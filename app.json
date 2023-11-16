@@ -1,6 +1,7 @@
 {
   "expo": {
     "name": "ProyectoGrado",
+    "displayName": "ProyectoGrado",
     "slug": "ProyectoGrado",
     "version": "1.0.0",
     "orientation": "portrait",
