@@ -12,6 +12,8 @@ import SideNavigation from "./SideNavigation";
 import NewClientForm from "../components/Forms/NewClientForm";
 import NewSupplierForm from "../components/Forms/NewSupplierForm";
 import NewProductForm from "../components/Forms/NewProductForm";
+import SettingsScreen from "../screens/SettingsScreen";
+import Company from "../components/Forms/CompanyForm";
 
 const Stack = createNativeStackNavigator();
 
@@ -27,10 +29,14 @@ function AppStack() {
         <Stack.Screen name="Suppliers" component={SuppliersScreen} />
         <Stack.Screen name="Inventory" component={InventoryScreen} />
         <Stack.Screen name="Kardex" component={KardexScreen} />
+        <Stack.Screen name="Settings" component={SettingsScreen} />
+
         <Stack.Screen name="Clients" component={ClientsScreen} />
         <Stack.Screen name="NewClient" component={NewClientForm} />
         <Stack.Screen name="NewSupplier" component={NewSupplierForm} />
         <Stack.Screen name="NewProduct" component={NewProductForm} />
+        <Stack.Screen name="Company" component={Company} />
+
       </Stack.Navigator>
     </NavigationContainer>
   );

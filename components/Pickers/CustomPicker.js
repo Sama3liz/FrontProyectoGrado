@@ -34,8 +34,8 @@ const CustomPicker = ({
               selectedValue={value}
               onValueChange={(value) => onChange(value)}
             >
-              {options.map((x) => {
-                return <Picker.Item label={x} value={x} />;
+              {options.map((value, index) => {
+                return <Picker.Item label={value} value={value} />;
               })}
             </Picker>
           </View>

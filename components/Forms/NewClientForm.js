@@ -35,7 +35,7 @@ const NewClientForm = ({ navigation }) => {
         <Text style={newPasswordStyles.title}>Register New Client</Text>
         <CustomPicker
           name="tid"
-          able="true"
+          able={true}
           defaultValue={"RUC"}
           options={["RUC","CI"]}
           control={control}

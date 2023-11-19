@@ -7,6 +7,7 @@ import SuppliersScreen from "../screens/SuppliersScreen";
 import KardexScreen from "../screens/KardexScreen";
 import InventoryScreen from "../screens/InventoryScreen";
 import ClientsScreen from "../screens/ClientsScreen";
+import SettingsScreen from "../screens/SettingsScreen";
 
 const Drawer = createDrawerNavigator();
 
@@ -57,6 +58,14 @@ function SideNavigation() {
         component={SuppliersScreen}
       />
       <Drawer.Screen
+        name="Clients"
+        options={{
+          drawerLabel: "Clients",
+          title: "Clients",
+        }}
+        component={ClientsScreen}
+      />
+      <Drawer.Screen
         name="Kardex"
         options={{
           drawerLabel: "Kardex",
@@ -65,12 +74,12 @@ function SideNavigation() {
         component={KardexScreen}
       />
       <Drawer.Screen
-        name="Clients"
+        name="Settings"
         options={{
-          drawerLabel: "Clients",
-          title: "Clients",
+          drawerLabel: "Settings",
+          title: "Settings",
         }}
-        component={ClientsScreen}
+        component={SettingsScreen}
       />
     </Drawer.Navigator>
   );
