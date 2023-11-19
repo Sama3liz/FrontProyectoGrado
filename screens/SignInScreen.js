@@ -1,41 +1,26 @@
-import React, { useState } from "react";
-import {
-  View,
-  Text,
-  Image,
-  useWindowDimensions,
-  ScrollView,
-  TextInput,
-} from "react-native";
+import React, { useContext, useState } from "react";
+import { View, Image, useWindowDimensions, ScrollView } from "react-native";
 import Logo from "../assets/Logo_1.png";
 import CustomInput from "../components/Inputs/CustomInput";
 import CustomButton from "../components/Buttons/CustomButton";
 import SocialSignInButtons from "../components/Buttons/SocialButtons";
 import { useNavigation } from "@react-navigation/native";
-import { SignInStyles } from "../styles/screenStyles/SignInStyles";
-import { useForm, Controller } from "react-hook-form";
+import { signInStyles } from "../styles/screenStyles/SignInStyles";
+import { useForm } from "react-hook-form";
+import { AuthContext } from "../context/AuthContext";
 
 const SignInScreen = () => {
   const { height } = useWindowDimensions();
   const navigation = useNavigation();
-  const [loading, setLoading] = useState(false);
+  const { signIn } = useContext(AuthContext);
   const {
     control,
     handleSubmit,
     formState: { errors },
   } = useForm();
 
-  const onSignInPressed = (data) => {
-    if (loading) {
-      return;
-    }
-    setLoading(true);
-    try {
-      navigation.navigate("Home");
-    } catch (e) {
-      Alert.alert("Oops", e.message);
-    }
-    setLoading(false);
+  const onSignInPressed = async (data) => {
+    await signIn(data);
   };
 
   const onForgotPasswordPressed = () => {
@@ -48,10 +33,10 @@ const SignInScreen = () => {
 
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
-      <View style={SignInStyles.root}>
+      <View style={signInStyles.root}>
         <Image
           source={Logo}
-          style={[SignInStyles.logo, { height: height * 0.3 }]}
+          style={[signInStyles.logo, { height: height * 0.3 }]}
           resizeMode="contain"
         />
 
@@ -77,7 +62,7 @@ const SignInScreen = () => {
         />
 
         <CustomButton
-          text={loading ? "Loading..." : "Sign In"}
+          text={"Sign In"}
           onPress={handleSubmit(onSignInPressed)}
         />
 
@@ -87,7 +72,7 @@ const SignInScreen = () => {
           type="TERTIARY"
         />
 
-        <SocialSignInButtons />
+        {/* <SocialSignInButtons /> */}
 
         <CustomButton
           text="Don't have an account? Create one"

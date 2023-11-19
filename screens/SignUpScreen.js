@@ -11,7 +11,7 @@ import CustomInput from "../components/Inputs/CustomInput";
 import CustomButton from "../components/Buttons/CustomButton";
 import SocialSignInButtons from "../components/Buttons/SocialButtons";
 import { useNavigation } from "@react-navigation/core";
-import { SignUpStyles } from "../styles/screenStyles/SignUpStyles";
+import { signUpStyles } from "../styles/screenStyles/SignUpStyles";
 import { useForm } from "react-hook-form";
 
 const EMAIL_REGEX =
@@ -42,13 +42,13 @@ const SignUpScreen = () => {
 
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
-      <View style={SignUpStyles.root}>
+      <View style={signUpStyles.root}>
         <Image
           source={Logo}
-          style={[SignUpStyles.logo, { height: height * 0.3 }]}
+          style={[signUpStyles.logo, { height: height * 0.3 }]}
           resizeMode="contain"
         />
-        <Text style={SignUpStyles.title}>Create an account</Text>
+        <Text style={signUpStyles.title}>Create an account</Text>
 
         <CustomInput
           name="username"
@@ -103,18 +103,18 @@ const SignUpScreen = () => {
           onPress={handleSubmit(onRegisterPressed)}
         />
 
-        <Text style={SignUpStyles.text}>
+        <Text style={signUpStyles.text}>
           By registering, you confirm that you accept our{" "}
-          <Text style={SignUpStyles.link} onPress={onTermsOfUsePressed}>
+          <Text style={signUpStyles.link} onPress={onTermsOfUsePressed}>
             Terms of Use
           </Text>{" "}
           and{" "}
-          <Text style={SignUpStyles.link} onPress={onPrivacyPressed}>
+          <Text style={signUpStyles.link} onPress={onPrivacyPressed}>
             Privacy Policy
           </Text>
         </Text>
 
-        <SocialSignInButtons />
+        {/* <SocialSignInButtons /> */}
 
         <CustomButton
           text="Have an account? Sign in"

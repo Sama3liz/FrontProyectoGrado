@@ -1,25 +1,32 @@
-import React, { useEffect, useState } from "react";
-import { StatusBar } from "expo-status-bar";
-import { Alert, Button, Text, View } from "react-native";
-import { globalStyles } from "../styles/GlobalStyles";
+import React, { useContext } from "react";
+import { Text, View } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import CustomButton from "../components/Buttons/CustomButton";
+import { globalStyles } from "../styles/GlobalStyles";
+import { AuthContext } from "../context/AuthContext";
 
 export default function HomeScreen() {
-  const navigation = useNavigation();
+  const { signOut, user } = useContext(AuthContext);
   const onLogOutPress = () => {
-    navigation.navigate("SignIn");
+    signOut();
   };
   return (
-    <View style={{ flex: 1 }}>
-      <Text style={{ fontSize: 24, alignSelf: "center" }}>
-        Home, sweet home
+    <View style={globalStyles.container}>
+      <Text style={{ fontSize: 24, alignSelf: "center", marginTop: 10 }}>
+      Hello, {user.username}
       </Text>
-      <CustomButton
-          text="Log Out"
-          onPress={onLogOutPress}
-          type="SECONDARY"
-        />
+      <Text
+        onPress={onLogOutPress}
+        style={{
+          width: "100%",
+          textAlign: "center",
+          color: "red",
+          marginTop: "auto",
+          marginVertical: 20,
+          fontSize: 20,
+        }}
+      >
+        Sign out
+      </Text>
     </View>
   );
 }

@@ -1,5 +1,5 @@
 import React from "react";
-import {  } from "expo";
+import {} from "expo";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
@@ -10,26 +10,16 @@ import NewPasswordScreen from "../screens/NewPasswordScreen";
 import SignInScreen from "../screens/SignInScreen";
 import PrivacyPolicyScreen from "../screens/PrivacyPolicyScreen";
 import TermsUseScreen from "../screens/TermsUseScreen";
-import SuppliersScreen from "../screens/SuppliersScreen";
-import NotFoundScreen from "../screens/NotFoundScreen";
-import KardexScreen from "../screens/KardexScreen";
-import InventoryScreen from "../screens/InventoryScreen";
-import ClientsScreen from "../screens/ClientsScreen";
-import SideNavigation from "./SideNavigation";
 
 const Stack = createNativeStackNavigator();
 
-function Navigation() {
+function AuthStack() {
   return (
     <NavigationContainer>
-      <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="SignIn">
-        <Stack.Screen name="Home" component={SideNavigation} />
-        <Stack.Screen name="NotFound" component={NotFoundScreen} />
-        <Stack.Screen name="Suppliers" component={SuppliersScreen} />
-        <Stack.Screen name="Inventory" component={InventoryScreen} />
-        <Stack.Screen name="Kardex" component={KardexScreen} />
-        <Stack.Screen name="Clients" component={ClientsScreen} />
-
+      <Stack.Navigator
+        screenOptions={{ headerShown: false }}
+        initialRouteName="SignIn"
+      >
         <Stack.Screen name="SignIn" component={SignInScreen} />
         <Stack.Screen name="SignUp" component={SignUpScreen} />
         <Stack.Screen name="ConfirmEmail" component={ConfirmEmailScreen} />
@@ -50,4 +40,4 @@ function Navigation() {
   );
 }
 
-export default Navigation;
+export default AuthStack;

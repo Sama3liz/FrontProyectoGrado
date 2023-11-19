@@ -1,10 +1,9 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet, ScrollView } from "react-native";
+import { View, Text, ScrollView } from "react-native";
 import CustomInput from "../components/Inputs/CustomInput";
 import CustomButton from "../components/Buttons/CustomButton";
-import SocialSignInButtons from "../components/Buttons/SocialButtons";
 import { useNavigation } from "@react-navigation/core";
-import { ConfirmEmailStyles } from "../styles/screenStyles/ConfirmEmailStyles";
+import { confirmEmailStyles } from "../styles/screenStyles/ConfirmEmailStyles";
 import { useForm } from "react-hook-form";
 
 const ConfirmEmailScreen = () => {
@@ -25,8 +24,8 @@ const ConfirmEmailScreen = () => {
 
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
-      <View style={ConfirmEmailStyles.root}>
-        <Text style={ConfirmEmailStyles.title}>Confirm your email</Text>
+      <View style={confirmEmailStyles.root}>
+        <Text style={confirmEmailStyles.title}>Confirm your email</Text>
 
         <CustomInput
           name="code"

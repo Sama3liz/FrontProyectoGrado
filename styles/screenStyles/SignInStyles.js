@@ -1,6 +1,6 @@
 import { StyleSheet } from "react-native";
 
-export const SignInStyles = StyleSheet.create({
+export const signInStyles = StyleSheet.create({
   root: {
     alignItems: 'center',
     padding: 20,

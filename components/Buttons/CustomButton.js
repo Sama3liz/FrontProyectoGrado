@@ -56,6 +56,8 @@ const styles = StyleSheet.create({
   text_TERTIARY: {
     color: 'gray',
   },
+
+  
 });
 
 export default CustomButton;

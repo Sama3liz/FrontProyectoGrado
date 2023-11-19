@@ -1,6 +1,6 @@
 import { StyleSheet } from "react-native";
 
-export const ConfirmEmailStyles = StyleSheet.create({
+export const confirmEmailStyles = StyleSheet.create({
   root: {
     flex: 1,
     alignItems: 'center',

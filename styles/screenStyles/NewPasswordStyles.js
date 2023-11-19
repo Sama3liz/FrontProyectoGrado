@@ -1,6 +1,6 @@
 import { StyleSheet } from "react-native";
 
-export const NewPasswordStyles = StyleSheet.create({
+export const newPasswordStyles = StyleSheet.create({
   root: {
     flex: 1,
     alignItems: 'center',
