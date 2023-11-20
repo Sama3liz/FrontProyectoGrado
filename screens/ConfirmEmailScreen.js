@@ -11,15 +11,13 @@ const ConfirmEmailScreen = ({ route }) => {
   const { control, handleSubmit } = useForm();
   const navigation = useNavigation();
 
-  const onConfirmPressed = async ({ code }) => {
+  const onConfirmPressed = async ({ confirmationCode }) => {
     try {
       const { username } = route.params;
       const { isSignUpComplete, nextStep } = await confirmSignUp({
         username,
-        code,
+        confirmationCode,
       });
-      console.log(isSignUpComplete);
-      console.log(nextStep);
       navigation.navigate("SignIn");
     } catch (error) {
       console.log("error confirming sign up", error);
@@ -30,9 +28,11 @@ const ConfirmEmailScreen = ({ route }) => {
     navigation.navigate("SignIn");
   };
 
-  const onResendPress = async (user) => {
+  const onResendPress = async () => {
     try {
-      await resendSignUpCode(user);
+      const { username } = route.params;
+      console.log(username)
+      await resendSignUpCode({username});
       return { success: true };
     } catch (error) {
       console.error("Error al reenviar código de confirmación:", error);
@@ -46,7 +46,7 @@ const ConfirmEmailScreen = ({ route }) => {
         <Text style={confirmEmailStyles.title}>Confirm your email</Text>
 
         <CustomInput
-          name="code"
+          name="confirmationCode"
           control={control}
           placeholder="Enter your confirmation code"
           rules={{

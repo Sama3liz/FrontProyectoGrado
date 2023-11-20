@@ -12,7 +12,7 @@ export default function HomeScreen() {
   return (
     <View style={globalStyles.container}>
       <Text style={{ fontSize: 24, alignSelf: "center", marginTop: 10 }}>
-        Hello, {user.payload.name}
+        Hello, 
       </Text>
       <Text
         onPress={onLogOutPress}

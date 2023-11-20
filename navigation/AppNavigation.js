@@ -22,7 +22,7 @@ const AppNavigation = () => {
   }
   return (
     <SafeAreaView style={styles.root}>
-      {user !== null ? <AppStack /> : <AuthStack />}
+      {user !== undefined ? <AppStack /> : <AuthStack />}
     </SafeAreaView>
   );
 };

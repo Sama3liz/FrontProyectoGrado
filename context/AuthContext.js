@@ -2,12 +2,12 @@ import React, { createContext, useState, useEffect } from "react";
 import { Amplify } from "aws-amplify";
 import amplifyconfig from "../src/amplifyconfiguration.json";
 Amplify.configure(amplifyconfig, { ssr: true });
-import { signIn, signOut, fetchAuthSession } from "aws-amplify/auth";
+import { signIn, signOut, fetchAuthSession, getCurrentUser } from "aws-amplify/auth";
 
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState(undefined);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -31,15 +31,14 @@ export const AuthProvider = ({ children }) => {
       const { idToken } = (await fetchAuthSession()).tokens ?? {};
       setUser(idToken);
     } catch (error) {
-      console.log("error signing in");
+      console.log("error signing in", error);
     }
   }
 
   const logOut = async () => {
     try {
-      await signOut({ global: true });
-      setUser(null);
-      console.log(user)
+      await signOut();
+      setUser(undefined);
     } catch (error) {
       console.error("Error al cerrar sesión:", error);
     }
