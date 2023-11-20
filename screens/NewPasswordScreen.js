@@ -5,15 +5,20 @@ import CustomButton from "../components/Buttons/CustomButton";
 import { useNavigation } from "@react-navigation/native";
 import { newPasswordStyles } from "../styles/screenStyles/NewPasswordStyles";
 import { useForm } from "react-hook-form";
+import { confirmResetPassword } from "aws-amplify/auth";
 
-const NewPasswordScreen = () => {
+const NewPasswordScreen = ({ route }) => {
   const { control, handleSubmit } = useForm();
-
   const navigation = useNavigation();
+  const { username } = route.params;
 
-  const onSubmitPressed = (data) => {
-    console.warn(data);
-    navigation.navigate("Home");
+  const onSubmitPressed = async ({ confirmationCode, newPassword }) => {
+    try {
+      await confirmResetPassword({ username, confirmationCode, newPassword });
+    } catch (error) {
+      console.log(error);
+    }
+    navigation.navigate("SignIn");
   };
 
   const onSignInPress = () => {
@@ -27,21 +32,21 @@ const NewPasswordScreen = () => {
 
         <CustomInput
           placeholder="Code"
-          name="code"
+          name="confirmationCode"
           control={control}
           rules={{ required: "Code is required" }}
         />
 
         <CustomInput
           placeholder="Enter your new password"
-          name="name"
+          name="newPassword"
           control={control}
           secureTextEntry
           rules={{
             required: "Password is required",
             minLength: {
               value: 8,
-              message: "Password should be at least 8 characters long",
+              message: "Password should be at least 12 characters long",
             },
           }}
         />

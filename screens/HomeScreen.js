@@ -5,14 +5,14 @@ import { globalStyles } from "../styles/GlobalStyles";
 import { AuthContext } from "../context/AuthContext";
 
 export default function HomeScreen() {
-  const { signOut, user } = useContext(AuthContext);
+  const { logOut, user } = useContext(AuthContext);
   const onLogOutPress = () => {
-    signOut();
+    logOut();
   };
   return (
     <View style={globalStyles.container}>
       <Text style={{ fontSize: 24, alignSelf: "center", marginTop: 10 }}>
-      Hello, {user.username}
+        Hello, {user.payload.name}
       </Text>
       <Text
         onPress={onLogOutPress}

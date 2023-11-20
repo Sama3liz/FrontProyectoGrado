@@ -1,5 +1,8 @@
 import React, { createContext, useState, useEffect } from "react";
-/* import * as Keychain from "react-native-keychain"; */
+import { Amplify } from "aws-amplify";
+import amplifyconfig from "../src/amplifyconfiguration.json";
+Amplify.configure(amplifyconfig, { ssr: true });
+import { signIn, signOut, getCurrentUser, fetchAuthSession } from "aws-amplify/auth";
 
 export const AuthContext = createContext();
 
@@ -13,43 +16,38 @@ export const AuthProvider = ({ children }) => {
 
   const checkUser = async () => {
     try {
-      /* const userInfo = await Auth.currentAuthenticatedUser(); */
-      const userInfo = user;
-      console.log(userInfo);
-      setUser(userInfo);
-    } catch (error) {
-      setUser(null);
+      const { idToken } = (await fetchAuthSession()).tokens ?? {};
+      setUser(idToken)
+    } catch (err) {
+      console.log(err);
     } finally {
       setLoading(false);
     }
   };
 
-  const signIn = async ({username, password}) => {
+  async function logIn(username, password) {
     try {
-      /* Log in API call here */
-      /* const data = await Keychain.setGenericPassword('token', JSON.stringify({username,password})); */
-      const userData = { username, password };
-      console.log(userData);
-      setUser(userData);
+      await signIn({ username, password });
+      const { idToken } = (await fetchAuthSession()).tokens ?? {};
+      setUser(idToken);
       return { success: true, user: userData };
     } catch (error) {
-      console.error("Error al iniciar sesión:", error);
-      return { success: false, error };
+      console.log("error signing in", error);
     }
-  };
+  }
 
-  const signOut = async () => {
+  const logOut = async () => {
     try {
-      /* await Auth.signOut(); */
-      /* await Keychain.resetGenericPassword(); */
+      await signOut({ global: true });
       setUser(null);
+      console.log(user)
     } catch (error) {
       console.error("Error al cerrar sesión:", error);
     }
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, signIn, signOut }}>
+    <AuthContext.Provider value={{ user, loading, logIn, logOut }}>
       {children}
     </AuthContext.Provider>
   );

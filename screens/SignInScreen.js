@@ -12,15 +12,15 @@ import { AuthContext } from "../context/AuthContext";
 const SignInScreen = () => {
   const { height } = useWindowDimensions();
   const navigation = useNavigation();
-  const { signIn } = useContext(AuthContext);
+  const { logIn } = useContext(AuthContext);
   const {
     control,
     handleSubmit,
     formState: { errors },
   } = useForm();
 
-  const onSignInPressed = async (data) => {
-    await signIn(data);
+  const onSignInPressed = async ({ username, password }) => {
+    await logIn(username, password);
   };
 
   const onForgotPasswordPressed = () => {

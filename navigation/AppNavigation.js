@@ -1,4 +1,9 @@
-import { ActivityIndicator, SafeAreaView, StyleSheet, View } from "react-native";
+import {
+  ActivityIndicator,
+  SafeAreaView,
+  StyleSheet,
+  View,
+} from "react-native";
 import React, { useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
 import AppStack from "./AppStack";

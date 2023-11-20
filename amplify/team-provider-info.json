@@ -10,6 +10,11 @@
       "StackName": "amplify-proyectogrado-dev-111627",
       "StackId": "arn:aws:cloudformation:us-east-1:461127647309:stack/amplify-proyectogrado-dev-111627/810352a0-849b-11ee-8e1d-0e688cc89157",
       "AmplifyAppId": "dr1yboiu0p5jj"
+    },
+    "categories": {
+      "auth": {
+        "proyectogrado": {}
+      }
     }
   }
 }

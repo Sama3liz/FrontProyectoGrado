@@ -5,15 +5,36 @@ import CustomButton from "../components/Buttons/CustomButton";
 import { useNavigation } from "@react-navigation/core";
 import { newPasswordStyles } from "../styles/screenStyles/NewPasswordStyles";
 import { useForm } from "react-hook-form";
+import { resetPassword } from 'aws-amplify/auth';
 
 const ForgotPasswordScreen = () => {
   const { control, handleSubmit } = useForm();
   const navigation = useNavigation();
 
-  const onSendPressed = (data) => {
-    console.warn(data);
-    navigation.navigate("NewPassword");
+  const onSendPressed = async ({ username }) => {
+    try {
+      const output = await resetPassword({ username });
+      handleResetPasswordNextSteps(output, username);
+    } catch (error) {
+      console.log(error);
+    }
   };
+
+  function handleResetPasswordNextSteps(output, username) {
+    const { nextStep } = output;
+    switch (nextStep.resetPasswordStep) {
+      case "CONFIRM_RESET_PASSWORD_WITH_CODE":
+        const codeDeliveryDetails = nextStep.codeDeliveryDetails;
+        console.log(
+          `Confirmation code was sent to ${codeDeliveryDetails.deliveryMedium}`
+        );
+        navigation.navigate("NewPassword", { username });
+        break;
+      case "DONE":
+        console.log("Successfully reset password.");
+        break;
+    }
+  }
 
   const onSignInPress = () => {
     navigation.navigate("SignIn");

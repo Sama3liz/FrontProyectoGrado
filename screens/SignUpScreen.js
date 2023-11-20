@@ -13,6 +13,7 @@ import SocialSignInButtons from "../components/Buttons/SocialButtons";
 import { useNavigation } from "@react-navigation/core";
 import { signUpStyles } from "../styles/screenStyles/SignUpStyles";
 import { useForm } from "react-hook-form";
+import { signUp } from "aws-amplify/auth";
 
 const EMAIL_REGEX =
   /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
@@ -24,8 +25,31 @@ const SignUpScreen = () => {
   const { height } = useWindowDimensions();
   const navigation = useNavigation();
 
-  const onRegisterPressed = () => {
-    navigation.navigate("ConfirmEmail");
+  const onRegisterPressed = async ({ username, name, email, password }) => {
+    const updated = Date.now();
+    const updated_at = updated.toString();
+    const picture = "default";
+    console.log(typeof updated_at);
+    try {
+      const { isSignUpComplete, userId, nextStep } = await signUp({
+        username,
+        password,
+        options: {
+          userAttributes: {
+            name,
+            picture,
+            updated_at,
+            email,
+          },
+        },
+      });
+      console.log(userId);
+      console.log(isSignUpComplete);
+      console.log(nextStep);
+      navigation.navigate("ConfirmEmail", { user: email });
+    } catch (error) {
+      console.log("error signing up:", error);
+    }
   };
 
   const onSignInPress = () => {
@@ -53,7 +77,23 @@ const SignUpScreen = () => {
         <CustomInput
           name="username"
           control={control}
-          placeholder="Username"
+          placeholder="RUC"
+          rules={{
+            required: "RUC is required",
+            minLength: {
+              value: 13,
+              message: "RUC should be at least 13 characters long",
+            },
+            maxLength: {
+              value: 13,
+              message: "RUC should be max 13 characters long",
+            },
+          }}
+        />
+        <CustomInput
+          name="name"
+          control={control}
+          placeholder="Full name"
           rules={{
             required: "Username is required",
             minLength: {
@@ -83,8 +123,8 @@ const SignUpScreen = () => {
           rules={{
             required: "Password is required",
             minLength: {
-              value: 8,
-              message: "Password should be at least 8 characters long",
+              value: 12,
+              message: "Password should be at least 12 characters long",
             },
           }}
         />
