@@ -2,7 +2,7 @@ import React, { createContext, useState, useEffect } from "react";
 import { Amplify } from "aws-amplify";
 import amplifyconfig from "../src/amplifyconfiguration.json";
 Amplify.configure(amplifyconfig, { ssr: true });
-import { signIn, signOut, getCurrentUser, fetchAuthSession } from "aws-amplify/auth";
+import { signIn, signOut, fetchAuthSession } from "aws-amplify/auth";
 
 export const AuthContext = createContext();
 
@@ -30,9 +30,8 @@ export const AuthProvider = ({ children }) => {
       await signIn({ username, password });
       const { idToken } = (await fetchAuthSession()).tokens ?? {};
       setUser(idToken);
-      return { success: true, user: userData };
     } catch (error) {
-      console.log("error signing in", error);
+      console.log("error signing in");
     }
   }
 

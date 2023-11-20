@@ -10,12 +10,12 @@ import { confirmSignUp, resendSignUpCode } from "aws-amplify/auth";
 const ConfirmEmailScreen = ({ route }) => {
   const { control, handleSubmit } = useForm();
   const navigation = useNavigation();
-  const {user} = route.params;
 
-  const onConfirmPressed = async ({ user, code }) => {
+  const onConfirmPressed = async ({ code }) => {
     try {
+      const { username } = route.params;
       const { isSignUpComplete, nextStep } = await confirmSignUp({
-        user,
+        username,
         code,
       });
       console.log(isSignUpComplete);
@@ -35,7 +35,7 @@ const ConfirmEmailScreen = ({ route }) => {
       await resendSignUpCode(user);
       return { success: true };
     } catch (error) {
-      console.error('Error al reenviar código de confirmación:', error);
+      console.error("Error al reenviar código de confirmación:", error);
       return { success: false, error };
     }
   };

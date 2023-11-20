@@ -29,7 +29,6 @@ const SignUpScreen = () => {
     const updated = Date.now();
     const updated_at = updated.toString();
     const picture = "default";
-    console.log(typeof updated_at);
     try {
       const { isSignUpComplete, userId, nextStep } = await signUp({
         username,
@@ -43,10 +42,7 @@ const SignUpScreen = () => {
           },
         },
       });
-      console.log(userId);
-      console.log(isSignUpComplete);
-      console.log(nextStep);
-      navigation.navigate("ConfirmEmail", { user: email });
+      navigation.navigate("ConfirmEmail", { username: username });
     } catch (error) {
       console.log("error signing up:", error);
     }
