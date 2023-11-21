@@ -3,13 +3,13 @@ import {} from "expo";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
-import SignUpScreen from "../screens/SignUpScreen";
-import ConfirmEmailScreen from "../screens/ConfirmEmailScreen";
-import ForgotPasswordScreen from "../screens/ForgotPasswordScreen";
-import NewPasswordScreen from "../screens/NewPasswordScreen";
-import SignInScreen from "../screens/SignInScreen";
-import PrivacyPolicyScreen from "../screens/PrivacyPolicyScreen";
-import TermsUseScreen from "../screens/TermsUseScreen";
+import SignUpScreen from "../screens/AuthScreens/SignUpScreen";
+import ConfirmEmailScreen from "../screens/AuthScreens/ConfirmEmailScreen";
+import ForgotPasswordScreen from "../screens/AuthScreens/ForgotPasswordScreen";
+import NewPasswordScreen from "../screens/AuthScreens/NewPasswordScreen";
+import SignInScreen from "../screens/AuthScreens/SignInScreen";
+import PrivacyPolicyScreen from "../screens/PublicScreens/PrivacyPolicyScreen";
+import TermsUseScreen from "../screens/PublicScreens/TermsUseScreen";
 
 const Stack = createNativeStackNavigator();
 

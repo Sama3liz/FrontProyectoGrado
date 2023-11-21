@@ -1,10 +1,9 @@
 import React from "react";
-import {} from "expo";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 import SuppliersScreen from "../screens/SuppliersScreen";
-import NotFoundScreen from "../screens/NotFoundScreen";
+import NotFoundScreen from "../screens/PublicScreens/NotFoundScreen";
 import KardexScreen from "../screens/KardexScreen";
 import InventoryScreen from "../screens/InventoryScreen";
 import ClientsScreen from "../screens/ClientsScreen";
@@ -14,6 +13,7 @@ import NewSupplierForm from "../components/Forms/NewSupplierForm";
 import NewProductForm from "../components/Forms/NewProductForm";
 import SettingsScreen from "../screens/SettingsScreen";
 import Company from "../components/Forms/CompanyForm";
+import ProfileScreen from "../screens/ProfileScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -37,6 +37,7 @@ function AppStack() {
         <Stack.Screen name="NewProduct" component={NewProductForm} />
         <Stack.Screen name="Company" component={Company} />
 
+        <Stack.Screen name="ProductProfile" component={ProfileScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

@@ -14,7 +14,7 @@
 
 - **/hooks:** Hooks personalizados para compartir lógica entre componentes.
 
-- **/config:** Archivos de configuración específicos de la aplicación, como configuraciones de entorno, claves de API, etc.
+- **/src:** Archivos de configuración específicos de la aplicación, como configuraciones de entorno, claves de API, etc.
 
 - **/styles:** Contiene estilos globales y específicos de pantalla.
   - `colors.js`: Definición de colores utilizados en la aplicación.
@@ -31,14 +31,6 @@
   - **/analytics:** Configuración de análisis o seguimiento, por ejemplo, Amplify Analytics.
   - **/function:** Configuración relacionada con funciones Lambda (si aplica).
   - **/graphql:** Configuración de API GraphQL (si utilizas AppSync).
-
-- **/scripts:** Scripts útiles para tareas de construcción, despliegue, automatización, etc.
-
-- **/typings:** Tipos de TypeScript personalizados (si usas TypeScript).
-
-- **/test:** Archivos de pruebas, como pruebas unitarias, de integración, etc.
-
-- **/storybook:** Configuración y componentes para Storybook (si utilizas Storybook para desarrollo de componentes).
 
 - **/docs:** Documentación del proyecto, como guías de estilo, guías de uso, etc.
 

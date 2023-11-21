@@ -1,34 +1,40 @@
 import React, { useState } from "react";
 import { View, Text, ScrollView } from "react-native";
-import CustomInput from "../components/Inputs/CustomInput";
-import CustomButton from "../components/Buttons/CustomButton";
-import { useNavigation } from "@react-navigation/native";
-import { newPasswordStyles } from "../styles/screenStyles/NewPasswordStyles";
+import CustomInput from "../../components/Inputs/CustomInput";
+import CustomButton from "../../components/Buttons/CustomButton";
+import { newPasswordStyles } from "../../styles/screenStyles/NewPasswordStyles";
 import { useForm } from "react-hook-form";
-import { confirmResetPassword } from "aws-amplify/auth";
+import useNavigationHelpers from "../../utils/navigationHelpers";
+import useConfirmation from "../../utils/useConfirmation";
+import PasswordChecklist from "react-password-checklist";
 
 const NewPasswordScreen = ({ route }) => {
   const { control, handleSubmit } = useForm();
-  const navigation = useNavigation();
   const { username } = route.params;
+  const { goTo } = useNavigationHelpers();
+  const { error, clearError, newForgotPassword } = useConfirmation();
+  const [password, setPassword] = useState("");
 
-  const onSubmitPressed = async ({ confirmationCode, newPassword }) => {
-    try {
-      await confirmResetPassword({ username, confirmationCode, newPassword });
-    } catch (error) {
-      console.log(error);
-    }
-    navigation.navigate("SignIn");
+  const onSubmitPressed = ({ confirmationCode, newPassword }) => {
+    clearError();
+    newForgotPassword({ username, confirmationCode, newPassword });
   };
 
   const onSignInPress = () => {
-    navigation.navigate("SignIn");
+    goTo("SignIn");
+  };
+
+  const handlePasswordChange = (text) => {
+    clearError();
+    setPassword(text);
   };
 
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
       <View style={newPasswordStyles.root}>
         <Text style={newPasswordStyles.title}>Reset your password</Text>
+
+        {error ? <Text style={{ color: "red" }}>{error}</Text> : null}
 
         <CustomInput
           placeholder="Code"
@@ -38,17 +44,25 @@ const NewPasswordScreen = ({ route }) => {
         />
 
         <CustomInput
-          placeholder="Enter your new password"
           name="newPassword"
           control={control}
+          placeholder="Enter your new password"
           secureTextEntry
+          handleInputChange={handlePasswordChange}
           rules={{
             required: "Password is required",
             minLength: {
-              value: 8,
+              value: 12,
               message: "Password should be at least 12 characters long",
             },
           }}
+        />
+
+        <PasswordChecklist
+          rules={["minLength", "specialChar", "number", "capital", "lowercase"]}
+          minLength={12}
+          value={password}
+          onChange={(isValid) => {}}
         />
 
         <CustomButton text="Submit" onPress={handleSubmit(onSubmitPressed)} />

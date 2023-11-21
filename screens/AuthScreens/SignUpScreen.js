@@ -6,58 +6,48 @@ import {
   Image,
   useWindowDimensions,
 } from "react-native";
-import Logo from "../assets/Logo_1.png";
-import CustomInput from "../components/Inputs/CustomInput";
-import CustomButton from "../components/Buttons/CustomButton";
-import SocialSignInButtons from "../components/Buttons/SocialButtons";
-import { useNavigation } from "@react-navigation/core";
-import { signUpStyles } from "../styles/screenStyles/SignUpStyles";
+import Logo from "../../assets/Logo_1.png";
+import CustomInput from "../../components/Inputs/CustomInput";
+import CustomButton from "../../components/Buttons/CustomButton";
+import { signUpStyles } from "../../styles/screenStyles/SignUpStyles";
 import { useForm } from "react-hook-form";
-import { signUp } from "aws-amplify/auth";
-
-const EMAIL_REGEX =
-  /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+import PasswordChecklist from "react-password-checklist";
+import useNavigationHelpers from "../../utils/navigationHelpers";
+import useRegistration from "../../utils/useRegistration";
+import { EMAIL_REGEX, RUC_REGEX, PASSWORD_REGEX } from "../../utils/constants";
 
 const SignUpScreen = () => {
+  const { onSignUp, error, clearError } = useRegistration();
+  const { goTo } = useNavigationHelpers();
   const { control, handleSubmit, watch } = useForm();
+  const [password, setPassword] = useState("");
   const pwd = watch("password");
-
   const { height } = useWindowDimensions();
-  const navigation = useNavigation();
 
-  const onRegisterPressed = async ({ username, name, email, password }) => {
-    const updated = Date.now();
-    const updated_at = updated.toString();
-    const picture = "default";
-    try {
-      const { isSignUpComplete, userId, nextStep } = await signUp({
-        username,
-        password,
-        options: {
-          userAttributes: {
-            name,
-            picture,
-            updated_at,
-            email,
-          },
-        },
-      });
-      navigation.navigate("ConfirmEmail", { username: username });
-    } catch (error) {
-      console.log("error signing up:", error);
-    }
+  const onRegisterPressed = (data) => {
+    clearError();
+    onSignUp(data);
   };
 
   const onSignInPress = () => {
-    navigation.navigate("SignIn");
+    goTo("SignIn");
   };
 
   const onTermsOfUsePressed = () => {
-    navigation.navigate("TermsUse");
+    goTo("TermsUse");
   };
 
   const onPrivacyPressed = () => {
-    navigation.navigate("PrivacyPolicy");
+    goTo("PrivacyPolicy");
+  };
+
+  const handleInputChange = () => {
+    clearError();
+  };
+
+  const handlePasswordChange = (text) => {
+    clearError();
+    setPassword(text);
   };
 
   return (
@@ -68,14 +58,22 @@ const SignUpScreen = () => {
           style={[signUpStyles.logo, { height: height * 0.3 }]}
           resizeMode="contain"
         />
+
         <Text style={signUpStyles.title}>Create an account</Text>
+
+        {error && <Text style={{ color: "red" }}>Error: {error}</Text>}
 
         <CustomInput
           name="username"
           control={control}
           placeholder="RUC"
+          handleInputChange={handleInputChange}
           rules={{
             required: "RUC is required",
+            pattern: {
+              value: RUC_REGEX,
+              message: "RUC should contain only numbers",
+            },
             minLength: {
               value: 13,
               message: "RUC should be at least 13 characters long",
@@ -86,22 +84,25 @@ const SignUpScreen = () => {
             },
           }}
         />
+
         <CustomInput
           name="name"
           control={control}
           placeholder="Full name"
+          handleInputChange={handleInputChange}
           rules={{
-            required: "Username is required",
+            required: "Name is required",
             minLength: {
               value: 3,
-              message: "Username should be at least 3 characters long",
+              message: "Name should be at least 3 characters long",
             },
             maxLength: {
               value: 24,
-              message: "Username should be max 24 characters long",
+              message: "Name should be max 24 characters long",
             },
           }}
         />
+
         <CustomInput
           name="email"
           control={control}
@@ -111,11 +112,13 @@ const SignUpScreen = () => {
             pattern: { value: EMAIL_REGEX, message: "Email is invalid" },
           }}
         />
+
         <CustomInput
           name="password"
           control={control}
           placeholder="Password"
           secureTextEntry
+          handleInputChange={handlePasswordChange}
           rules={{
             required: "Password is required",
             minLength: {
@@ -124,14 +127,23 @@ const SignUpScreen = () => {
             },
           }}
         />
+
         <CustomInput
           name="password-repeat"
           control={control}
           placeholder="Repeat Password"
           secureTextEntry
+          handleInputChange={handleInputChange}
           rules={{
             validate: (value) => value === pwd || "Password do not match",
           }}
+        />
+
+        <PasswordChecklist
+          rules={["minLength", "specialChar", "number", "capital", "lowercase"]}
+          minLength={12}
+          value={password}
+          onChange={(isValid) => {}}
         />
 
         <CustomButton
@@ -149,8 +161,6 @@ const SignUpScreen = () => {
             Privacy Policy
           </Text>
         </Text>
-
-        {/* <SocialSignInButtons /> */}
 
         <CustomButton
           text="Have an account? Sign in"

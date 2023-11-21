@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { View, Text, ScrollView } from "react-native";
 
-import CustomButton from "../components/Buttons/CustomButton";
+import CustomButton from "../../components/Buttons/CustomButton";
 import { useNavigation } from "@react-navigation/native";
-import { newPasswordStyles } from "../styles/screenStyles/NewPasswordStyles";
+import { newPasswordStyles } from "../../styles/screenStyles/NewPasswordStyles";
 
 const NotFoundScreen = () => {
   const navigation = useNavigation();

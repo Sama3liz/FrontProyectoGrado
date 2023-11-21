@@ -8,6 +8,7 @@ const CustomInput = ({
   rules = {},
   placeholder,
   secureTextEntry,
+  handleInputChange,
 }) => {
   return (
     <Controller
@@ -28,7 +29,12 @@ const CustomInput = ({
           >
             <TextInput
               value={value}
-              onChangeText={onChange}
+              onChangeText={(text) => {
+                onChange(text);
+                if (handleInputChange) {
+                  handleInputChange(text);
+                }
+              }}
               onBlur={onBlur}
               placeholder={placeholder}
               style={styles.input}

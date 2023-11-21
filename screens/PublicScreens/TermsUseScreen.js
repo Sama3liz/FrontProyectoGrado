@@ -1,6 +1,6 @@
 import { View, Text, ScrollView } from "react-native";
 import React from "react";
-import { globalStyles } from "../styles/GlobalStyles";
+import { globalStyles } from "../../styles/GlobalStyles";
 
 export default function TermsUseScreen() {
   return (

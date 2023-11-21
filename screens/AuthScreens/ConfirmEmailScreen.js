@@ -1,53 +1,45 @@
 import React, { useState } from "react";
 import { View, Text, ScrollView } from "react-native";
-import CustomInput from "../components/Inputs/CustomInput";
-import CustomButton from "../components/Buttons/CustomButton";
-import { useNavigation } from "@react-navigation/core";
-import { confirmEmailStyles } from "../styles/screenStyles/ConfirmEmailStyles";
+import CustomInput from "../../components/Inputs/CustomInput";
+import CustomButton from "../../components/Buttons/CustomButton";
+import useNavigationHelpers from "../../utils/navigationHelpers";
+import { confirmEmailStyles } from "../../styles/screenStyles/ConfirmEmailStyles";
 import { useForm } from "react-hook-form";
-import { confirmSignUp, resendSignUpCode } from "aws-amplify/auth";
+import useConfirmation from "../../utils/useConfirmation";
 
 const ConfirmEmailScreen = ({ route }) => {
   const { control, handleSubmit } = useForm();
-  const navigation = useNavigation();
+  const { goTo } = useNavigationHelpers();
+  const { username } = route.params;
+  const { confirmEmailCode, resendCodeMail, clearError, error } = useConfirmation();
 
-  const onConfirmPressed = async ({ confirmationCode }) => {
-    try {
-      const { username } = route.params;
-      const { isSignUpComplete, nextStep } = await confirmSignUp({
-        username,
-        confirmationCode,
-      });
-      navigation.navigate("SignIn");
-    } catch (error) {
-      console.log("error confirming sign up", error);
-    }
+  const onConfirmPressed = ({ confirmationCode }) => {
+    clearError();
+    confirmEmailCode({ confirmationCode, username });
   };
 
   const onSignInPress = () => {
-    navigation.navigate("SignIn");
+    goTo("SignIn");
   };
 
-  const onResendPress = async () => {
-    try {
-      const { username } = route.params;
-      console.log(username)
-      await resendSignUpCode({username});
-      return { success: true };
-    } catch (error) {
-      console.error("Error al reenviar código de confirmación:", error);
-      return { success: false, error };
-    }
+  const onResendPress = () => {
+    clearError();
+    resendCodeMail({ username });
+  };
+
+  const handleInputChange = () => {
+    clearError();
   };
 
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
       <View style={confirmEmailStyles.root}>
         <Text style={confirmEmailStyles.title}>Confirm your email</Text>
-
+        {error ? <Text style={{ color: "red" }}>{error}</Text> : null}
         <CustomInput
           name="confirmationCode"
           control={control}
+          handleInputChange={handleInputChange}
           placeholder="Enter your confirmation code"
           rules={{
             required: "Confirmation code is required",
