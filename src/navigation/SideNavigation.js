@@ -20,9 +20,7 @@ import KardexScreen from "../screens/KardexScreen";
 import InventoryScreen from "../screens/InventoryScreen";
 import ClientsScreen from "../screens/ClientsScreen";
 import SettingsScreen from "../screens/SettingsScreen";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { AuthContext } from "../context/AuthContext";
-import { Divider, Flex } from "@aws-amplify/ui-react";
 
 const Drawer = createDrawerNavigator();
 
@@ -33,6 +31,7 @@ function SideNavigation() {
   };
   return (
     <Drawer.Navigator
+      drawerLockMode={"locked-closed"}
       drawerContent={(props) => (
         <DrawerContentScrollView {...props}>
           <View
@@ -57,7 +56,7 @@ function SideNavigation() {
                 color: "#111",
               }}
             >
-              {user.payload.name}
+              {user.payload["name"]}
             </Text>
             <Text
               style={{
@@ -102,7 +101,7 @@ function SideNavigation() {
         drawerLabelStyle: {
           color: "#111",
         },
-        drawerActiveTintColor: "#531158"
+        drawerActiveTintColor: "#531158",
       }}
     >
       <Drawer.Screen

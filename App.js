@@ -1,9 +1,11 @@
-import 'react-native-gesture-handler';
-import React from "react";
+/**
+ * @format
+ */
+import "react-native-gesture-handler";
 import { AppRegistry } from "react-native";
-import { AuthProvider } from "./context/AuthContext";
-import AppNavigation from "./navigation/AppNavigation";
-import {name as appName} from './app.json';
+import { name as appName } from "./app.json";
+import { AuthProvider } from "./src/context/AuthContext";
+import AppNavigation from "./src/navigation/AppNavigation";
 
 const App = () => {
   return (

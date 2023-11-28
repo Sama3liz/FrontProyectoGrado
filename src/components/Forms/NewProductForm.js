@@ -4,10 +4,27 @@ import CustomInput from "../Inputs/CustomInput";
 import CustomButton from "../Buttons/CustomButton";
 import { newPasswordStyles } from "../../styles/screenStyles/NewPasswordStyles";
 import CustomPicker from "../Pickers/CustomPicker";
+import { useEffect } from "react";
+import useNavigationHelpers from "../../utils/navigationHelpers";
 
 const NewProductForm = ({ navigation }) => {
-  const { control, handleSubmit } = useForm();
+  const { control, handleSubmit, watch, setValue } = useForm();
+  const { goTo } = useNavigationHelpers();
+  const price = watch("price");
+
+  useEffect(() => {
+    if (price) {
+      const sugPrice = (price * 1.3).toFixed(2);
+      setValue("sugprice", sugPrice);
+    }
+  }, [price, setValue]);
+
   const onSubmitPressed = /* async */ (data) => {
+    console.log(data);
+    data.price = parseFloat(data.price);
+    data.sugprice = parseFloat(data.sugprice);
+    data.stock = parseInt(data.stock, 10);
+    data.supplier = parseInt(data.supplier, 10);
     console.log(data);
     try {
       /* await fetch("/api-endpoint", {
@@ -29,6 +46,14 @@ const NewProductForm = ({ navigation }) => {
     navigation.goBack();
   };
 
+  const onNewSupplierPressed = () => {
+    goTo("NewSupplier");
+  };
+
+  const onNewCategoryPressed = () => {
+    goTo("NewCategory");
+  };
+
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
       <View style={newPasswordStyles.root}>
@@ -39,12 +64,15 @@ const NewProductForm = ({ navigation }) => {
           control={control}
           rules={{ required: "Name is required" }}
         />
-        <CustomInput
-          placeholder="Suplier"
-          name="suplier"
+        <CustomPicker
+          name="supplier"
+          able={true}
+          defaultValue={"0"}
+          options={["Supplier 1", "Supplier 2"]}
           control={control}
           rules={{ required: "Supplier is required" }}
         />
+        <CustomButton text="Add New Supplier" onPress={onNewSupplierPressed} />
         <CustomInput
           placeholder="Code Suplier"
           name="supcod"
@@ -52,38 +80,75 @@ const NewProductForm = ({ navigation }) => {
           rules={{ required: "Code supplier is required" }}
         />
         <CustomInput
-          placeholder="Category"
+          placeholder="Internal Code"
+          name="intcod"
+          control={control}
+          rules={{ required: "Code is required" }}
+        />
+        <CustomPicker
           name="category"
+          able={true}
+          defaultValue={"0"}
+          options={["Category 1", "Category 2"]}
           control={control}
           rules={{ required: "Category is required" }}
         />
+        <CustomButton text="Add New Category" onPress={onNewCategoryPressed}/>
         <CustomInput
           placeholder="Price"
           name="price"
+          type={"number"}
+          valueAsNumber
           control={control}
-          rules={{ required: "Price is required" }}
+          rules={{
+            required: "Price is required",
+            pattern: {
+              value: /^\d*\.?\d*$/,
+              message: "Only numbers allowed",
+            },
+          }}
         />
         <CustomInput
+          disabled
           placeholder="Suggested Price"
           name="sugprice"
           control={control}
-          rules={{ required: "Sugested price is required" }}
+          editable={false}
+          rules={{
+            required: "Sugested price is required",
+            pattern: {
+              value: /^\d*\.?\d*$/,
+              message: "Only numbers allowed",
+            },
+          }}
         />
         <CustomInput
           placeholder="Stock"
           name="stock"
           control={control}
-          rules={{ required: "Stock is required" }}
+          type={"number"}
+          showDecimals={false}
+          rules={{
+            required: "Stock is required",
+            pattern: {
+              value: /^[0-9]*$/,
+              message: "Only numbers allowed",
+            },
+          }}
         />
-        <CustomInput
-          placeholder="Unit"
+        <CustomPicker
           name="unit"
+          able={true}
+          defaultValue={"0"}
+          options={["Unit 1", "Unit 2"]}
           control={control}
           rules={{ required: "Unit is required" }}
         />
-        <CustomInput
-          placeholder="Type"
+        <CustomPicker
           name="type"
+          able={true}
+          defaultValue={"0"}
+          options={["Type 1", "Type 2"]}
           control={control}
           rules={{ required: "Type is required" }}
         />

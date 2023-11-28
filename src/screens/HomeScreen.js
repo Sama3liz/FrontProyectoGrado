@@ -2,7 +2,6 @@ import React, { useContext, useState } from "react";
 import { StyleSheet, Text, Pressable, View } from "react-native";
 import { AuthContext } from "../context/AuthContext";
 import CustomModal from "../components/Modal/CustomModal";
-import DataTableComponent from "../components/DataTables/DataTable";
 
 export default function HomeScreen() {
   const [visible, setVisible] = useState(false);
@@ -15,24 +14,7 @@ export default function HomeScreen() {
       <Text style={{ fontSize: 24, alignSelf: "center", marginTop: 10 }}>
         Hello, {user.payload.name}
       </Text>
-      <CustomModal visible={visible}>
-        <View style={styles.modalView}>
-          <Text style={styles.modalText}>Hello World!</Text>
-          <Pressable
-            style={[styles.button, styles.buttonClose]}
-            onPress={() => setVisible(false)}
-          >
-            <Text style={styles.textStyle}>Hide Modal</Text>
-          </Pressable>
-        </View>
-      </CustomModal>
-      <Pressable
-        style={[styles.button, styles.buttonOpen]}
-        onPress={() => setVisible(true)}
-      >
-        <Text style={styles.textStyle}>Show Modal</Text>
-      </Pressable>
-      <DataTableComponent/>
+      
       <Text
         onPress={onLogOutPress}
         style={{

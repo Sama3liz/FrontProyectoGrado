@@ -1,20 +1,21 @@
 import React from "react";
-import { View, Text, TextInput, StyleSheet } from "react-native";
+import { View, Text, StyleSheet } from "react-native";
 import { Controller } from "react-hook-form";
+import { Picker } from "@react-native-picker/picker";
 
-const CustomInput = ({
+const CustomPicker = ({
   control,
   name,
   rules = {},
-  placeholder,
-  secureTextEntry,
-  handleInputChange,
+  defaultValue,
+  able,
+  options = [],
 }) => {
   return (
     <Controller
-      defaultValue={""}
       control={control}
       name={name}
+      defaultValue={defaultValue}
       rules={rules}
       render={({
         field: { value, onChange, onBlur },
@@ -27,19 +28,16 @@ const CustomInput = ({
               { borderColor: error ? "red" : "#e8e8e8" },
             ]}
           >
-            <TextInput
-              value={value}
-              onChangeText={(text) => {
-                onChange(text);
-                if (handleInputChange) {
-                  handleInputChange(text);
-                }
-              }}
-              onBlur={onBlur}
-              placeholder={placeholder}
+            <Picker
+              enabled={able}
               style={styles.input}
-              secureTextEntry={secureTextEntry}
-            />
+              selectedValue={value}
+              onValueChange={(value) => onChange(parseInt(value, 10))}
+            >
+              {options.map((value, index) => {
+                return <Picker.Item key={index} label={value} value={index.toString()} />;
+              })}
+            </Picker>
           </View>
           {error && (
             <Text style={{ color: "red", alignSelf: "stretch" }}>
@@ -61,10 +59,10 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 5,
 
-    paddingHorizontal: 10,
+    paddingHorizontal: 0,
     marginVertical: 5,
   },
   input: {},
 });
 
-export default CustomInput;
+export default CustomPicker;

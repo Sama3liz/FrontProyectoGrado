@@ -26,9 +26,11 @@ const Company = ({ navigation }) => {
       <View style={newPasswordStyles.root}>
         <Text style={newPasswordStyles.title}>Company Data</Text>
         <CustomInput
-          placeholder="ID"
+          disabled
+          placeholder="RUC"
           name="id"
           type="number"
+          showDecimals={false}
           control={control}
           rules={{
             required: "RUC is required",

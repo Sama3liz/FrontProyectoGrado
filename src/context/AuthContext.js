@@ -1,6 +1,6 @@
 import React, { createContext, useState, useEffect } from "react";
 import { Amplify } from "aws-amplify";
-import amplifyconfig from "../src/amplifyconfiguration.json";
+import amplifyconfig from "../amplifyconfiguration.json";
 Amplify.configure(amplifyconfig, { ssr: true });
 import {
   signIn,
