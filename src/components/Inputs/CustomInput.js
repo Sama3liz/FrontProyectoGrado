@@ -38,9 +38,9 @@ const CustomInput = ({
               onChangeText={(text) => {
                 const isValidNumber = (text) => {
                   if (showDecimals) {
-                    return /^\d*\.?\d*$/.test(text); // Permite números con decimales
+                    return /^\d*\.?\d*$/.test(text); 
                   } else {
-                    return /^\d+$/.test(text); // Acepta solo números enteros
+                    return /^\d+$/.test(text); 
                   }
                 };
                 if (
@@ -62,7 +62,7 @@ const CustomInput = ({
                       : numericValue.toFixed(2)
                     : isNaN(numericValue)
                     ? ""
-                    : numericValue.toString().replace(/\.\d*/, ""); // Elimina los decimales si no se permiten
+                    : numericValue.toString().replace(/\.\d*/, ""); 
                   onChange(formattedValue);
                 }
                 onBlur();

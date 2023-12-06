@@ -4,24 +4,19 @@ import CustomInput from "../Inputs/CustomInput";
 import CustomButton from "../Buttons/CustomButton";
 import { newPasswordStyles } from "../../styles/screenStyles/NewPasswordStyles";
 import CustomPicker from "../Pickers/CustomPicker";
+import { addSupplier } from "../../utils/dbFunctions";
+import useNavigationHelpers from "../../utils/navigationHelpers";
 
 const NewSupplierForm = ({ navigation }) => {
   const { control, handleSubmit } = useForm();
-  const onSubmitPressed = /* async */ (data) => {
-    console.log(data);
-    try {
-      /* await fetch("http://127.0.0.1:3000/formulario_temporal", {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      }); */
-      console.log(data);
+  const { goBack, goTo } = useNavigationHelpers();
+
+  const onSubmitPressed = async (data) => {
+    const added = await addSupplier(data);
+    if (added) {
       navigation.goBack();
-    } catch (e) {
-      alert(e);
+    } else {
+      alert("Failed to add supplier");
     }
   };
 
@@ -35,7 +30,7 @@ const NewSupplierForm = ({ navigation }) => {
         <Text style={newPasswordStyles.title}>Register New Supplier</Text>
         <CustomPicker
           able={false}
-          options={["RUC","CI"]}
+          options={["RUC", "CI"]}
           name="tid"
           defaultValue="RUC"
           control={control}
@@ -45,7 +40,9 @@ const NewSupplierForm = ({ navigation }) => {
           placeholder="ID"
           name="id"
           type="number"
+          pattern="\d*"
           control={control}
+          showDecimals={false}
           rules={{
             required: "RUC is required",
             minLength: {

@@ -9,12 +9,13 @@ import {
   TextInput,
 } from "react-native";
 import React, { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
+import CustomButton from "../Buttons/CustomButton";
+import useNavigationHelpers from "../../utils/navigationHelpers";
 
 const numColumns = 4;
-const WIDTH = Dimensions.get("window").width;
 
-const CustomCard = ({ data }) => {
+const CustomCard = ({ data, helper, type }) => {
+  const { goTo } = useNavigationHelpers();
   const [filter, setFilter] = useState([]);
   const [master, setMaster] = useState([]);
   const [search, setSearch] = useState("");
@@ -24,16 +25,30 @@ const CustomCard = ({ data }) => {
     setMaster(data);
   }, [data]);
 
-  console.log(filter);
-
   const searchFilter = (text) => {
     if (text) {
       const newData = master.filter((item) => {
-        const itemData = item.title
-          ? item.title.toUpperCase()
-          : "".toUpperCase();
-        const textData = text.toUpperCase();
-        return itemData.indexOf(textData) > -1;
+        if (type === "clients") {
+          const itemData = item.firstName
+            ? item.firstName.toUpperCase()
+            : "".toUpperCase();
+          const textData = text.toUpperCase();
+          return itemData.indexOf(textData) > -1;
+        }
+        if (type === "inventory") {
+          const itemData = item.nombre_producto
+            ? item.nombre_producto.toUpperCase()
+            : "".toUpperCase();
+          const textData = text.toUpperCase();
+          return itemData.indexOf(textData) > -1;
+        }
+        if (type === "suppliers") {
+          const itemData = item.nombre_comercial
+            ? item.nombre_comercial.toUpperCase()
+            : "".toUpperCase();
+          const textData = text.toUpperCase();
+          return itemData.indexOf(textData) > -1;
+        }
       });
       setFilter(newData);
       setSearch(text);
@@ -42,30 +57,92 @@ const CustomCard = ({ data }) => {
       setSearch(text);
     }
   };
+
+  const onMorePressed = (item) => {
+    if (type === "suppliers") {
+      goTo("UserProfile", { id: item.id_proveedor });
+    }
+    if (type === "clients") {
+      goTo("UserProfile", { id: item.id_cliente });
+    }
+    if (type === "inventory") {
+      goTo("ProductProfile", { id: item.id_producto });
+    }
+  };
+
   return (
-    <View>
-      <TextInput
-        placeholder="Search Here"
-        value={search}
-        onChangeText={(text) => searchFilter(text)}
-      />
+    <>
+      <View style={styles.container}>
+        <TextInput
+          style={styles.input}
+          placeholder="Search Here"
+          value={search}
+          onChangeText={(text) => searchFilter(text)}
+        />
+      </View>
       <FlatList
         data={filter}
         numColumns={numColumns}
+        style={styles.container}
         renderItem={({ item }) => {
-          return (
-            <View style={styles.card}>
-              <Image
-                style={styles.cardImage}
-                source={{ uri: item.images[0] }}
-              />
-              <Text style={styles.cardText}>{item.title}</Text>
-            </View>
-          );
+          if (type === "clients") {
+            return (
+              <View style={styles.card}>
+                {/* <Image style={styles.cardImage} source={{ uri: item.image }} /> */}
+                <Text style={styles.cardText}>{item.apellido}</Text>
+                <Text style={styles.cardText}>{item.nombre}</Text>
+                <CustomButton
+                  text={helper}
+                  type="TERTIARY"
+                  onPress={() => onMorePressed(item)}
+                />
+              </View>
+            );
+          }
+          if (type === "inventory") {
+            return (
+              <View style={styles.card}>
+                {/* <Image
+                  style={styles.cardImage}
+                  source={{ uri: item.images[0] }}
+                /> */}
+                <Text style={styles.cardText}>{item.nombre_producto}</Text>
+                <CustomButton
+                  text={helper}
+                  type="TERTIARY"
+                  onPress={() => onMorePressed(item)}
+                />
+              </View>
+            );
+          }
+          if (type === "suppliers") {
+            return (
+              <View style={styles.card}>
+                {/* <Image style={styles.cardImage} source={{ uri: item.image }} /> */}
+                <Text style={styles.cardText}>{item.nombre_comercial}</Text>
+                <Text style={styles.cardText}>RUC: {item.identificacion}</Text>
+                <CustomButton
+                  text={helper}
+                  type="TERTIARY"
+                  onPress={() => onMorePressed(item)}
+                />
+              </View>
+            );
+          }
         }}
-        keyExtractor={(item) => item.id.toString()} // Asegúrate de ajustar esto a la propiedad que representa la clave única de cada elemento
+        keyExtractor={(item) => {
+          if (type === "inventory") {
+            item.id_producto.toString();
+          }
+          if (type === "clients") {
+            item.id_cliente.toString();
+          }
+          if (type === "suppliers") {
+            item.id_proveedor.toString();
+          }
+        }}
       />
-    </View>
+    </>
   );
 };
 
@@ -76,7 +153,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     marginBottom: 10,
     marginLeft: 20,
-    width: "96%",
+    width: "100%",
     shadowColor: "#000",
     shadowOpacity: 0.2,
     shadowRadius: 1,
@@ -94,4 +171,20 @@ const styles = StyleSheet.create({
     padding: 10,
     fontSize: 16,
   },
+  cardSubText: {
+    padding: 10,
+    fontSize: 12,
+  },
+  container: {
+    backgroundColor: "white",
+    width: "100%",
+
+    borderColor: "#e8e8e8",
+    borderWidth: 1,
+    borderRadius: 5,
+
+    paddingHorizontal: 10,
+    marginVertical: 5,
+  },
+  input: {},
 });

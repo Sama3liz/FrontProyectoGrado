@@ -1,8 +1,8 @@
 import React, { useContext } from "react";
 import { Text, View } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { globalStyles } from "../styles/GlobalStyles";
-import CustomButton from "../components/Buttons/CustomButton";
+import CustomButton from "../../components/Buttons/CustomButton";
+import { newPasswordStyles } from "../../styles/screenStyles/NewPasswordStyles";
 
 export default function SettingsScreen() {
   const navigation = useNavigation();
@@ -10,9 +10,10 @@ export default function SettingsScreen() {
     navigation.navigate("Company");
   };
   return (
-    <View style={globalStyles.container}>
-      <Text>Here are the most important configurations, take care when you change it.</Text>
+    <View style={newPasswordStyles.root}>
       <CustomButton text="Company" onPress={onCompanyPress} />
+      <CustomButton text="Profile" />
+      <CustomButton text="Appearance" />
     </View>
   );
 }

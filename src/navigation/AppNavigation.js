@@ -11,6 +11,7 @@ import AuthStack from "./AuthStack";
 
 const AppNavigation = () => {
   const { loading, user } = useContext(AuthContext);
+
   if (loading) {
     return (
       <View
@@ -22,7 +23,7 @@ const AppNavigation = () => {
   }
   return (
     <SafeAreaView style={styles.root}>
-      {user !== undefined ? <AppStack /> : <AuthStack />}
+      {user ? <AppStack /> : <AuthStack />}
     </SafeAreaView>
   );
 };

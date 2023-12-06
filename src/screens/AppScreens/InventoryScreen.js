@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, ScrollView, FlatList } from "react-native";
-import CustomButton from "../components/Buttons/CustomButton";
-import { useNavigation } from "@react-navigation/native";
-import { newPasswordStyles } from "../styles/screenStyles/NewPasswordStyles";
-import CustomCard from "../components/Card/CustomCard";
+import CustomButton from "../../components/Buttons/CustomButton";
+import { newPasswordStyles } from "../../styles/screenStyles/NewPasswordStyles";
+import CustomCard from "../../components/Card/CustomCard";
+import { fetchData } from "../../utils/dbFunctions";
+import useNavigationHelpers from "../../utils/navigationHelpers";
 
 const InventoryScreen = () => {
   const [products, setProducts] = useState([]);
-  const navigation = useNavigation();
+  const { goTo } = useNavigationHelpers();
 
   useEffect(() => {
     loadData();
@@ -15,22 +16,17 @@ const InventoryScreen = () => {
 
   const loadData = async () => {
     try {
-      const response = await fetch("https://dummyjson.com/products", {
-        method: "GET",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-      });
-      const data = await response.json();
-      setProducts(data.products)
-    } catch (e) {
+      const data = await fetchData(
+        "https://c9ng6xj8f5.execute-api.us-east-1.amazonaws.com/getInv"
+      );
+      setProducts(data);
+    } catch (error) {
       console.error("Error fetching data:", error);
     }
   };
 
   const onNewPressed = () => {
-    navigation.navigate("NewProduct");
+    goTo("NewProduct");
   };
 
   const onPlusPressed = () => {
@@ -44,11 +40,10 @@ const InventoryScreen = () => {
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
       <View style={newPasswordStyles.root}>
-        <Text style={newPasswordStyles.title}>Inventory</Text>
         <CustomButton text="New" onPress={onNewPressed} />
         <CustomButton text="+" onPress={onPlusPressed} type="SECONDARY" />
         <CustomButton text="-" onPress={onMinusPressed} type="SECONDARY" />
-        <CustomCard data={products}/>
+        <CustomCard data={products} helper={"Details"} type={"inventory"}/>
       </View>
     </ScrollView>
   );

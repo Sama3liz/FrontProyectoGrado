@@ -4,9 +4,7 @@ import {
   Image,
   useWindowDimensions,
   ScrollView,
-  StyleSheet,
   Text,
-  Pressable,
 } from "react-native";
 import Logo from "../../assets/Logo_1.png";
 import CustomInput from "../../components/Inputs/CustomInput";

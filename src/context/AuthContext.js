@@ -1,7 +1,4 @@
 import React, { createContext, useState, useEffect } from "react";
-import { Amplify } from "aws-amplify";
-import amplifyconfig from "../amplifyconfiguration.json";
-Amplify.configure(amplifyconfig, { ssr: true });
 import {
   signIn,
   signOut,
@@ -30,7 +27,11 @@ export const AuthProvider = ({ children }) => {
       setUser(idToken);
     } catch (err) {
       setUser(null)
-      setError(error.message);
+      if (err && err.message) {
+        setError(err.message);
+      } else {
+        setError('An unknown error occurred');
+      }
     } finally {
       setLoading(false);
     }

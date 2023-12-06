@@ -13,7 +13,12 @@
     },
     "categories": {
       "auth": {
-        "proyectogrado": {}
+        "proyectogrado9ee3a968": {
+          "userPoolId": "us-east-1_TT9NJwQM7",
+          "userPoolName": "ProyectoGrado",
+          "webClientId": "a5flf0vnitgj18gmfv6a2bg5u",
+          "nativeClientId": "a5flf0vnitgj18gmfv6a2bg5u"
+        }
       }
     }
   }

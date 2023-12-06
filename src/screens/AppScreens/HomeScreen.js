@@ -1,10 +1,9 @@
 import React, { useContext, useState } from "react";
 import { StyleSheet, Text, Pressable, View } from "react-native";
-import { AuthContext } from "../context/AuthContext";
-import CustomModal from "../components/Modal/CustomModal";
+import { AuthContext } from "../../context/AuthContext";
+import CustomModal from "../../components/Modal/CustomModal";
 
 export default function HomeScreen() {
-  const [visible, setVisible] = useState(false);
   const { logOut, user } = useContext(AuthContext);
   const onLogOutPress = () => {
     logOut();

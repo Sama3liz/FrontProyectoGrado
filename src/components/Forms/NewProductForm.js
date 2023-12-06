@@ -4,41 +4,85 @@ import CustomInput from "../Inputs/CustomInput";
 import CustomButton from "../Buttons/CustomButton";
 import { newPasswordStyles } from "../../styles/screenStyles/NewPasswordStyles";
 import CustomPicker from "../Pickers/CustomPicker";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import useNavigationHelpers from "../../utils/navigationHelpers";
+import { addProductToInventory, fetchData } from "../../utils/dbFunctions";
 
 const NewProductForm = ({ navigation }) => {
   const { control, handleSubmit, watch, setValue } = useForm();
-  const { goTo } = useNavigationHelpers();
+  const { goTo, goBack } = useNavigationHelpers();
+  const [categories, setCategories] = useState([]);
+  const [idCategory, setIdCategory] = useState(0);
+  const [suppliers, setSuppliers] = useState([]);
+  const [idSupplier, setIdSupplier] = useState(0);
+  const [types, setTypes] = useState([]);
+  const [idType, setIdType] = useState(0);
+  const [idUnit, setIdUnit] = useState(0);
   const price = watch("price");
+  const category = watch("category");
+
+  const extractInitials = (categoryName) => {
+    const words = categoryName.split(" ");
+    const initials = words.map((word) => word.charAt(0)).join("");
+    return initials.toUpperCase();
+  };
 
   useEffect(() => {
+    load_data_sup();
+    load_data_cat();
+    load_data_type();
     if (price) {
       const sugPrice = (price * 1.3).toFixed(2);
       setValue("sugprice", sugPrice);
     }
-  }, [price, setValue]);
+    if (category) {
+      const sugCode = extractInitials(category);
+      setValue("intcod", sugCode);
+    }
+  }, [price, setValue, category]);
 
-  const onSubmitPressed = /* async */ (data) => {
-    console.log(data);
-    data.price = parseFloat(data.price);
-    data.sugprice = parseFloat(data.sugprice);
-    data.stock = parseInt(data.stock, 10);
-    data.supplier = parseInt(data.supplier, 10);
-    console.log(data);
+  const load_data_sup = async () => {
     try {
-      /* await fetch("/api-endpoint", {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      }); */
-      console.log(data);
-      navigation.goBack();
-    } catch (e) {
-      alert(e);
+      const data = await fetchData(
+        "https://c9ng6xj8f5.execute-api.us-east-1.amazonaws.com/getSup"
+      );
+      const array = data.map((item) => item.identificacion);
+      setSuppliers(array);
+    } catch (error) {
+      console.error("Error fetching supplier data:", error);
+    }
+  };
+
+  const load_data_cat = async () => {
+    try {
+      const data = await fetchData(
+        "https://c9ng6xj8f5.execute-api.us-east-1.amazonaws.com/getCat"
+      );
+      const array = data.map((item) => item.nombre_categoria);
+      setCategories(array);
+    } catch (error) {
+      console.error("Error fetching category data:", error);
+    }
+  };
+
+  const load_data_type = async () => {
+    try {
+      const data = await fetchData(
+        "https://c9ng6xj8f5.execute-api.us-east-1.amazonaws.com/getType"
+      );
+      const array = data.map((item) => item.tipo);
+      setTypes(array);
+    } catch (error) {
+      console.error("Error fetching type data:", error);
+    }
+  };
+
+  const onSubmitPressed = async (data) => {
+    try {
+      await addProductToInventory(data, idCategory, idSupplier, idType, idUnit);
+      /* navigation.goBack(); */
+    } catch (error) {
+      alert(error);
     }
   };
 
@@ -67,33 +111,35 @@ const NewProductForm = ({ navigation }) => {
         <CustomPicker
           name="supplier"
           able={true}
-          defaultValue={"0"}
-          options={["Supplier 1", "Supplier 2"]}
+          options={suppliers}
           control={control}
+          setIndex={setIdSupplier}
           rules={{ required: "Supplier is required" }}
         />
         <CustomButton text="Add New Supplier" onPress={onNewSupplierPressed} />
         <CustomInput
-          placeholder="Code Suplier"
+          placeholder="Code Supplier"
           name="supcod"
           control={control}
           rules={{ required: "Code supplier is required" }}
         />
-        <CustomInput
-          placeholder="Internal Code"
-          name="intcod"
-          control={control}
-          rules={{ required: "Code is required" }}
-        />
         <CustomPicker
           name="category"
           able={true}
-          defaultValue={"0"}
-          options={["Category 1", "Category 2"]}
+          options={categories}
           control={control}
+          setIndex={setIdCategory}
           rules={{ required: "Category is required" }}
         />
-        <CustomButton text="Add New Category" onPress={onNewCategoryPressed}/>
+        <CustomButton text="Add New Category" onPress={onNewCategoryPressed} />
+        <CustomInput
+          disabled
+          placeholder="Internal Code"
+          name="intcod"
+          control={control}
+          editable={false}
+          rules={{ required: "Code is required" }}
+        />
         <CustomInput
           placeholder="Price"
           name="price"
@@ -139,18 +185,37 @@ const NewProductForm = ({ navigation }) => {
         <CustomPicker
           name="unit"
           able={true}
-          defaultValue={"0"}
-          options={["Unit 1", "Unit 2"]}
+          options={[
+            "Meters",
+            "Liters",
+            "Gallons",
+            "Units",
+            "Kilograms",
+            "Pounds",
+            "Inches",
+            "Centimeters",
+            "Milliliters",
+            "Fluid Ounces",
+          ]}
+          /* const unidadesDeMedida = ['Metros', 'Litros', 'Galones', 'Unidades', 'Kilogramos', 'Libras', 'Pulgadas', 'Centímetros', 'Mililitros', 'Onzas líquidas'];
+           */
           control={control}
+          setIndex={setIdUnit}
           rules={{ required: "Unit is required" }}
         />
         <CustomPicker
           name="type"
           able={true}
-          defaultValue={"0"}
-          options={["Type 1", "Type 2"]}
+          options={types}
           control={control}
+          setIndex={setIdType}
           rules={{ required: "Type is required" }}
+        />
+        <CustomInput
+          placeholder="Details"
+          name="details"
+          control={control}
+          rules={{}}
         />
         <CustomInput
           placeholder="Image"

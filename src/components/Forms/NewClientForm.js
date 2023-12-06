@@ -4,24 +4,18 @@ import CustomInput from "../Inputs/CustomInput";
 import CustomButton from "../Buttons/CustomButton";
 import { newPasswordStyles } from "../../styles/screenStyles/NewPasswordStyles";
 import CustomPicker from "../Pickers/CustomPicker";
+import { addClient } from "../../utils/dbFunctions";
 
 const NewClientForm = ({ navigation }) => {
   const { control, handleSubmit, watch } = useForm();
 
-  const onSubmitPressed = (data) => {
+  const onSubmitPressed = async(data) => {
     try {
-      /* await fetch("/api-endpoint", {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      }); */
+      await addClient(data);
       console.log(data);
       navigation.goBack();
-    } catch (e) {
-      console.log(e);
+    } catch (error) {
+      console.log(error);
     }
   };
 

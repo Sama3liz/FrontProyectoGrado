@@ -14,13 +14,14 @@ import {
   createDrawerNavigator,
 } from "@react-navigation/drawer";
 import USER from "../assets/user-default-96.png";
-import HomeScreen from "../screens/HomeScreen";
-import SuppliersScreen from "../screens/SuppliersScreen";
-import KardexScreen from "../screens/KardexScreen";
-import InventoryScreen from "../screens/InventoryScreen";
-import ClientsScreen from "../screens/ClientsScreen";
-import SettingsScreen from "../screens/SettingsScreen";
+import HomeScreen from "../screens/AppScreens/HomeScreen";
+import SuppliersScreen from "../screens/AppScreens/SuppliersScreen";
+import AccountingScreen from "../screens/AppScreens/AccountingScreen";
+import InventoryScreen from "../screens/AppScreens/InventoryScreen";
+import ClientsScreen from "../screens/AppScreens/ClientsScreen";
+import SettingsScreen from "../screens/AppScreens/SettingsScreen";
 import { AuthContext } from "../context/AuthContext";
+import BillingScreen from "../screens/AppScreens/BillingScreen";
 
 const Drawer = createDrawerNavigator();
 
@@ -149,6 +150,17 @@ function SideNavigation() {
         component={ClientsScreen}
       />
       <Drawer.Screen
+        name="Billing"
+        options={{
+          drawerLabel: "Billing",
+          title: "Billing",
+          drawerIcon: () => (
+            <FontAwesome5 name="money-bill" size={20} color={"#808080"} />
+          ),
+        }}
+        component={BillingScreen}
+      />
+      <Drawer.Screen
         name="Accounting"
         options={{
           drawerLabel: "Accounting",
@@ -157,7 +169,7 @@ function SideNavigation() {
             <FontAwesome5 name="cash-register" size={20} color={"#808080"} />
           ),
         }}
-        component={KardexScreen}
+        component={AccountingScreen}
       />
       <Drawer.Screen
         name="Settings"

@@ -1,11 +1,45 @@
 {
   "auth": {
-    "proyectogrado": {
+    "proyectogrado9ee3a968": {
       "customAuth": false,
       "dependsOn": [],
       "providerPlugin": "awscloudformation",
       "service": "Cognito",
       "serviceType": "imported"
+    }
+  },
+  "parameters": {
+    "AMPLIFY_auth_proyectogrado9ee3a968_nativeClientId": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "proyectogrado9ee3a968"
+        }
+      ]
+    },
+    "AMPLIFY_auth_proyectogrado9ee3a968_userPoolId": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "proyectogrado9ee3a968"
+        }
+      ]
+    },
+    "AMPLIFY_auth_proyectogrado9ee3a968_userPoolName": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "proyectogrado9ee3a968"
+        }
+      ]
+    },
+    "AMPLIFY_auth_proyectogrado9ee3a968_webClientId": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "proyectogrado9ee3a968"
+        }
+      ]
     }
   }
 }

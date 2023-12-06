@@ -3,16 +3,17 @@ import { View, Text, ScrollView } from "react-native";
 import CustomInput from "../Inputs/CustomInput";
 import CustomButton from "../Buttons/CustomButton";
 import { newPasswordStyles } from "../../styles/screenStyles/NewPasswordStyles";
+import { addCategory } from "../../utils/dbFunctions";
 
 const NewCategoryForm = ({ navigation }) => {
   const { control, handleSubmit } = useForm();
-  const onSubmitPressed = /* async */ (data) => {
-    console.log(data);
+
+  const onSubmitPressed = async (data) => {
     try {
-      console.log(data);
+      await addCategory(data);
       navigation.goBack();
-    } catch (e) {
-      alert(e);
+    } catch (error) {
+      alert(error);
     }
   };
 
