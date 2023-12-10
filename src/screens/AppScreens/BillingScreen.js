@@ -2,13 +2,10 @@ import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
-  StyleSheet,
-  FlatList,
   TouchableOpacity,
+  FlatList,
   TextInput,
-  ScrollView,
 } from "react-native";
-import { ProgressBar } from "react-native-elements";
 import CustomButton from "../../components/Buttons/CustomButton";
 import useNavigationHelpers from "../../utils/navigationHelpers";
 import {
@@ -20,12 +17,17 @@ import {
   handleQuantityChange,
   calculateChange,
 } from "../../utils/useBilling";
-import { signInStyles } from "../../styles/screenStyles/SignInStyles";
+import styles from "../../styles/styles";
 import CustomInput from "../../components/Inputs/CustomInput";
 import { useForm } from "react-hook-form";
+import { useError } from "../../context/ErrorContext";
+import { ScrollView } from "react-native-gesture-handler";
+import CartItem from "../../components/Card/CustomItemCard";
+import { Ionicons } from "@expo/vector-icons";
 
 const BillingScreen = () => {
   const { goTo } = useNavigationHelpers();
+  const { errorMessage, setErrorMessage, clearError } = useError();
   const { control, handleSubmit, watch, setValue } = useForm();
   const [step, setStep] = useState(1);
   const [selectedProducts, setSelectedProducts] = useState([]);
@@ -50,25 +52,35 @@ const BillingScreen = () => {
     calculateTotals(selectedProducts, setTotals);
   }, [selectedProducts]);
 
-  const searchCustomer = async () => {
-    const isCustomerFound = await searchCustomerById(
-      customerId,
-      setCustomerData
-    );
-    if (isCustomerFound) {
-      console.log("Customer found");
-      setValue("ssn", customerData.ssn);
-      setValue("name", customerData.firstName + " " + customerData.lastName);
+  const setSearchCustomer = (customerData) => {
+    if (customerData !== null) {
+      clearError();
+      setValue("name", customerData.firstName);
+      setValue("lastname", customerData.lastName);
       setValue("email", customerData.email);
       setValue("address", customerData.address.address);
       setValue("phone", customerData.phone);
     } else {
-      console.log("Customer not found");
-      setValue("ssn", "");
+      setErrorMessage("Client not found");
       setValue("name", "");
+      setValue("lastname", "");
       setValue("email", "");
       setValue("address", "");
       setValue("phone", "");
+    }
+  };
+
+  const searchCustomer = async () => {
+    try {
+      if (customerId) {
+        const data = await searchCustomerById(customerId, setCustomerData);
+        setSearchCustomer(data);
+      } else {
+        setErrorMessage("CI/RUC must be");
+      }
+    } catch (error) {
+      console.log(error);
+      setCustomerData(null);
     }
   };
 
@@ -119,43 +131,48 @@ const BillingScreen = () => {
     calculateChange(text, totals, setChange);
   };
 
-  const renderProductItem = ({ item }) => (
-    <View style={styles.productItem}>
-      <View>
-        <Text>{item.title}</Text>
-        <Text>${item.price.toFixed(2)}</Text>
-      </View>
-      <View style={signInStyles.root}>
-        <CustomButton
-          text={"-"}
-          type="SECONDARY"
-          onPress={() => quantityChange(item.id, item.quantity - 1)}
-        />
-        <TextInput
-          style={styles.quantityInput}
-          value={item.quantity.toString()}
-          onChangeText={(text) => quantityChange(item.id, text)}
-          keyboardType="numeric"
-        />
-        <CustomButton
-          text={"+"}
-          type="SECONDARY"
-          onPress={() => productSelection(item)}
-        />
-        <CustomButton
-          text={"Remove"}
-          type="SECONDARY"
-          onPress={() => removeFromInvoice(item.id)}
-        />
+  const handleInputChange = () => {
+    clearError();
+  };
+
+  const handleIDChange = (text) => {
+    clearError();
+    setCustomerId(text);
+  };
+
+  const renderProductSelected = ({ item }) => (
+    <View style={styles.itemContainer}>
+      <TouchableOpacity
+        style={styles.removeButton}
+        onPress={() => removeFromInvoice(item.id)}
+      >
+        <Ionicons name="trash-bin-outline" size={24} color="red" />
+      </TouchableOpacity>
+      <View style={styles.itemDetails}>
+        <Text style={styles.itemName}>{item.title}</Text>
       </View>
     </View>
   );
 
+  const renderProductList = ({ item }) => (
+    <View style={styles.itemContainer}>
+      <View style={styles.itemDetails}>
+        <Text style={styles.itemName}>{item.title}</Text>
+      </View>
+      <TouchableOpacity
+        style={styles.removeButton}
+        onPress={() => addToInvoice(item.id)}
+      >
+        <Ionicons name="ios-add-circle-outline" size={24} color="green" />
+      </TouchableOpacity>
+    </View>
+  );
+
   const renderPaymentFields = () => {
-    if (paymentMethod === "Efectivo") {
+    if (paymentMethod === "Cash") {
       return (
         <>
-          <View style={signInStyles.root}>
+          <View style={styles.root}>
             <Text>Total:</Text>
             <Text style={styles.input}>${totals.total.toFixed(2)}</Text>
             <Text>Cash:</Text>
@@ -164,6 +181,8 @@ const BillingScreen = () => {
               keyboardType="numeric"
               placeholder="Ingrese el monto"
               onChangeText={(text) => {
+                clearError();
+                setCashInput(text);
                 cashChange(text, totals);
               }}
             />
@@ -172,10 +191,7 @@ const BillingScreen = () => {
           </View>
         </>
       );
-    } else if (
-      paymentMethod === "Tarjeta" ||
-      paymentMethod === "Transferencia"
-    ) {
+    } else if (paymentMethod === "Card" || paymentMethod === "Transfer") {
       return (
         <CustomButton
           text={"Go to payment platform"}
@@ -190,18 +206,33 @@ const BillingScreen = () => {
   const onNextPressed = (data) => {
     if (step === 1) {
       console.log(data);
+      clearError();
       setStep(step + 1);
     }
     if (step === 2) {
       if (selectedProducts.length === 0) {
-        console.log("Please add at least one product to the invoice");
+        setErrorMessage("Please add at least one product to the invoice");
       } else {
+        clearError();
         setStep(step + 1);
       }
     }
     if (step === 3) {
-      console.log(change);
-      setStep(step + 1);
+      if (paymentMethod !== "") {
+        if (paymentMethod === "Cash" && cashInput !== "") {
+          if (parseFloat(cashInput) > totals.total.toFixed(2)) {
+            clearError();
+            setStep(step + 1);
+          } else {
+            setErrorMessage("Put an amount higher than total");
+          }
+        } else {
+          setErrorMessage("Put a cash value");
+        }
+        paymentMethod !== "Cash" ? setStep(step + 1) : null;
+      } else {
+        setErrorMessage("Choose a payment method");
+      }
     }
   };
 
@@ -214,17 +245,20 @@ const BillingScreen = () => {
     const newBilling = {
       ...data,
       totals,
+      paymentMethod,
+      change,
       products: selectedProducts,
     };
     console.log(newBilling);
     setValue("ci", "");
-    setValue("ssn", "");
     setValue("name", "");
     setValue("email", "");
     setValue("address", "");
     setValue("phone", "");
     setSelectedProducts([]);
+    setFilteredProducts([]);
     setChange("");
+    clearError();
     setStep(1);
   };
 
@@ -235,20 +269,31 @@ const BillingScreen = () => {
           <>
             <Text style={styles.title}>Customer Data</Text>
             <View style={styles.customerDetails}>
+              {errorMessage ? (
+                <Text style={styles.error}>{errorMessage}</Text>
+              ) : null}
               <CustomInput
                 name="ci"
                 placeholder="CI/RUC"
                 control={control}
-                handleInputChange={setCustomerId}
+                handleInputChange={handleIDChange}
                 rules={{ required: "CI/RUC is required" }}
               />
-              <CustomButton text={"Search"} onPress={searchCustomer} />
-              <CustomInput name="ssn" placeholder="SSN" control={control} />
+              <View>
+                <CustomButton text={"Search"} onPress={searchCustomer} />
+              </View>
               <CustomInput
                 name="name"
                 placeholder="Name"
                 control={control}
                 rules={{ required: "Name is required" }}
+                handleInputChange={handleInputChange}
+              />
+              <CustomInput
+                name="lastname"
+                placeholder="Last name"
+                control={control}
+                rules={{ required: "Last name is required" }}
               />
               <CustomInput
                 name="email"
@@ -269,98 +314,143 @@ const BillingScreen = () => {
                 rules={{ required: "Address is required" }}
               />
             </View>
-            <CustomButton text={"Next"} onPress={handleSubmit(onNextPressed)} />
+            <View style={styles.buttonContainer}>
+              <CustomButton
+                text={"Next"}
+                onPress={handleSubmit(onNextPressed)}
+              />
+            </View>
           </>
         );
       case 2:
         return (
           <>
-            <Text style={styles.title}>Products</Text>
-            <View style={signInStyles.root}>
-              <TextInput
-                style={styles.input}
-                value={searchQuery}
-                onChangeText={(text) => setSearchQuery(text)}
-                placeholder="Search by name or code"
-              />
-              <CustomButton text={"Search"} onPress={handleSearch} />
+            <View style={styles.containerCol}>
+              <Text style={styles.title}>Products</Text>
+              <View style={styles.customerDetails}>
+                {errorMessage ? (
+                  <Text style={styles.error}>{errorMessage}</Text>
+                ) : null}
+                <TextInput
+                  style={styles.input}
+                  value={searchQuery}
+                  onChangeText={(text) => setSearchQuery(text)}
+                  placeholder="Search by name or code"
+                />
+                <CustomButton text={"Search"} onPress={handleSearch} />
+              </View>
+              <View style={styles.containerRow}>
+                {filteredProducts.length !== 0 ? (
+                  <View style={[styles.searchProduct, { height: 300 }]}>
+                    <FlatList
+                      data={filteredProducts}
+                      renderItem={renderProductList}
+                      keyExtractor={(item) => item.id.toString()}
+                    />
+                  </View>
+                ) : (
+                  <View style={styles.searchProduct}>
+                    <Text>Search a product</Text>
+                  </View>
+                )}
+                {selectedProducts.length !== 0 ? (
+                  <View style={[styles.selectedProducts, { height: 300 }]}>
+                    <FlatList
+                      data={selectedProducts}
+                      renderItem={renderProductSelected}
+                      keyExtractor={(item) => item.id.toString()}
+                    />
+                  </View>
+                ) : (
+                  <View style={styles.selectedProducts}>
+                    <Text>No products selected</Text>
+                  </View>
+                )}
+              </View>
+              <View style={styles.buttonRowContainer}>
+                <CustomButton text={"Back"} onPress={onBackPressed} />
+                <CustomButton
+                  text={"Next"}
+                  onPress={handleSubmit(onNextPressed)}
+                />
+              </View>
             </View>
-            <FlatList
-              data={filteredProducts}
-              renderItem={({ item }) => (
-                <View style={styles.productItem}>
-                  <Text>{item.title}</Text>
-                  <Text>${item.price.toFixed(2)}</Text>
-                  <CustomButton
-                    text={"+"}
-                    onPress={() => addToInvoice(item.id)}
-                  />
-                </View>
-              )}
-              keyExtractor={(item) => item.id.toString()}
-            />
-            <View style={styles.cartContainer}>
-              <FlatList
-                data={selectedProducts}
-                renderItem={renderProductItem}
-                keyExtractor={(item) => item.id.toString()}
-              />
-            </View>
-            <View style={styles.billSummary}>
-              <Text>Total: ${totals.total.toFixed(2)}</Text>
-            </View>
-            <CustomButton text={"Next"} onPress={handleSubmit(onNextPressed)} />
-            <CustomButton text={"Back"} onPress={onBackPressed} />
           </>
         );
       case 3:
         return (
           <>
             <Text style={styles.title}>Choose Payment</Text>
+            {errorMessage ? (
+              <Text style={styles.error}>{errorMessage}</Text>
+            ) : null}
             <View style={styles.customerDetails}>
-              <CustomButton
-                text={"Cash"}
-                onPress={() => setPaymentMethod("Efectivo")}
-              />
-              <CustomButton
-                text={"Card"}
-                onPress={() => setPaymentMethod("Tarjeta")}
-              />
-              <CustomButton
-                text={"Transfer"}
-                onPress={() => setPaymentMethod("Transferencia")}
-              />
-              {renderPaymentFields()}
+              <View style={styles.containerRow}>
+                <CustomButton
+                  text={"Cash"}
+                  type="SECONDARY"
+                  onPress={() => setPaymentMethod("Cash")}
+                />
+                <CustomButton
+                  text={"Card"}
+                  type="SECONDARY"
+                  onPress={() => setPaymentMethod("Card")}
+                />
+                <CustomButton
+                  text={"Transfer"}
+                  type="SECONDARY"
+                  onPress={() => setPaymentMethod("Transfer")}
+                />
+              </View>
             </View>
-            <CustomButton text={"Next"} onPress={handleSubmit(onNextPressed)} />
-            <CustomButton text={"Back"} onPress={onBackPressed} />
+            <View style={styles.customerDetails}>{renderPaymentFields()}</View>
+            <View style={styles.buttonRowContainer}>
+              <CustomButton text={"Back"} onPress={onBackPressed} />
+              <CustomButton
+                text={"Next"}
+                onPress={handleSubmit(onNextPressed)}
+              />
+            </View>
           </>
         );
       case 4:
         return (
           <>
             <Text style={styles.title}>Resume</Text>
-            <View style={styles.cartContainer}>
-              <FlatList
-                data={selectedProducts}
-                renderItem={renderProductItem}
-                keyExtractor={(item) => item.id.toString()}
+            {selectedProducts.map((product) => (
+              <CartItem
+                key={product.id}
+                item={product}
+                onRemoveProduct={() => removeFromInvoice(product.id)}
+                onQuantityIncrease={() => productSelection(product)}
+                onQuantityDecrease={() =>
+                  quantityChange(product.id, product.quantity - 1)
+                }
+                onQuantityChange={(text) => quantityChange(product.id, text)}
               />
-            </View>
+            ))}
             <View style={styles.billSummary}>
+              {paymentMethod === "Cash" ? (
+                <View>
+                  <Text>Method: {paymentMethod}</Text>
+                  <Text>Change: ${change}</Text>
+                </View>
+              ) : (
+                <Text>Method: {paymentMethod}</Text>
+              )}
               <Text>Subtotal: ${totals.subtotal.toFixed(2)}</Text>
               <Text>Tarifa 0: ${totals.tariff0.toFixed(2)}</Text>
               <Text>Tarifa 12: ${totals.tariff12.toFixed(2)}</Text>
               <Text>12% IVA: ${totals.iva12.toFixed(2)}</Text>
               <Text>Total: ${totals.total.toFixed(2)}</Text>
-              {change !== "" ? <Text>Change: ${change}</Text> : ""}
-              {/* Botón para procesar el pago */}
               <CustomButton
                 text={"Send"}
                 onPress={handleSubmit(onSubmitPressed)}
               />
             </View>
-            <CustomButton text={"Back"} onPress={onBackPressed} />
+            <View style={styles.buttonContainer}>
+              <CustomButton text={"Back"} onPress={onBackPressed} />
+            </View>
           </>
         );
       default:
@@ -368,93 +458,13 @@ const BillingScreen = () => {
     }
   };
 
-  const goToPayment = () => {};
-
   return (
-    <ScrollView showsVerticalScrollIndicator={false}>
-      <View style={styles.container}>{renderStepContent()}</View>
+    <ScrollView>
+      <View style={styles.container}>
+        <View style={styles.containerCol}>{renderStepContent()}</View>
+      </View>
     </ScrollView>
   );
 };
-
-const styles = StyleSheet.create({
-  cartContainer: {
-    padding: 20,
-  },
-  container: {
-    flex: 1,
-    padding: 20,
-  },
-  buttonContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between", // O el tipo de espaciado que desees
-    marginTop: 20, // Esto es opcional, según la separación que desees
-  },
-  searchContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginBottom: 20,
-  },
-  input: {
-    flex: 1,
-    borderWidth: 1,
-    borderColor: "#ccc",
-    padding: 10,
-    borderRadius: 5,
-    marginRight: 10,
-  },
-  customerDetails: {
-    marginTop: 20,
-    borderWidth: 1,
-    borderColor: "#ccc",
-    padding: 10,
-    borderRadius: 5,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: "bold",
-    marginBottom: 20,
-  },
-  productItem: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    padding: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: "#ccc",
-  },
-  quantityContainer: {
-    flexDirection: "row",
-    alignItems: "right",
-  },
-  quantityInput: {
-    padding: 8,
-    marginVertical: 3,
-    borderRadius: 5,
-    borderWidth: 1,
-    borderColor: "#ccc",
-    fontSize: 14, // Tamaño de la fuente para el input
-    width: 40, // Ancho máximo para tres dígitos
-    textAlign: "center", // Alineación del texto al centro
-  },
-  billSummary: {
-    marginTop: 20,
-    borderTopWidth: 1,
-    borderTopColor: "#ccc",
-    paddingTop: 10,
-    alignItems: "center",
-  },
-  progressBar: {
-    height: 5,
-    backgroundColor: "lightgray",
-  },
-  progressBarContainer: {
-    width: "100%",
-    height: 5,
-  },
-  progressBarIndicator: {
-    backgroundColor: "blue",
-  },
-});
 
 export default BillingScreen;

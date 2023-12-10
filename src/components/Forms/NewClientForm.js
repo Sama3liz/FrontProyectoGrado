@@ -1,26 +1,30 @@
 import { useForm } from "react-hook-form";
 import { View, Text, ScrollView } from "react-native";
-import CustomInput from "../Inputs/CustomInput";
 import CustomButton from "../Buttons/CustomButton";
 import { newPasswordStyles } from "../../styles/screenStyles/NewPasswordStyles";
 import CustomPicker from "../Pickers/CustomPicker";
 import { addClient } from "../../utils/dbFunctions";
+import CustomInputText from "../Inputs/CustomInputText";
+import { useState } from "react";
+import useNavigationHelpers from "../../utils/navigationHelpers";
 
-const NewClientForm = ({ navigation }) => {
+const NewClientForm = ({ route }) => {
   const { control, handleSubmit, watch } = useForm();
+  const { goBack } = useNavigationHelpers();
+  const [idType, setIdType] = useState(0);
 
-  const onSubmitPressed = async(data) => {
+  const onSubmitPressed = async (data) => {
     try {
-      await addClient(data);
-      console.log(data);
-      navigation.goBack();
+      await addClient(data, idType);
+      route.params.updateClients();
+      goBack();
     } catch (error) {
       console.log(error);
     }
   };
 
   const onBackPressed = () => {
-    navigation.goBack();
+    goBack();
   };
 
   return (
@@ -30,16 +34,16 @@ const NewClientForm = ({ navigation }) => {
         <CustomPicker
           name="tid"
           able={true}
+          options={["RUC", "CI"]}
           defaultValue={"RUC"}
-          options={["RUC","CI"]}
           control={control}
+          setIndex={setIdType}
           rules={{ required: "Type identification is required" }}
         />
         {watch("tid") === "CI" ? (
-          <CustomInput
+          <CustomInputText
             placeholder="ID"
             name="id"
-            type="number"
             control={control}
             rules={{
               required: "CI is required",
@@ -54,10 +58,9 @@ const NewClientForm = ({ navigation }) => {
             }}
           />
         ) : (
-          <CustomInput
+          <CustomInputText
             placeholder="ID"
             name="id"
-            type="number"
             control={control}
             rules={{
               required: "RUC is required",
@@ -73,31 +76,31 @@ const NewClientForm = ({ navigation }) => {
           />
         )}
 
-        <CustomInput
+        <CustomInputText
           placeholder="Name"
           name="name"
           control={control}
           rules={{ required: "Name is required" }}
         />
-        <CustomInput
+        <CustomInputText
           placeholder="Lastname"
           name="lastname"
           control={control}
           rules={{ required: "Lastname is required" }}
         />
-        <CustomInput
+        <CustomInputText
           placeholder="Email"
           name="email"
           control={control}
           rules={{ required: "Email is required" }}
         />
-        <CustomInput
+        <CustomInputText
           placeholder="Phone"
           name="phone"
           control={control}
           rules={{ required: "Phone is required" }}
         />
-        <CustomInput
+        <CustomInputText
           placeholder="Address"
           name="address"
           control={control}

@@ -39,7 +39,7 @@ const CustomPicker = ({
                   : onChange(selectedValue);
               }}
             >
-              <Picker.Item key={""} label={"Select an option"} value={""} />
+              <Picker.Item key={0} label={"Select an option"} value={0} />
               {options.map((value, index) => {
                 return <Picker.Item key={index} label={value} value={value} />;
               })}

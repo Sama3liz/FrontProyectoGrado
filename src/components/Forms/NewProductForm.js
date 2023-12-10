@@ -1,12 +1,13 @@
 import { useForm } from "react-hook-form";
 import { View, Text, ScrollView } from "react-native";
-import CustomInput from "../Inputs/CustomInput";
 import CustomButton from "../Buttons/CustomButton";
 import { newPasswordStyles } from "../../styles/screenStyles/NewPasswordStyles";
 import CustomPicker from "../Pickers/CustomPicker";
 import { useEffect, useState } from "react";
 import useNavigationHelpers from "../../utils/navigationHelpers";
 import { addProductToInventory, fetchData } from "../../utils/dbFunctions";
+import CustomInputText from "../Inputs/CustomInputText";
+import CustomInputNumber from "../Inputs/CustomInputNumber";
 
 const NewProductForm = ({ navigation }) => {
   const { control, handleSubmit, watch, setValue } = useForm();
@@ -46,7 +47,7 @@ const NewProductForm = ({ navigation }) => {
       const data = await fetchData(
         "https://c9ng6xj8f5.execute-api.us-east-1.amazonaws.com/getSup"
       );
-      const array = data.map((item) => item.identificacion);
+      const array = data.map((item) => item.nombre_comercial);
       setSuppliers(array);
     } catch (error) {
       console.error("Error fetching supplier data:", error);
@@ -77,6 +78,14 @@ const NewProductForm = ({ navigation }) => {
     }
   };
 
+  const updateSuppliers = () => {
+    load_data_sup();
+  };
+
+  const updateCategories = () => {
+    load_data_cat();
+  };
+
   const onSubmitPressed = async (data) => {
     try {
       await addProductToInventory(data, idCategory, idSupplier, idType, idUnit);
@@ -91,18 +100,18 @@ const NewProductForm = ({ navigation }) => {
   };
 
   const onNewSupplierPressed = () => {
-    goTo("NewSupplier");
+    goTo("NewSupplier", { updateSuppliers });
   };
 
   const onNewCategoryPressed = () => {
-    goTo("NewCategory");
+    goTo("NewCategory", { updateCategories });
   };
 
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
       <View style={newPasswordStyles.root}>
         <Text style={newPasswordStyles.title}>Register New Product</Text>
-        <CustomInput
+        <CustomInputText
           placeholder="Name"
           name="name"
           control={control}
@@ -117,7 +126,7 @@ const NewProductForm = ({ navigation }) => {
           rules={{ required: "Supplier is required" }}
         />
         <CustomButton text="Add New Supplier" onPress={onNewSupplierPressed} />
-        <CustomInput
+        <CustomInputText
           placeholder="Code Supplier"
           name="supcod"
           control={control}
@@ -132,7 +141,7 @@ const NewProductForm = ({ navigation }) => {
           rules={{ required: "Category is required" }}
         />
         <CustomButton text="Add New Category" onPress={onNewCategoryPressed} />
-        <CustomInput
+        <CustomInputText
           disabled
           placeholder="Internal Code"
           name="intcod"
@@ -140,11 +149,12 @@ const NewProductForm = ({ navigation }) => {
           editable={false}
           rules={{ required: "Code is required" }}
         />
-        <CustomInput
+        <CustomInputNumber
           placeholder="Price"
           name="price"
           type={"number"}
           valueAsNumber
+          showDecimals={true}
           control={control}
           rules={{
             required: "Price is required",
@@ -154,21 +164,23 @@ const NewProductForm = ({ navigation }) => {
             },
           }}
         />
-        <CustomInput
+
+        <CustomInputNumber
           disabled
           placeholder="Suggested Price"
           name="sugprice"
           control={control}
           editable={false}
           rules={{
-            required: "Sugested price is required",
+            required: "Suggested price is required",
             pattern: {
               value: /^\d*\.?\d*$/,
               message: "Only numbers allowed",
             },
           }}
         />
-        <CustomInput
+
+        <CustomInputNumber
           placeholder="Stock"
           name="stock"
           control={control}
@@ -211,13 +223,14 @@ const NewProductForm = ({ navigation }) => {
           setIndex={setIdType}
           rules={{ required: "Type is required" }}
         />
-        <CustomInput
+        <CustomInputText
           placeholder="Details"
           name="details"
           control={control}
           rules={{}}
         />
-        <CustomInput
+
+        <CustomInputText
           placeholder="Image"
           name="image"
           control={control}

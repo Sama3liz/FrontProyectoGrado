@@ -3,34 +3,35 @@ import { View, Text, ScrollView } from "react-native";
 import CustomInput from "../Inputs/CustomInput";
 import CustomButton from "../Buttons/CustomButton";
 import { newPasswordStyles } from "../../styles/screenStyles/NewPasswordStyles";
-import CustomPicker from "../Pickers/CustomPicker";
+import CustomInputText from "../Inputs/CustomInputText";
+import { useContext, useEffect } from "react";
+import { AuthContext } from "../../context/AuthContext";
+import useNavigationHelpers from "../../utils/navigationHelpers";
 
-const Company = ({ navigation }) => {
-  const { control, handleSubmit } = useForm();
+const Company = () => {
+  const { user } = useContext(AuthContext);
+  const { control, handleSubmit, setValue } = useForm();
+  const { goBack } = useNavigationHelpers();
+
+  useEffect(() => {
+    setValue("ruc", user.payload["cognito:username"]);
+  }, [setValue]);
+
   const onSubmitPressed = /* async */ (data) => {
     console.log(data);
-    try {
-      console.log(data);
-      navigation.goBack();
-    } catch (e) {
-      alert(e);
-    }
   };
 
   const onBackPressed = () => {
-    navigation.goBack();
+    goBack();
   };
 
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
       <View style={newPasswordStyles.root}>
         <Text style={newPasswordStyles.title}>Company Data</Text>
-        <CustomInput
+        <CustomInputText
           disabled
-          placeholder="RUC"
-          name="id"
-          type="number"
-          showDecimals={false}
+          name="ruc"
           control={control}
           rules={{
             required: "RUC is required",
@@ -44,25 +45,25 @@ const Company = ({ navigation }) => {
             },
           }}
         />
-        <CustomInput
+        <CustomInputText
           placeholder="Comercial Name"
           name="comercial"
           control={control}
           rules={{ required: "Comercial name is required" }}
         />
-        <CustomInput
+        <CustomInputText
           placeholder="Email"
           name="email"
           control={control}
           rules={{ required: "Email is required" }}
         />
-        <CustomInput
+        <CustomInputText
           placeholder="Phone"
           name="phone"
           control={control}
           rules={{ required: "Phone is required" }}
         />
-        <CustomInput
+        <CustomInputText
           placeholder="Address"
           name="address"
           control={control}

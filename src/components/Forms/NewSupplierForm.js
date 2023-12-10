@@ -1,27 +1,29 @@
 import { useForm } from "react-hook-form";
 import { View, Text, ScrollView } from "react-native";
-import CustomInput from "../Inputs/CustomInput";
 import CustomButton from "../Buttons/CustomButton";
 import { newPasswordStyles } from "../../styles/screenStyles/NewPasswordStyles";
 import CustomPicker from "../Pickers/CustomPicker";
 import { addSupplier } from "../../utils/dbFunctions";
 import useNavigationHelpers from "../../utils/navigationHelpers";
+import CustomInputText from "../Inputs/CustomInputText";
 
-const NewSupplierForm = ({ navigation }) => {
+const NewSupplierForm = ({ route }) => {
   const { control, handleSubmit } = useForm();
   const { goBack, goTo } = useNavigationHelpers();
 
   const onSubmitPressed = async (data) => {
+    data.tid = 1;
     const added = await addSupplier(data);
     if (added) {
-      navigation.goBack();
+      route.params.updateSuppliers();
+      goBack();
     } else {
       alert("Failed to add supplier");
     }
   };
 
   const onBackPressed = () => {
-    navigation.goBack();
+    goBack();
   };
 
   return (
@@ -32,17 +34,14 @@ const NewSupplierForm = ({ navigation }) => {
           able={false}
           options={["RUC", "CI"]}
           name="tid"
-          defaultValue="RUC"
+          defaultValue={"RUC"}
           control={control}
           rules={{ required: "Type identification is required" }}
         />
-        <CustomInput
+        <CustomInputText
           placeholder="ID"
           name="id"
-          type="number"
-          pattern="\d*"
           control={control}
-          showDecimals={false}
           rules={{
             required: "RUC is required",
             minLength: {
@@ -55,42 +54,43 @@ const NewSupplierForm = ({ navigation }) => {
             },
           }}
         />
-        <CustomInput
-          placeholder="Comercial Name"
-          name="comercial"
+        <CustomInputText
+          placeholder="Commercial Name"
+          name="commercial"
           control={control}
-          rules={{ required: "Comercial name is required" }}
+          rules={{ required: "Commercial name is required" }}
         />
-        <CustomInput
+        <CustomInputText
           placeholder="Name"
           name="name"
           control={control}
           rules={{ required: "Name is required" }}
         />
-        <CustomInput
+        <CustomInputText
           placeholder="Lastname"
           name="lastname"
           control={control}
           rules={{ required: "Lastname is required" }}
         />
-        <CustomInput
+        <CustomInputText
           placeholder="Email"
           name="email"
           control={control}
           rules={{ required: "Email is required" }}
         />
-        <CustomInput
+        <CustomInputText
           placeholder="Phone"
           name="phone"
           control={control}
           rules={{ required: "Phone is required" }}
         />
-        <CustomInput
+        <CustomInputText
           placeholder="Address"
           name="address"
           control={control}
           rules={{ required: "Address is required" }}
         />
+
         <CustomButton text="Submit" onPress={handleSubmit(onSubmitPressed)} />
         <CustomButton text="Back" onPress={onBackPressed} type="PRIMARY" />
       </View>

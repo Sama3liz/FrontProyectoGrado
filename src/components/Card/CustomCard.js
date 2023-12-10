@@ -35,7 +35,7 @@ const CustomCard = ({ data, helper, type }) => {
           const textData = text.toUpperCase();
           return itemData.indexOf(textData) > -1;
         }
-        if (type === "inventory") {
+        if (type === "inventory" || type === "cardex") {
           const itemData = item.nombre_producto
             ? item.nombre_producto.toUpperCase()
             : "".toUpperCase();
@@ -67,6 +67,9 @@ const CustomCard = ({ data, helper, type }) => {
     }
     if (type === "inventory") {
       goTo("ProductProfile", { id: item.id_producto });
+    }
+    if (type === "cardex") {
+      goTo("HistoryProduct", { id: item.id_producto });
     }
   };
 
@@ -115,6 +118,22 @@ const CustomCard = ({ data, helper, type }) => {
               </View>
             );
           }
+          if (type === "cardex") {
+            return (
+              <View style={styles.card}>
+                {/* <Image
+                  style={styles.cardImage}
+                  source={{ uri: item.images[0] }}
+                /> */}
+                <Text style={styles.cardText}>{item.nombre_producto}</Text>
+                <CustomButton
+                  text={helper}
+                  type="TERTIARY"
+                  onPress={() => onMorePressed(item)}
+                />
+              </View>
+            );
+          }
           if (type === "suppliers") {
             return (
               <View style={styles.card}>
@@ -131,7 +150,7 @@ const CustomCard = ({ data, helper, type }) => {
           }
         }}
         keyExtractor={(item) => {
-          if (type === "inventory") {
+          if (type === "inventory" || type === "cardex") {
             item.id_producto.toString();
           }
           if (type === "clients") {

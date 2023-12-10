@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, ScrollView, FlatList } from "react-native";
+import { View, ScrollView } from "react-native";
 import CustomButton from "../../components/Buttons/CustomButton";
-import { newPasswordStyles } from "../../styles/screenStyles/NewPasswordStyles";
 import CustomCard from "../../components/Card/CustomCard";
 import { fetchData } from "../../utils/dbFunctions";
 import useNavigationHelpers from "../../utils/navigationHelpers";
+import styles from "../../styles/styles";
 
 const InventoryScreen = () => {
   const [products, setProducts] = useState([]);
@@ -39,7 +39,7 @@ const InventoryScreen = () => {
 
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
-      <View style={newPasswordStyles.root}>
+      <View style={styles.container}>
         <CustomButton text="New" onPress={onNewPressed} />
         <CustomButton text="+" onPress={onPlusPressed} type="SECONDARY" />
         <CustomButton text="-" onPress={onMinusPressed} type="SECONDARY" />

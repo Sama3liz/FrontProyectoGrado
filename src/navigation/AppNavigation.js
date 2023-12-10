@@ -1,16 +1,20 @@
 import {
   ActivityIndicator,
   SafeAreaView,
-  StyleSheet,
   View,
 } from "react-native";
 import React, { useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
+import { useError } from "../context/ErrorContext";
+import { useTheme } from "../context/ThemeContext";
 import AppStack from "./AppStack";
 import AuthStack from "./AuthStack";
+import styles from "../styles/styles";
 
 const AppNavigation = () => {
   const { loading, user } = useContext(AuthContext);
+  const { error } = useError();
+  const { theme } = useTheme();
 
   if (loading) {
     return (
@@ -21,6 +25,7 @@ const AppNavigation = () => {
       </View>
     );
   }
+
   return (
     <SafeAreaView style={styles.root}>
       {user ? <AppStack /> : <AuthStack />}
@@ -29,10 +34,3 @@ const AppNavigation = () => {
 };
 
 export default AppNavigation;
-
-const styles = StyleSheet.create({
-  root: {
-    flex: 1,
-    backgroundColor: "#F9FBFC",
-  },
-});

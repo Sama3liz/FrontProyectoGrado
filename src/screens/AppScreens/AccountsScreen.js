@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, FlatList, StyleSheet } from "react-native";
+import { View, Text, FlatList } from "react-native";
 import CustomButton from "../../components/Buttons/CustomButton";
 import useNavigationHelpers from "../../utils/navigationHelpers";
+import styles from "../../styles/styles";
 
 const AccountsScreen = () => {
   const [accounts, setAccounts] = useState([]);
@@ -22,20 +23,20 @@ const AccountsScreen = () => {
   }, []);
 
   const renderItem = ({ item }) => (
-    <View style={styles.item}>
-      <Text style={styles.cell}>{item.code}</Text>
-      <Text style={styles.cell}>{item.type}</Text>
-      <Text style={[styles.cell, styles.name]}>{item.name}</Text>
+    <View style={styles.itemTable}>
+      <Text style={styles.cellTable}>{item.code}</Text>
+      <Text style={styles.cellTable}>{item.type}</Text>
+      <Text style={[styles.cellTable, styles.nameTable]}>{item.name}</Text>
     </View>
   );
 
   return (
-    <View style={styles.container}>
+    <View style={styles.containerTable}>
       <CustomButton text={"Back"} onPress={() => goBack()} />
-      <View style={styles.header}>
-        <Text style={styles.headerText}>Código</Text>
-        <Text style={styles.headerText}>Tipo</Text>
-        <Text style={styles.headerText}>Nombre</Text>
+      <View style={styles.headerTable}>
+        <Text style={styles.headerTextTable}>Código</Text>
+        <Text style={styles.headerTextTable}>Tipo</Text>
+        <Text style={styles.headerTextTable}>Nombre</Text>
       </View>
       <FlatList
         data={accounts}
@@ -45,42 +46,5 @@ const AccountsScreen = () => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    paddingHorizontal: 20,
-  },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: '#ccc',
-    paddingBottom: 5,
-  },
-  headerText: {
-    fontWeight: 'bold',
-    fontSize: 16,
-    flex: 1, // Para ocupar igualmente el espacio
-    textAlign: 'center',
-  },
-  item: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingVertical: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: '#eee',
-  },
-  cell: {
-    flex: 1, // Para ocupar igualmente el espacio
-    textAlign: 'center',
-  },
-  name: {
-    textAlign: 'left',
-  },
-});
 
 export default AccountsScreen;

@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, ScrollView } from "react-native";
 import CustomButton from "../../components/Buttons/CustomButton";
-import { newPasswordStyles } from "../../styles/screenStyles/NewPasswordStyles";
 import useNavigationHelpers from "../../utils/navigationHelpers";
 import CustomCard from "../../components/Card/CustomCard";
 import { fetchData } from "../../utils/dbFunctions";
+import styles from "../../styles/styles";
 
 const ClientsScreen = () => {
   const [users, setUsers] = useState([]);
@@ -25,16 +25,19 @@ const ClientsScreen = () => {
     }
   };
 
+  const updateClients = () => {
+    loadData();
+  };
+
   const onNewPressed = () => {
-    goTo("NewClient");
+    goTo("NewClient", { updateClients });
   };
 
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
-      <View style={newPasswordStyles.root}>
-        <Text style={newPasswordStyles.title}>Clients</Text>
+      <View style={styles.container}>
         <CustomButton text="New" onPress={onNewPressed} />
-        <CustomCard data={users} helper={"Details"} type={"clients"}/>
+        <CustomCard data={users} helper={"Details"} type={"clients"} />
       </View>
     </ScrollView>
   );

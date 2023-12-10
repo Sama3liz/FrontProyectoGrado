@@ -30,7 +30,7 @@ const KardexScreen = () => {
       <View style={newPasswordStyles.root}>
         <CustomButton text={"Back"} onPress={() => goBack()} />
         <Text style={newPasswordStyles.title}>Products List</Text>
-        <CustomCard data={products} helper={"Registry"} type={"inventory"} />
+        <CustomCard data={products} helper={"History"} type={"cardex"} />
       </View>
     </ScrollView>
   );

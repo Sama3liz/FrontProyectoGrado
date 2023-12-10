@@ -1,17 +1,14 @@
 import React from "react";
-import { View, Text, TextInput } from "react-native";
+import { View, Text, TextInput, StyleSheet } from "react-native";
 import { Controller } from "react-hook-form";
-import styles from "../../styles/styles";
 
-const CustomInput = ({
+const CustomInputNumber = ({
   control,
   name,
   rules = {},
   placeholder,
-  secureTextEntry,
   handleInputChange,
   defaultValue,
-  type,
   disabled,
   showDecimals = true,
 }) => {
@@ -28,49 +25,33 @@ const CustomInput = ({
         <>
           <View
             style={[
-              styles.input,
+              styles.container,
               { borderColor: error ? "red" : "#e8e8e8" },
             ]}
           >
             <TextInput
-              type={type ? type : "text"}
+              type="numeric"
               disabled={disabled ? true : false}
               value={value}
               onChangeText={(text) => {
                 const isValidNumber = (text) => {
                   if (showDecimals) {
-                    return /^\d*\.?\d*$/.test(text); 
+                    return /^\d*\.?\d*$/.test(text);
                   } else {
-                    return /^\d+$/.test(text); 
+                    return /^\d+$/.test(text);
                   }
                 };
-                if (
-                  (type === "number" && isValidNumber(text)) ||
-                  type !== "number"
-                ) {
+                if (isValidNumber(text)) {
                   onChange(text);
                   if (handleInputChange) {
                     handleInputChange(text);
                   }
                 }
               }}
-              onBlur={() => {
-                if (type === "number") {
-                  const numericValue = parseFloat(value);
-                  const formattedValue = showDecimals
-                    ? isNaN(numericValue)
-                      ? ""
-                      : numericValue.toFixed(2)
-                    : isNaN(numericValue)
-                    ? ""
-                    : numericValue.toString().replace(/\.\d*/, ""); 
-                  onChange(formattedValue);
-                }
-                onBlur();
-              }}
+              onBlur={onBlur}
               placeholder={placeholder}
-              style={styles.void}
-              secureTextEntry={secureTextEntry}
+              style={styles.input}
+              keyboardType="numeric"
             />
           </View>
           {error && (
@@ -84,4 +65,19 @@ const CustomInput = ({
   );
 };
 
-export default CustomInput;
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: "white",
+    width: "100%",
+
+    borderColor: "#e8e8e8",
+    borderWidth: 1,
+    borderRadius: 5,
+
+    paddingHorizontal: 10,
+    marginVertical: 5,
+  },
+  input: {},
+});
+
+export default CustomInputNumber;

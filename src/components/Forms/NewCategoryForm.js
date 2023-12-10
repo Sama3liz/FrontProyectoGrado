@@ -1,31 +1,34 @@
 import { useForm } from "react-hook-form";
 import { View, Text, ScrollView } from "react-native";
-import CustomInput from "../Inputs/CustomInput";
 import CustomButton from "../Buttons/CustomButton";
 import { newPasswordStyles } from "../../styles/screenStyles/NewPasswordStyles";
 import { addCategory } from "../../utils/dbFunctions";
+import useNavigationHelpers from "../../utils/navigationHelpers";
+import CustomInputText from "../Inputs/CustomInputText";
 
-const NewCategoryForm = ({ navigation }) => {
+const NewCategoryForm = ({ route }) => {
   const { control, handleSubmit } = useForm();
+  const { goBack } = useNavigationHelpers();
 
   const onSubmitPressed = async (data) => {
     try {
       await addCategory(data);
-      navigation.goBack();
+      route.params.updateCategories();
+      goBack();
     } catch (error) {
       alert(error);
     }
   };
 
   const onBackPressed = () => {
-    navigation.goBack();
+    goBack();
   };
 
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
       <View style={newPasswordStyles.root}>
         <Text style={newPasswordStyles.title}>Category</Text>
-        <CustomInput
+        <CustomInputText
           placeholder="Name"
           name="name"
           control={control}

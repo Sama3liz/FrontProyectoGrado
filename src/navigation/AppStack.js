@@ -13,6 +13,9 @@ import NewCategoryForm from "../components/Forms/NewCategoryForm";
 import AccountsScreen from "../screens/AppScreens/AccountsScreen";
 import JournalScreen from "../screens/AppScreens/JournalScreen";
 import LedgerScreen from "../screens/AppScreens/LedgerScreen";
+import CardexScreen from "../screens/AppScreens/CardexScreen";
+import UserScreen from "../screens/AppScreens/UserScreen";
+import AppearanceScreen from "../screens/AppScreens/AppearanceScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -20,29 +23,96 @@ function AppStack() {
   return (
     <NavigationContainer>
       <Stack.Navigator
-        screenOptions={{ headerShown: false }}
+        /* screenOptions={{ headerShown: false }} */
         initialRouteName="Home"
       >
-        <Stack.Screen name="Home" component={SideNavigation} />
+        <Stack.Screen
+          name="Home"
+          component={SideNavigation}
+          options={{ headerShown: false }}
+        />
         {/* Not Found */}
-        <Stack.Screen name="NotFound" component={NotFoundScreen} />
-        {/* Suplliers */}
-        <Stack.Screen name="NewSupplier" component={NewSupplierForm} />
+        <Stack.Screen
+          name="NotFound"
+          component={NotFoundScreen}
+          options={{ headerTitle: "Page not found" }}
+        />
+        {/* Suppliers */}
+        <Stack.Screen
+          name="NewSupplier"
+          component={NewSupplierForm}
+          options={{ headerTitle: "New Supplier" }}
+        />
         {/* Inventory */}
-        <Stack.Screen name="NewProduct" component={NewProductForm} />
-        <Stack.Screen name="NewCategory" component={NewCategoryForm} />
-        {/* Profile */}
-        <Stack.Screen name="UserProfile" component={ProfileScreen} />
-        <Stack.Screen name="ProductProfile" component={ProfileScreen} />
-        {/* Accounting */}
-        <Stack.Screen name="Kardex" component={KardexScreen} />
-        <Stack.Screen name="Accounts" component={AccountsScreen} />
-        <Stack.Screen name="Journal" component={JournalScreen} />
-        <Stack.Screen name="Major" component={LedgerScreen} />
-        {/* Settings */}
-        <Stack.Screen name="Company" component={Company} />
+        <Stack.Screen
+          name="NewProduct"
+          component={NewProductForm}
+          options={{ headerTitle: "" }}
+        />
+        <Stack.Screen
+          name="NewCategory"
+          component={NewCategoryForm}
+          options={{ headerTitle: "" }}
+        />
         {/* Clients */}
-        <Stack.Screen name="NewClient" component={NewClientForm} />
+        <Stack.Screen
+          name="NewClient"
+          component={NewClientForm}
+          options={{ headerTitle: "" }}
+        />
+        {/* Profile */}
+        <Stack.Screen
+          name="UserProfile"
+          component={ProfileScreen}
+          options={{ headerTitle: "" }}
+        />
+        <Stack.Screen
+          name="ProductProfile"
+          component={ProfileScreen}
+          options={{ headerTitle: "" }}
+        />
+        {/* Accounting */}
+        <Stack.Screen
+          name="Kardex"
+          component={KardexScreen}
+          options={{ headerTitle: "" }}
+        />
+        <Stack.Screen
+          name="HistoryProduct"
+          component={CardexScreen}
+          options={{ headerTitle: "" }}
+        />
+        <Stack.Screen
+          name="Accounts"
+          component={AccountsScreen}
+          options={{ headerTitle: "" }}
+        />
+        <Stack.Screen
+          name="Journal"
+          component={JournalScreen}
+          options={{ headerTitle: "" }}
+        />
+        <Stack.Screen
+          name="Major"
+          component={LedgerScreen}
+          options={{ headerTitle: "" }}
+        />
+        {/* Settings */}
+        <Stack.Screen
+          name="Company"
+          component={Company}
+          options={{ headerTitle: "" }}
+        />
+        <Stack.Screen
+          name="User"
+          component={UserScreen}
+          options={{ headerTitle: "" }}
+        />
+        <Stack.Screen
+          name="Appearance"
+          component={AppearanceScreen}
+          options={{ headerTitle: "" }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );

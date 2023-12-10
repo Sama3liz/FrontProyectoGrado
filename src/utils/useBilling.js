@@ -1,3 +1,5 @@
+import React, { useContext } from "react";
+
 export const loadData = async (setProducts) => {
   try {
     const response = await fetch("https://dummyjson.com/products", {
@@ -11,10 +13,10 @@ export const loadData = async (setProducts) => {
     const initialProducts = data.products.map((product) => ({
       ...product,
       quantity: 0,
-      appliesIVA: true, // Inicialmente, la cantidad es 0 para todos los productos
+      appliesIVA: true,
     }));
     setProducts(initialProducts);
-  } catch (e) {
+  } catch (error) {
     console.error("Error fetching data:", error);
   }
 };
@@ -22,25 +24,21 @@ export const loadData = async (setProducts) => {
 export const searchCustomerById = async (customerId, setCustomerData) => {
   try {
     const response = await fetch(`https://dummyjson.com/users/${customerId}`);
-    if (response.status === 404) {
-      console.error("Customer not found");
-      setCustomerData(null);
-      return false;
+    if (response.status !== 404) {
+      const data = await response.json();
+      return data
+    } else {
+      return null
     }
-    const data = await response.json();
-    setCustomerData(data);
-    return true;
   } catch (error) {
     console.error("Error fetching customer data:", error);
-    setCustomerData(null);
-    return false;
   }
 };
 
 export const calculateChange = (text, totals, setChange) => {
   if (parseFloat(text) >= totals.total.toFixed(2)) {
     const newChange = parseFloat(text) - totals.total.toFixed(2);
-    setChange(newChange.toFixed(2))
+    setChange(newChange.toFixed(2));
   }
 };
 

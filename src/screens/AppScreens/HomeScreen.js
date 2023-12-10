@@ -1,76 +1,23 @@
-import React, { useContext, useState } from "react";
-import { StyleSheet, Text, Pressable, View } from "react-native";
+import React, { useContext } from "react";
+import { Text, View } from "react-native";
 import { AuthContext } from "../../context/AuthContext";
-import CustomModal from "../../components/Modal/CustomModal";
+import CustomChart from "../../components/Charts/CustomChart";
+import styles from "../../styles/styles";
+import { useTheme } from "../../context/ThemeContext";
 
 export default function HomeScreen() {
   const { logOut, user } = useContext(AuthContext);
+  const { theme } = useTheme();
+
   const onLogOutPress = () => {
     logOut();
   };
   return (
-    <View style={styles.centeredView}>
+    <View style={styles.container}>
       <Text style={{ fontSize: 24, alignSelf: "center", marginTop: 10 }}>
-        Hello, {user.payload.name}
+        Hello, <Text style={{ color: theme.color }}>{user.payload.name}</Text>
       </Text>
-      
-      <Text
-        onPress={onLogOutPress}
-        style={{
-          width: "100%",
-          textAlign: "center",
-          color: "red",
-          marginTop: "auto",
-          marginVertical: 20,
-          fontSize: 20,
-        }}
-      >
-        Sign out
-      </Text>
+      <CustomChart/>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  centeredView: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    marginTop: 22,
-  },
-  modalView: {
-    margin: 20,
-    backgroundColor: "white",
-    borderRadius: 20,
-    padding: 35,
-    alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
-  },
-  button: {
-    borderRadius: 20,
-    padding: 10,
-    elevation: 2,
-  },
-  buttonOpen: {
-    backgroundColor: "#F194FF",
-  },
-  buttonClose: {
-    backgroundColor: "#2196F3",
-  },
-  textStyle: {
-    color: "white",
-    fontWeight: "bold",
-    textAlign: "center",
-  },
-  modalText: {
-    marginBottom: 15,
-    textAlign: "center",
-  },
-});

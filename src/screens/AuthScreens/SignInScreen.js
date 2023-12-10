@@ -9,7 +9,6 @@ import {
 import Logo from "../../assets/Logo_1.png";
 import CustomInput from "../../components/Inputs/CustomInput";
 import CustomButton from "../../components/Buttons/CustomButton";
-import SocialSignInButtons from "../../components/Buttons/SocialButtons";
 import useNavigationHelpers from "../../utils/navigationHelpers";
 import { signInStyles } from "../../styles/screenStyles/SignInStyles";
 import { useForm } from "react-hook-form";
@@ -80,8 +79,6 @@ const SignInScreen = () => {
           onPress={onForgotPasswordPressed}
           type="TERTIARY"
         />
-
-        {/* <SocialSignInButtons /> */}
 
         <CustomButton
           text="Don't have an account? Create one"

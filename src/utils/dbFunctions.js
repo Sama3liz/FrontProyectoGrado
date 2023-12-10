@@ -54,8 +54,9 @@ export const addCategory = async (data) => {
 };
 
 /* Function to add a new client */
-export const addClient = async (data) => {
+export const addClient = async (data, idType) => {
   try {
+    data.tid = idType;
     const response = await fetch(
       "https://c9ng6xj8f5.execute-api.us-east-1.amazonaws.com/addClient",
       {
@@ -92,7 +93,7 @@ export const addProductToInventory = async (
     data.unit = idUnit;
     data.name = data.name.toLowerCase();
     console.log(data);
-    /* await fetch(
+    await fetch(
       "https://c9ng6xj8f5.execute-api.us-east-1.amazonaws.com/addInv",
       {
         method: "POST",
@@ -102,7 +103,7 @@ export const addProductToInventory = async (
         },
         body: JSON.stringify(data),
       }
-    ); */
+    );
   } catch (error) {
     console.error("Error adding product:", error);
     throw error;
@@ -115,7 +116,7 @@ export const addSupplier = async (data) => {
     data.name = data.name.toLowerCase();
     data.lastname = data.lastname.toLowerCase();
     data.address = data.address.toLowerCase();
-    data.comercial = data.comercial.toLowerCase();
+    data.comercial = data.commercial.toLowerCase();
     const response = await fetch(
       "https://c9ng6xj8f5.execute-api.us-east-1.amazonaws.com/addSupplier",
       {
