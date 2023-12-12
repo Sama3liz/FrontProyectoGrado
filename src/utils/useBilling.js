@@ -26,9 +26,9 @@ export const searchCustomerById = async (customerId, setCustomerData) => {
     const response = await fetch(`https://dummyjson.com/users/${customerId}`);
     if (response.status !== 404) {
       const data = await response.json();
-      return data
+      return data;
     } else {
-      return null
+      return null;
     }
   } catch (error) {
     console.error("Error fetching customer data:", error);
@@ -78,8 +78,10 @@ export const calculateTotals = (selectedProducts, setTotals) => {
 export const handleAddToInvoice = (
   productId,
   products,
+  product,
   selectedProducts,
-  setSelectedProducts
+  setSelectedProducts,
+  setProducts
 ) => {
   const productToAdd = products.find((product) => product.id === productId);
   if (productToAdd) {
@@ -89,15 +91,27 @@ export const handleAddToInvoice = (
     if (existingProduct) {
       handleQuantityChange(
         productId,
-        product.quantity + 1,
+        existingProduct.quantity + 1,
         selectedProducts,
         setSelectedProducts
       );
     } else {
       const newProduct = { ...productToAdd, quantity: 1 };
       setSelectedProducts([...selectedProducts, newProduct]);
+      /* handleRemoveFromFiltered(productId, filteredProducts, setFilteredProducts); */
     }
   }
+};
+
+export const handleRemoveFromFiltered = (
+  productId,
+  filteredProducts,
+  setFilteredProducts
+) => {
+  const updatedFilteredProducts = filteredProducts.filter(
+    (product) => product.id !== productId
+  );
+  setFilteredProducts(updatedFilteredProducts);
 };
 
 export const handleQuantityChange = (
@@ -114,7 +128,6 @@ export const handleQuantityChange = (
       }
       return product;
     });
-
     setSelectedProducts(updatedSelectedProducts);
   }
 };

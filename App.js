@@ -10,7 +10,7 @@ import { Amplify } from "aws-amplify";
 import amplifyconfig from "./src/amplifyconfiguration.json";
 import { ThemeProvider } from "./src/context/ThemeContext";
 import { ErrorProvider } from "./src/context/ErrorContext";
-Amplify.configure(amplifyconfig, { ssr: true });
+Amplify.configure(amplifyconfig);
 
 const App = () => {
   return (

@@ -46,6 +46,12 @@ const BillingScreen = () => {
   const [paymentMethod, setPaymentMethod] = useState("");
   const [cashInput, setCashInput] = useState("");
   const [change, setChange] = useState(0);
+  const firstName = watch("name");
+  const lastName = watch("lastname");
+  const id = watch("ci");
+  const address = watch("address");
+  const phone = watch("phone");
+  const email = watch("email");
 
   useEffect(() => {
     loadData(setProducts);
@@ -92,12 +98,15 @@ const BillingScreen = () => {
     setFilteredProducts(filtered);
   };
 
-  const addToInvoice = (productId) => {
+  const addToInvoice = (product) => {
+    const productId = product.id;
     handleAddToInvoice(
       productId,
       products,
+      product,
       selectedProducts,
-      setSelectedProducts
+      setSelectedProducts,
+      setProducts
     );
   };
 
@@ -150,6 +159,7 @@ const BillingScreen = () => {
       </TouchableOpacity>
       <View style={styles.itemDetails}>
         <Text style={styles.itemName}>{item.title}</Text>
+        <Text style={styles.itemDescription}>Quantity: {item.quantity}</Text>
       </View>
     </View>
   );
@@ -161,7 +171,7 @@ const BillingScreen = () => {
       </View>
       <TouchableOpacity
         style={styles.removeButton}
-        onPress={() => addToInvoice(item.id)}
+        onPress={() => addToInvoice(item)}
       >
         <Ionicons name="ios-add-circle-outline" size={24} color="green" />
       </TouchableOpacity>
@@ -417,6 +427,13 @@ const BillingScreen = () => {
         return (
           <>
             <Text style={styles.title}>Resume</Text>
+            <View style={styles.billSummary}>
+              <Text>CI/RUC: {id}</Text>
+              <Text>Name: {firstName + " " + lastName} </Text>
+              <Text>Email: {email}</Text>
+              <Text>Phone: {phone}</Text>
+              <Text>Address: {email}</Text>
+            </View>
             {selectedProducts.map((product) => (
               <CartItem
                 key={product.id}

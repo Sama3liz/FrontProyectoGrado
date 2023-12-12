@@ -1,8 +1,8 @@
 import React from "react";
-import { View } from "react-native";
+import { View, ScrollView } from "react-native";
 import CustomButton from "../../components/Buttons/CustomButton";
-import { newPasswordStyles } from "../../styles/screenStyles/NewPasswordStyles";
 import useNavigationHelpers from "../../utils/navigationHelpers";
+import styles from "../../styles/styles";
 
 export default function SettingsScreen() {
   const { goTo } = useNavigationHelpers();
@@ -10,10 +10,15 @@ export default function SettingsScreen() {
     goTo(page);
   };
   return (
-    <View style={newPasswordStyles.root}>
-      <CustomButton text="Company" onPress={() => onButtonPress("Company")} />
-      <CustomButton text="Profile" onPress={() => onButtonPress("User")} />
-      <CustomButton text="Appearance" onPress={()=> onButtonPress("Appearance")} />
-    </View>
+    <ScrollView showsVerticalScrollIndicator={false}>
+      <View style={styles.container}>
+        <CustomButton text="Company" onPress={() => onButtonPress("Company")} />
+        <CustomButton text="Profile" onPress={() => onButtonPress("User")} />
+        <CustomButton
+          text="Appearance"
+          onPress={() => onButtonPress("Appearance")}
+        />
+      </View>
+    </ScrollView>
   );
 }

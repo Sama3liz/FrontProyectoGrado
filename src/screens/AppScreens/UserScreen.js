@@ -4,6 +4,7 @@ import { newPasswordStyles } from "../../styles/screenStyles/NewPasswordStyles";
 import { AuthContext } from "../../context/AuthContext";
 import CustomInputText from "../../components/Inputs/CustomInputText";
 import { useForm } from "react-hook-form";
+import CustomButton from "../../components/Buttons/CustomButton";
 
 const UserScreen = () => {
   const { user } = useContext(AuthContext);
@@ -51,7 +52,7 @@ const UserScreen = () => {
           control={control}
           rules={{}}
         />
-        <Button title="Save" onPress={handleSubmit(updateUserData)} />
+        <CustomButton text={"Save"} onPress={handleSubmit(updateUserData)} />
       </View>
     </ScrollView>
   );
