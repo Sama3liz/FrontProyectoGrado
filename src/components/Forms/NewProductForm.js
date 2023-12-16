@@ -5,11 +5,15 @@ import { newPasswordStyles } from "../../styles/screenStyles/NewPasswordStyles";
 import CustomPicker from "../Pickers/CustomPicker";
 import { useEffect, useState } from "react";
 import useNavigationHelpers from "../../utils/navigationHelpers";
-import { addProductToInventory, fetchData } from "../../utils/dbFunctions";
+import {
+  addProductToInventory,
+  fetchData,
+  getDataByCategory,
+} from "../../utils/dbFunctions";
 import CustomInputText from "../Inputs/CustomInputText";
 import CustomInputNumber from "../Inputs/CustomInputNumber";
 
-const NewProductForm = ({ navigation }) => {
+const NewProductForm = ({ route }) => {
   const { control, handleSubmit, watch, setValue } = useForm();
   const { goTo, goBack } = useNavigationHelpers();
   const [categories, setCategories] = useState([]);
@@ -22,32 +26,21 @@ const NewProductForm = ({ navigation }) => {
   const price = watch("price");
   const category = watch("category");
 
-  const extractInitials = (categoryName) => {
-    const words = categoryName.split(" ");
-    const initials = words.map((word) => word.charAt(0)).join("");
-    return initials.toUpperCase();
-  };
-
   useEffect(() => {
     load_data_sup();
     load_data_cat();
     load_data_type();
-    if (price) {
-      const sugPrice = (price * 1.3).toFixed(2);
-      setValue("sugprice", sugPrice);
-    }
-    if (category) {
-      const sugCode = extractInitials(category);
-      setValue("intcod", sugCode);
-    }
-  }, [price, setValue, category]);
+    getSuggestedPrice(price);
+    getInternalCode(category, idCategory);
+  }, [price, category, idCategory]);
 
   const load_data_sup = async () => {
     try {
       const data = await fetchData(
-        "https://c9ng6xj8f5.execute-api.us-east-1.amazonaws.com/getSup"
+        "https://q20filkgq3.execute-api.us-east-1.amazonaws.com/dev/suppliers"
       );
-      const array = data.map((item) => item.nombre_comercial);
+      const body = JSON.parse(data.body);
+      const array = body.map((item) => item.commercial);
       setSuppliers(array);
     } catch (error) {
       console.error("Error fetching supplier data:", error);
@@ -57,9 +50,10 @@ const NewProductForm = ({ navigation }) => {
   const load_data_cat = async () => {
     try {
       const data = await fetchData(
-        "https://c9ng6xj8f5.execute-api.us-east-1.amazonaws.com/getCat"
+        "https://q20filkgq3.execute-api.us-east-1.amazonaws.com/dev/categories"
       );
-      const array = data.map((item) => item.nombre_categoria);
+      const body = JSON.parse(data.body);
+      const array = body.map((item) => item.name);
       setCategories(array);
     } catch (error) {
       console.error("Error fetching category data:", error);
@@ -69,12 +63,37 @@ const NewProductForm = ({ navigation }) => {
   const load_data_type = async () => {
     try {
       const data = await fetchData(
-        "https://c9ng6xj8f5.execute-api.us-east-1.amazonaws.com/getType"
+        "https://q20filkgq3.execute-api.us-east-1.amazonaws.com/dev/types"
       );
-      const array = data.map((item) => item.tipo);
+      const body = JSON.parse(data.body);
+      const array = body.map((item) => item.name);
       setTypes(array);
     } catch (error) {
       console.error("Error fetching type data:", error);
+    }
+  };
+
+  const extractInitials = (categoryName) => {
+    const words = categoryName.split(" ");
+    const initials = words.map((word) => word.charAt(0)).join("");
+    return initials.toUpperCase();
+  };
+
+  const getInternalCode = async (id) => {
+    if (category) {
+      const sugCode = extractInitials(category);
+      const quantity = await getDataByCategory(idCategory);
+      console.log(quantity);
+      const newQuantity = quantity + 1;
+      console.log(newQuantity);
+      setValue("intcod", sugCode + "-" + newQuantity);
+    }
+  };
+
+  const getSuggestedPrice = (price) => {
+    if (price) {
+      const sugPrice = (price * 1.3).toFixed(2);
+      setValue("sugprice", sugPrice);
     }
   };
 
@@ -89,14 +108,15 @@ const NewProductForm = ({ navigation }) => {
   const onSubmitPressed = async (data) => {
     try {
       await addProductToInventory(data, idCategory, idSupplier, idType, idUnit);
-      /* navigation.goBack(); */
+      route.params.updateProducts();
+      goBack();
     } catch (error) {
       alert(error);
     }
   };
 
   const onBackPressed = () => {
-    navigation.goBack();
+    goBack();
   };
 
   const onNewSupplierPressed = () => {

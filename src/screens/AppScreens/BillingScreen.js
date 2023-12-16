@@ -10,12 +10,12 @@ import CustomButton from "../../components/Buttons/CustomButton";
 import useNavigationHelpers from "../../utils/navigationHelpers";
 import {
   loadData,
-  searchCustomerById,
   calculateTotals,
   handleAddToInvoice,
   handleProductSelection,
   handleQuantityChange,
   calculateChange,
+  getCurrentDate,
 } from "../../utils/useBilling";
 import styles from "../../styles/styles";
 import CustomInput from "../../components/Inputs/CustomInput";
@@ -24,6 +24,7 @@ import { useError } from "../../context/ErrorContext";
 import { ScrollView } from "react-native-gesture-handler";
 import CartItem from "../../components/Card/CustomItemCard";
 import { Ionicons } from "@expo/vector-icons";
+import { searchCustomerById } from "../../utils/dbFunctions";
 
 const BillingScreen = () => {
   const { goTo } = useNavigationHelpers();
@@ -59,12 +60,13 @@ const BillingScreen = () => {
   }, [selectedProducts]);
 
   const setSearchCustomer = (customerData) => {
+    console.log(customerData)
     if (customerData !== null) {
       clearError();
-      setValue("name", customerData.firstName);
-      setValue("lastname", customerData.lastName);
+      setValue("name", customerData.firstname);
+      setValue("lastname", customerData.lastname);
       setValue("email", customerData.email);
-      setValue("address", customerData.address.address);
+      setValue("address", customerData.address);
       setValue("phone", customerData.phone);
     } else {
       setErrorMessage("Client not found");
@@ -79,10 +81,10 @@ const BillingScreen = () => {
   const searchCustomer = async () => {
     try {
       if (customerId) {
-        const data = await searchCustomerById(customerId, setCustomerData);
+        const data = await searchCustomerById(customerId);
         setSearchCustomer(data);
       } else {
-        setErrorMessage("CI/RUC must be");
+        setErrorMessage("Give a valid CI/RUC for search");
       }
     } catch (error) {
       console.log(error);
@@ -93,7 +95,7 @@ const BillingScreen = () => {
   const handleSearch = () => {
     const query = searchQuery.toLowerCase();
     const filtered = products.filter((product) =>
-      product.title.toLowerCase().includes(query)
+      product.name.toLowerCase().includes(query)
     );
     setFilteredProducts(filtered);
   };
@@ -158,7 +160,7 @@ const BillingScreen = () => {
         <Ionicons name="trash-bin-outline" size={24} color="red" />
       </TouchableOpacity>
       <View style={styles.itemDetails}>
-        <Text style={styles.itemName}>{item.title}</Text>
+        <Text style={styles.itemName}>{item.name}</Text>
         <Text style={styles.itemDescription}>Quantity: {item.quantity}</Text>
       </View>
     </View>
@@ -167,7 +169,8 @@ const BillingScreen = () => {
   const renderProductList = ({ item }) => (
     <View style={styles.itemContainer}>
       <View style={styles.itemDetails}>
-        <Text style={styles.itemName}>{item.title}</Text>
+        <Text style={styles.itemName}>{item.name}</Text>
+        <Text style={styles.itemDescription}>Stock: {item.stock}</Text>
       </View>
       <TouchableOpacity
         style={styles.removeButton}
@@ -251,15 +254,45 @@ const BillingScreen = () => {
   };
 
   const onSubmitPressed = (data) => {
-    console.log(data);
+    /* const date = getCurrentDate();
+    const infoTributary = {
+      ambient: 1,
+      tipoEmision: 1,
+      razonSocial,
+      nombreComercial,
+      ruc,
+      claveAcceso: "0000000000000000000000000000000000000000000000000",
+      codDoc: "01",
+      estab: "000",
+      ptoEmi: "000",
+      secuencial: "0000",
+      dirMatriz: "dirMatriz",
+      agenteRetencion: 0,
+      contribuyenteRimpe: "CONTRIBUYENTE RÉGIMEN RIMPE"
+    };
+    constInfoFactura = {
+      fechaEmision: date,
+      dirEstablecimiento,
+      contribuyenteEspecial,
+      obligadoContabilidad,
+      tipoIdentificacionComprador,
+      razonSocialComprador,
+      identificacionComprador,
+      direccionComprador,
+      totalSinImpuestos,
+      totalSubsidio,
+      incoTermTotalSinImpuestos,
+      totalDescuento,
+    }
     const newBilling = {
-      ...data,
-      totals,
-      paymentMethod,
-      change,
+      date,
+      infoTributary,
+      companyData: {},
+      clientData: data,
+      valuesTotals: { ...totals, paymentMethod, change },
       products: selectedProducts,
     };
-    console.log(newBilling);
+    console.log(newBilling); */
     setValue("ci", "");
     setValue("name", "");
     setValue("email", "");
@@ -443,7 +476,9 @@ const BillingScreen = () => {
                 onQuantityDecrease={() =>
                   quantityChange(product.id, product.quantity - 1)
                 }
-                onQuantityChange={(text) => quantityChange(product.id, text)}
+                onQuantityChange={(text) =>
+                  quantityChange(product.id, text)
+                }
               />
             ))}
             <View style={styles.billSummary}>

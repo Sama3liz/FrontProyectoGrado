@@ -1,16 +1,18 @@
-import React, { useContext } from "react";
-
 export const loadData = async (setProducts) => {
   try {
-    const response = await fetch("https://dummyjson.com/products", {
-      method: "GET",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await fetch(
+      "https://q20filkgq3.execute-api.us-east-1.amazonaws.com/dev/inventory",
+      {
+        method: "GET",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+      }
+    );
     const data = await response.json();
-    const initialProducts = data.products.map((product) => ({
+    const body = JSON.parse(data.body);
+    const initialProducts = body.map((product) => ({
       ...product,
       quantity: 0,
       appliesIVA: true,
@@ -21,18 +23,15 @@ export const loadData = async (setProducts) => {
   }
 };
 
-export const searchCustomerById = async (customerId, setCustomerData) => {
-  try {
-    const response = await fetch(`https://dummyjson.com/users/${customerId}`);
-    if (response.status !== 404) {
-      const data = await response.json();
-      return data;
-    } else {
-      return null;
-    }
-  } catch (error) {
-    console.error("Error fetching customer data:", error);
-  }
+export const getCurrentDate = () => {
+  var today = new Date();
+  var year = today.getFullYear();
+  var month = today.getMonth() + 1;
+  var day = today.getDate();
+  month = month < 10 ? "0" + month : month;
+  day = day < 10 ? "0" + day : day;
+  var formattedDate = year + "-" + month + "-" + day;
+  return formattedDate;
 };
 
 export const calculateChange = (text, totals, setChange) => {
@@ -83,7 +82,9 @@ export const handleAddToInvoice = (
   setSelectedProducts,
   setProducts
 ) => {
-  const productToAdd = products.find((product) => product.id === productId);
+  const productToAdd = products.find(
+    (product) => product.id === productId
+  );
   if (productToAdd) {
     const existingProduct = selectedProducts.find(
       (product) => product.id === productId

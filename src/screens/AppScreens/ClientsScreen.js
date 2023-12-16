@@ -2,9 +2,9 @@ import React, { useState, useEffect } from "react";
 import { View, Text, ScrollView } from "react-native";
 import CustomButton from "../../components/Buttons/CustomButton";
 import useNavigationHelpers from "../../utils/navigationHelpers";
-import CustomCard from "../../components/Card/CustomCard";
 import { fetchData } from "../../utils/dbFunctions";
 import styles from "../../styles/styles";
+import CustomCardClients from "../../components/Card/CustomCardClients";
 
 const ClientsScreen = () => {
   const [users, setUsers] = useState([]);
@@ -17,9 +17,10 @@ const ClientsScreen = () => {
   const loadData = async () => {
     try {
       const data = await fetchData(
-        "https://c9ng6xj8f5.execute-api.us-east-1.amazonaws.com/getClients"
+        "https://q20filkgq3.execute-api.us-east-1.amazonaws.com/dev/clients"
       );
-      setUsers(data);
+      const body = JSON.parse(data.body);
+      setUsers(body);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -37,7 +38,7 @@ const ClientsScreen = () => {
     <ScrollView showsVerticalScrollIndicator={false}>
       <View style={styles.container}>
         <CustomButton text="New" onPress={onNewPressed} />
-        <CustomCard data={users} helper={"Details"} type={"clients"} />
+        <CustomCardClients data={users} helper={"Details"} type={"clients"} />
       </View>
     </ScrollView>
   );

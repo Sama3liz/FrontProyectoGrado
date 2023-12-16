@@ -5,6 +5,7 @@ import CustomCard from "../../components/Card/CustomCard";
 import { fetchData } from "../../utils/dbFunctions";
 import useNavigationHelpers from "../../utils/navigationHelpers";
 import styles from "../../styles/styles";
+import CustomCardProducts from "../../components/Card/CustomCardProducts";
 
 const InventoryScreen = () => {
   const [products, setProducts] = useState([]);
@@ -17,16 +18,22 @@ const InventoryScreen = () => {
   const loadData = async () => {
     try {
       const data = await fetchData(
-        "https://c9ng6xj8f5.execute-api.us-east-1.amazonaws.com/getInv"
+        "https://q20filkgq3.execute-api.us-east-1.amazonaws.com/dev/inventory"
       );
-      setProducts(data);
+      const body = JSON.parse(data.body);
+      console.log(body)
+      setProducts(body);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
   };
 
+  const updateProducts = () => {
+    loadData();
+  };
+
   const onNewPressed = () => {
-    goTo("NewProduct");
+    goTo("NewProduct", { updateProducts });
   };
 
   const onPlusPressed = () => {
@@ -43,7 +50,7 @@ const InventoryScreen = () => {
         <CustomButton text="New" onPress={onNewPressed} />
         <CustomButton text="+" onPress={onPlusPressed} type="SECONDARY" />
         <CustomButton text="-" onPress={onMinusPressed} type="SECONDARY" />
-        <CustomCard data={products} helper={"Details"} type={"inventory"}/>
+        <CustomCardProducts data={products} helper={"Details"} type={"inventory"}/>
       </View>
     </ScrollView>
   );

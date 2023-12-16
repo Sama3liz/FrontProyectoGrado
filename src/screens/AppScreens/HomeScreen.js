@@ -9,6 +9,8 @@ export default function HomeScreen() {
   const { logOut, user } = useContext(AuthContext);
   const { theme } = useTheme();
 
+  console.log(user)
+
   const onLogOutPress = () => {
     logOut();
   };

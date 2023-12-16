@@ -1,20 +1,4 @@
-// utils/dbFunctions.js
-
-// Example function to fetch customer data by ID
-export const fetchCustomerById = async (customerId) => {
-  try {
-    const response = await fetch(
-      `https://example.com/api/customers/${customerId}`
-    );
-    const data = await response.json();
-    return data; // Assuming the API returns customer data
-  } catch (error) {
-    console.error("Error fetching customer data:", error);
-    return null;
-  }
-};
-
-/* Function to fetch data */
+/* Function to get data */
 export const fetchData = async (url) => {
   try {
     const response = await fetch(url, {
@@ -32,11 +16,34 @@ export const fetchData = async (url) => {
   }
 };
 
+/* Function to get amount of certain data */
+export const getDataByCategory = async (id) => {
+  try {
+    const response = await fetch(
+      "https://q20filkgq3.execute-api.us-east-1.amazonaws.com/dev/categories/products",
+      {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ id }),
+      }
+    );
+    const data = await response.json();
+    const body = JSON.parse(data.body);
+    const quantity = Object.keys(body).length;
+    return quantity;
+  } catch (error) {
+    throw new Error("Error fetching quantity");
+  }
+};
+
 /* Function to add a new category */
 export const addCategory = async (data) => {
   try {
     const response = await fetch(
-      "https://c9ng6xj8f5.execute-api.us-east-1.amazonaws.com/addCategory",
+      "https://q20filkgq3.execute-api.us-east-1.amazonaws.com/dev/categories",
       {
         method: "POST",
         headers: {
@@ -46,7 +53,11 @@ export const addCategory = async (data) => {
         body: JSON.stringify(data),
       }
     );
-    return response;
+    if (!response.ok) {
+      throw new Error(`Failed to add category. Status: ${response.status}`);
+    }
+    const responseData = await response.json();
+    return responseData;
   } catch (error) {
     console.error("Error adding category:", error);
     throw error;
@@ -56,22 +67,28 @@ export const addCategory = async (data) => {
 /* Function to add a new client */
 export const addClient = async (data, idType) => {
   try {
-    data.tid = idType;
+    const requestData = {
+      ...data,
+      tid: idType,
+    };
     const response = await fetch(
-      "https://c9ng6xj8f5.execute-api.us-east-1.amazonaws.com/addClient",
+      "https://q20filkgq3.execute-api.us-east-1.amazonaws.com/dev/clients",
       {
         method: "POST",
         headers: {
           Accept: "application/json",
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(data),
+        body: JSON.stringify(requestData),
       }
     );
-    return response;
+    if (!response.ok) {
+      throw new Error(`Failed to add client. Status: ${response.status}`);
+    }
+    return response.json();
   } catch (error) {
     console.error("Error adding client:", error);
-    throw error;
+    throw new Error("Failed to add client");
   }
 };
 
@@ -84,41 +101,60 @@ export const addProductToInventory = async (
   idUnit
 ) => {
   try {
-    data.price = parseFloat(data.price);
-    data.sugprice = parseFloat(data.sugprice);
-    data.stock = parseInt(data.stock, 10);
-    data.supplier = idSupplier;
-    data.category = idCategory;
-    data.type = idType;
-    data.unit = idUnit;
-    data.name = data.name.toLowerCase();
-    console.log(data);
+    // Validación de datos
+    if (
+      isNaN(Number(data.price)) ||
+      isNaN(Number(data.sugprice)) ||
+      isNaN(Number(data.stock)) ||
+      !data.name ||
+      !idCategory ||
+      !idSupplier ||
+      !idType ||
+      !idUnit
+    ) {
+      throw new Error("Invalid data or missing required fields");
+    }
+    // Asignación de valores
+    const requestData = {
+      ...data,
+      supplier: idSupplier,
+      category: idCategory,
+      type: idType,
+      unit: idUnit,
+      price: Number(data.price),
+      sugprice: Number(data.sugprice),
+      stock: Number(data.stock),
+      name: data.name.toLowerCase(),
+    };
+    console.log(requestData);
+    // Llamada a la API para agregar producto al inventario
     await fetch(
-      "https://c9ng6xj8f5.execute-api.us-east-1.amazonaws.com/addInv",
+      "https://q20filkgq3.execute-api.us-east-1.amazonaws.com/dev/inventory",
       {
         method: "POST",
         headers: {
           Accept: "application/json",
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(data),
+        body: JSON.stringify(requestData),
       }
     );
   } catch (error) {
     console.error("Error adding product:", error);
-    throw error;
+    throw new Error("Failed to add product to inventory");
   }
 };
 
 /* Function to add a new supplier */
 export const addSupplier = async (data) => {
   try {
+    console.log(JSON.stringify(data));
     data.name = data.name.toLowerCase();
     data.lastname = data.lastname.toLowerCase();
     data.address = data.address.toLowerCase();
     data.comercial = data.commercial.toLowerCase();
     const response = await fetch(
-      "https://c9ng6xj8f5.execute-api.us-east-1.amazonaws.com/addSupplier",
+      "https://q20filkgq3.execute-api.us-east-1.amazonaws.com/dev/suppliers",
       {
         method: "POST",
         headers: {
@@ -131,10 +167,35 @@ export const addSupplier = async (data) => {
     if (!response.ok) {
       throw new Error("Failed to add supplier");
     }
-    console.log(data);
     return true;
   } catch (error) {
     console.error("Error adding supplier:", error);
     return false;
+  }
+};
+
+/* Function to search  */
+export const searchCustomerById = async (customerId) => {
+  try {
+    const response = await fetch(
+      "https://q20filkgq3.execute-api.us-east-1.amazonaws.com/dev/clients/client",
+      {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ id: customerId }),
+      }
+    );
+    const data = await response.json();
+    const body = JSON.parse(data.body);
+    if (Object.keys(body).length !== 0) {
+      return body[0];
+    } else {
+      return null;
+    }
+  } catch (error) {
+    console.error("Error fetching customer data:", error);
   }
 };

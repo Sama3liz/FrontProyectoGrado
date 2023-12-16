@@ -2,9 +2,9 @@ import React, { useState, useEffect } from "react";
 import { View, Text, ScrollView } from "react-native";
 import CustomButton from "../../components/Buttons/CustomButton";
 import useNavigationHelpers from "../../utils/navigationHelpers";
-import CustomCard from "../../components/Card/CustomCard";
 import { fetchData } from "../../utils/dbFunctions";
 import styles from "../../styles/styles";
+import CustomCardSuppliers from "../../components/Card/CustomCardSuppliers";
 
 
 const SuppliersScreen = () => {
@@ -18,10 +18,10 @@ const SuppliersScreen = () => {
   const loadData = async () => {
     try {
       const data = await fetchData(
-        "https://c9ng6xj8f5.execute-api.us-east-1.amazonaws.com/getSup"
+        "https://q20filkgq3.execute-api.us-east-1.amazonaws.com/dev/suppliers"
       );
-      setUsers(data);
-      console.log(data);
+      const body = JSON.parse(data.body);
+      setUsers(body);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -39,7 +39,7 @@ const SuppliersScreen = () => {
     <ScrollView showsVerticalScrollIndicator={false}>
       <View style={styles.container}>
         <CustomButton text="New" onPress={onNewPressed} />
-        <CustomCard data={users} helper={"Details"} type={"suppliers"} />
+        <CustomCardSuppliers data={users} helper={"Details"} type={"suppliers"} />
       </View>
     </ScrollView>
   );

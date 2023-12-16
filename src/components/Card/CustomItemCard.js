@@ -16,7 +16,7 @@ const CartItem = ({
         <Ionicons name="trash-bin-outline" size={24} color="red" />
       </TouchableOpacity>
       <View style={styles.itemDetails}>
-        <Text style={styles.itemName}>{item.title}</Text>
+        <Text style={styles.itemName}>{item.name}</Text>
         <Text style={styles.itemDescription}>${item.price.toFixed(2)}</Text>
       </View>
       {item.quantity !== 0 && item.quantity !== 1 ? (

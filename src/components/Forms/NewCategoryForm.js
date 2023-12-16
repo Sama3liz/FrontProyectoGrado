@@ -16,7 +16,7 @@ const NewCategoryForm = ({ route }) => {
       route.params.updateCategories();
       goBack();
     } catch (error) {
-      alert(error);
+      console.log(error);
     }
   };
 

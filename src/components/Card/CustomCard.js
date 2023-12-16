@@ -110,6 +110,7 @@ const CustomCard = ({ data, helper, type }) => {
                   source={{ uri: item.images[0] }}
                 /> */}
                 <Text style={styles.cardText}>{item.nombre_producto}</Text>
+                <Text style={styles.cardText}>{item.id_categoria}</Text>
                 <CustomButton
                   text={helper}
                   type="TERTIARY"
