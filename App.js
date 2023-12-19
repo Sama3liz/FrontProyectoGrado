@@ -8,7 +8,6 @@ import { AuthProvider } from "./src/context/AuthContext";
 import AppNavigation from "./src/navigation/AppNavigation";
 import { Amplify } from "aws-amplify";
 import amplifyconfig from "./src/amplifyconfiguration.json";
-import { ThemeProvider } from "./src/context/ThemeContext";
 import { ErrorProvider } from "./src/context/ErrorContext";
 Amplify.configure(amplifyconfig);
 
@@ -16,9 +15,7 @@ const App = () => {
   return (
     <AuthProvider>
       <ErrorProvider>
-        <ThemeProvider>
           <AppNavigation />
-        </ThemeProvider>
       </ErrorProvider>
     </AuthProvider>
   );

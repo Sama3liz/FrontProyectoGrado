@@ -13,9 +13,8 @@ export default StyleSheet.create({
   /* Containers */
   container: {
     flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
     padding: 20,
+    backgroundColor: "#F9FBFC",
   },
   containerRow: {
     marginTop: 10,
@@ -27,9 +26,39 @@ export default StyleSheet.create({
     flex: 1,
     marginTop: 10,
     width: "100%",
-
     justifyContent: "center",
     paddingHorizontal: 10,
+  },
+  containerTable: {
+    backgroundColor: "#fff",
+    paddingHorizontal: 20,
+  },
+  buttonContainer: {
+    width: "100%",
+    padding: 15,
+    marginVertical: 5,
+    alignItems: "center",
+    borderRadius: 5,
+    justifyContent: "space-between",
+  },
+  buttonRowContainer: {
+    width: "100%",
+    padding: 15,
+    marginVertical: 5,
+    alignItems: "center",
+    borderRadius: 5,
+    flex: 1,
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  inputContainer: {
+    marginVertical: 10,
+    paddingHorizontal: 10,
+    borderColor: "gray",
+    borderWidth: 1,
+    borderRadius: 5,
+    position: "relative",
+    backgroundColor: "white",
   },
   customerDetails: {
     width: "100%",
@@ -74,12 +103,14 @@ export default StyleSheet.create({
     width: "50%",
   },
   billSummary: {
+    width: "100%",
     marginTop: 20,
-    borderTopWidth: 1,
-    borderTopColor: "#ccc",
-    paddingTop: 10,
-    alignItems: "center",
-    justifyContent: "center",
+    borderWidth: 1,
+    borderColor: "#ccc",
+    padding: 10,
+    borderRadius: 5,
+    alignItems: "flex-end",
+    justifyContent: "flex-end",
   },
   /* Buttons */
   button: {
@@ -115,25 +146,6 @@ export default StyleSheet.create({
     borderRadius: 16,
   },
   /* Buttons Styles */
-  buttonContainer: {
-    width: "100%",
-    padding: 15,
-    marginVertical: 5,
-    alignItems: "center",
-    borderRadius: 5,
-    flex: 1,
-    justifyContent: "space-between",
-  },
-  buttonRowContainer: {
-    width: "100%",
-    padding: 15,
-    marginVertical: 5,
-    alignItems: "center",
-    borderRadius: 5,
-    flex: 1,
-    flexDirection: "row",
-    justifyContent: "space-between",
-  },
   container_PRIMARY: {
     backgroundColor: "#3B71F3",
   },
@@ -160,11 +172,6 @@ export default StyleSheet.create({
     paddingHorizontal: 8,
   },
   /* Table Styles */
-  containerTable: {
-    flex: 1,
-    backgroundColor: "#fff",
-    paddingHorizontal: 20,
-  },
   headerTable: {
     flexDirection: "row",
     justifyContent: "space-between",
@@ -190,9 +197,18 @@ export default StyleSheet.create({
   cellTable: {
     flex: 1,
     textAlign: "center",
+    borderRightWidth: 1,
+    borderColor: "grey",
+    padding: 5,
+  },
+  cellRowTable: {
+    flex: 1,
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
   },
   nameTable: {
-    textAlign: "left",
+    textAlign: "center",
   },
   /* Billing Styles  */
   cartContainer: {
@@ -202,21 +218,6 @@ export default StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     marginBottom: 20,
-  },
-  input: {
-    /* flex: 1,
-    borderWidth: 1,
-    borderColor: "white",
-    padding: 10,
-    borderRadius: 5,
-    marginRight: 10, */
-    backgroundColor: "white",
-    width: "100%",
-    borderColor: "#e8e8e8",
-    borderWidth: 1,
-    borderRadius: 5,
-    paddingHorizontal: 10,
-    marginVertical: 5,
   },
   title: {
     fontSize: 24,
@@ -245,5 +246,90 @@ export default StyleSheet.create({
   itemDescription: {
     fontSize: 14,
     color: "#666",
+  },
+  /* Profile */
+  imgContainer: {
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  img: {
+    width: "100%",
+    height: 300,
+    resizeMode: "contain",
+  },
+  info: {
+    marginTop: 20,
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: "bold",
+  },
+  detail: {
+    fontSize: 18,
+    marginTop: 10,
+  },
+  itemContainer: {
+    backgroundColor: "#ffffff",
+    marginBottom: 20,
+    padding: 15,
+    borderRadius: 5,
+  },
+  itemTitle: {
+    fontSize: 20,
+    fontWeight: "bold",
+    marginBottom: 5,
+  },
+  itemDescription: {
+    fontSize: 16,
+    marginBottom: 5,
+  },
+  itemPrice: {
+    fontSize: 18,
+    fontWeight: "bold",
+    marginBottom: 10,
+  },
+  itemDetails: {
+    fontSize: 14,
+    color: "gray",
+    marginBottom: 10,
+  },
+  addToCartButton: {
+    backgroundColor: "#26A69A",
+    padding: 10,
+    borderRadius: 5,
+  },
+  addToCartText: {
+    color: "#ffffff",
+    fontSize: 16,
+    fontWeight: "bold",
+    textAlign: "center",
+  },
+  /* Input */
+  label: {
+    position: "absolute",
+    top: -10,
+    left: 10,
+    backgroundColor: "#F9FBFC",
+    paddingHorizontal: 5,
+    fontSize: 12,
+  },
+  input: {
+    height: 40,
+    paddingHorizontal: 10,
+  },
+  /* Images */
+  logo: {
+    width: "70%",
+    maxWidth: 300,
+    maxHeight: 200,
+  },
+  /* Text */
+  text: {
+    color: 'gray',
+    marginVertical: 10,
+  },
+  /* Link */
+  link: {
+    color: '#FDB075',
   },
 });

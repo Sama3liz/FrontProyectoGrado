@@ -7,6 +7,8 @@ import { useForm } from "react-hook-form";
 import useNavigationHelpers from "../../utils/navigationHelpers";
 import useConfirmation from "../../utils/useConfirmation";
 import PasswordChecklist from "react-password-checklist";
+import styles from "../../styles/styles";
+import CustomInputText from "../../components/Inputs/CustomInputText";
 
 const NewPasswordScreen = ({ route }) => {
   const { control, handleSubmit } = useForm();
@@ -31,20 +33,34 @@ const NewPasswordScreen = ({ route }) => {
 
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
-      <View style={newPasswordStyles.root}>
-        <Text style={newPasswordStyles.title}>Reset your password</Text>
-
+      <View style={styles.container}>
+        <View
+          style={[
+            styles.void,
+            {
+              flex: 1,
+              alignItems: "center",
+              justifyContent: "center",
+              padding: 20,
+              marginTop: 50,
+            },
+          ]}
+        >
+          <Text style={[styles.title, { color: "#051C60" }]}>
+            Reset your password
+          </Text>
+        </View>
         {error ? <Text style={{ color: "red" }}>{error}</Text> : null}
-
-        <CustomInput
+        <CustomInputText
           placeholder="Code"
           name="confirmationCode"
+          label={"Code"}
           control={control}
           rules={{ required: "Code is required" }}
         />
-
-        <CustomInput
+        <CustomInputText
           name="newPassword"
+          label={"New Password"}
           control={control}
           placeholder="Enter your new password"
           secureTextEntry
@@ -57,16 +73,13 @@ const NewPasswordScreen = ({ route }) => {
             },
           }}
         />
-
         <PasswordChecklist
           rules={["minLength", "specialChar", "number", "capital", "lowercase"]}
           minLength={12}
           value={password}
           onChange={(isValid) => {}}
         />
-
         <CustomButton text="Submit" onPress={handleSubmit(onSubmitPressed)} />
-
         <CustomButton
           text="Back to Sign in"
           onPress={onSignInPress}

@@ -7,7 +7,7 @@ import SideNavigation from "./SideNavigation";
 import NewClientForm from "../components/Forms/NewClientForm";
 import NewSupplierForm from "../components/Forms/NewSupplierForm";
 import NewProductForm from "../components/Forms/NewProductForm";
-import Company from "../components/Forms/CompanyForm";
+import Company from "../components/Forms/CompanyDataForm";
 import ProfileScreen from "../screens/AppScreens/ProfileScreen";
 import NewCategoryForm from "../components/Forms/NewCategoryForm";
 import AccountsScreen from "../screens/AppScreens/AccountsScreen";
@@ -15,7 +15,8 @@ import JournalScreen from "../screens/AppScreens/JournalScreen";
 import LedgerScreen from "../screens/AppScreens/LedgerScreen";
 import CardexScreen from "../screens/AppScreens/CardexScreen";
 import UserScreen from "../screens/AppScreens/UserScreen";
-import AppearanceScreen from "../screens/AppScreens/AppearanceScreen";
+import ProductScreen from "../screens/AppScreens/ProductScreen";
+import NewAccountForm from "../components/Forms/NewAccountForm";
 
 const Stack = createNativeStackNavigator();
 
@@ -68,7 +69,7 @@ function AppStack() {
         />
         <Stack.Screen
           name="ProductProfile"
-          component={ProfileScreen}
+          component={ProductScreen}
           options={{ headerTitle: "" }}
         />
         {/* Accounting */}
@@ -85,6 +86,11 @@ function AppStack() {
         <Stack.Screen
           name="Accounts"
           component={AccountsScreen}
+          options={{ headerTitle: "" }}
+        />
+        <Stack.Screen
+          name="NewAccount"
+          component={NewAccountForm}
           options={{ headerTitle: "" }}
         />
         <Stack.Screen
@@ -106,11 +112,6 @@ function AppStack() {
         <Stack.Screen
           name="User"
           component={UserScreen}
-          options={{ headerTitle: "" }}
-        />
-        <Stack.Screen
-          name="Appearance"
-          component={AppearanceScreen}
           options={{ headerTitle: "" }}
         />
       </Stack.Navigator>

@@ -21,7 +21,7 @@ const InventoryScreen = () => {
         "https://q20filkgq3.execute-api.us-east-1.amazonaws.com/dev/inventory"
       );
       const body = JSON.parse(data.body);
-      console.log(body)
+      console.log(data)
       setProducts(body);
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -50,7 +50,7 @@ const InventoryScreen = () => {
         <CustomButton text="New" onPress={onNewPressed} />
         <CustomButton text="+" onPress={onPlusPressed} type="SECONDARY" />
         <CustomButton text="-" onPress={onMinusPressed} type="SECONDARY" />
-        <CustomCardProducts data={products} helper={"Details"} type={"inventory"}/>
+        <CustomCardProducts data={products} helper={"Details"}/>
       </View>
     </ScrollView>
   );

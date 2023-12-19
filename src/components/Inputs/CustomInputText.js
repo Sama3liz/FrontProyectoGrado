@@ -1,10 +1,12 @@
 import React from "react";
 import { View, Text, TextInput, StyleSheet } from "react-native";
 import { Controller } from "react-hook-form";
+import styles from "../../styles/styles";
 
 const CustomInputText = ({
   control,
   name,
+  label,
   rules = {},
   placeholder,
   secureTextEntry,
@@ -22,13 +24,16 @@ const CustomInputText = ({
         field: { value, onChange, onBlur },
         fieldState: { error },
       }) => (
-        <>
+        <View style={styles.void}>
           <View
             style={[
-              styles.container,
+              styles.inputContainer,
               { borderColor: error ? "red" : "#e8e8e8" },
             ]}
           >
+            <Text style={[styles.label, { color: error ? "red" : "black" }]}>
+              {label}
+            </Text>
             <TextInput
               type="text"
               disabled={disabled ? true : false}
@@ -50,25 +55,10 @@ const CustomInputText = ({
               {error.message || "Error"}
             </Text>
           )}
-        </>
+        </View>
       )}
     />
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: "white",
-    width: "100%",
-
-    borderColor: "#e8e8e8",
-    borderWidth: 1,
-    borderRadius: 5,
-
-    paddingHorizontal: 10,
-    marginVertical: 5,
-  },
-  input: {},
-});
 
 export default CustomInputText;

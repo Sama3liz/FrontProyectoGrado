@@ -6,7 +6,6 @@ import {
 import React, { useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
 import { useError } from "../context/ErrorContext";
-import { useTheme } from "../context/ThemeContext";
 import AppStack from "./AppStack";
 import AuthStack from "./AuthStack";
 import styles from "../styles/styles";
@@ -14,7 +13,6 @@ import styles from "../styles/styles";
 const AppNavigation = () => {
   const { loading, user } = useContext(AuthContext);
   const { error } = useError();
-  const { theme } = useTheme();
 
   if (loading) {
     return (

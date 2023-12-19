@@ -14,7 +14,9 @@ import { useForm } from "react-hook-form";
 import PasswordChecklist from "react-password-checklist";
 import useNavigationHelpers from "../../utils/navigationHelpers";
 import useRegistration from "../../utils/useRegistration";
-import { EMAIL_REGEX, RUC_REGEX, PASSWORD_REGEX } from "../../utils/constants";
+import { EMAIL_REGEX, RUC_REGEX } from "../../utils/constants";
+import styles from "../../styles/styles";
+import CustomInputText from "../../components/Inputs/CustomInputText";
 
 const SignUpScreen = () => {
   const { onSignUp, error, clearError } = useRegistration();
@@ -52,19 +54,27 @@ const SignUpScreen = () => {
 
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
-      <View style={signUpStyles.root}>
-        <Image
-          source={Logo}
-          style={[signUpStyles.logo, { height: height * 0.3 }]}
-          resizeMode="contain"
-        />
-
-        <Text style={signUpStyles.title}>Create an account</Text>
-
+      <View style={styles.container}>
+        <View
+          style={[
+            styles.void,
+            {
+              flex: 1,
+              alignItems: "center",
+              justifyContent: "center",
+              padding: 20,
+              marginTop: 50,
+            },
+          ]}
+        >
+          <Text style={[styles.title, { color: "#051C60" }]}>
+            Create an account
+          </Text>
+        </View>
         {error && <Text style={{ color: "red" }}>Error: {error}</Text>}
-
-        <CustomInput
+        <CustomInputText
           name="username"
+          label="RUC"
           control={control}
           placeholder="RUC"
           handleInputChange={handleInputChange}
@@ -84,9 +94,9 @@ const SignUpScreen = () => {
             },
           }}
         />
-
-        <CustomInput
+        <CustomInputText
           name="name"
+          label="Name"
           control={control}
           placeholder="Full name"
           handleInputChange={handleInputChange}
@@ -102,9 +112,9 @@ const SignUpScreen = () => {
             },
           }}
         />
-
-        <CustomInput
+        <CustomInputText
           name="email"
+          label="Email"
           control={control}
           placeholder="Email"
           rules={{
@@ -112,9 +122,9 @@ const SignUpScreen = () => {
             pattern: { value: EMAIL_REGEX, message: "Email is invalid" },
           }}
         />
-
-        <CustomInput
+        <CustomInputText
           name="password"
+          label="Password"
           control={control}
           placeholder="Password"
           secureTextEntry
@@ -127,9 +137,9 @@ const SignUpScreen = () => {
             },
           }}
         />
-
-        <CustomInput
+        <CustomInputText
           name="password-repeat"
+          label="Password"
           control={control}
           placeholder="Repeat Password"
           secureTextEntry
@@ -138,26 +148,23 @@ const SignUpScreen = () => {
             validate: (value) => value === pwd || "Password do not match",
           }}
         />
-
         <PasswordChecklist
           rules={["minLength", "specialChar", "number", "capital", "lowercase"]}
           minLength={12}
           value={password}
           onChange={(isValid) => {}}
         />
-
         <CustomButton
           text="Register"
           onPress={handleSubmit(onRegisterPressed)}
         />
-
-        <Text style={signUpStyles.text}>
+        <Text style={styles.text}>
           By registering, you confirm that you accept our{" "}
-          <Text style={signUpStyles.link} onPress={onTermsOfUsePressed}>
+          <Text style={styles.link} onPress={onTermsOfUsePressed}>
             Terms of Use
           </Text>{" "}
           and{" "}
-          <Text style={signUpStyles.link} onPress={onPrivacyPressed}>
+          <Text style={styles.link} onPress={onPrivacyPressed}>
             Privacy Policy
           </Text>
         </Text>

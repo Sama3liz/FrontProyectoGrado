@@ -37,12 +37,13 @@ function SideNavigation() {
         <DrawerContentScrollView {...props}>
           <View
             style={{
-              height: 200,
+              height: "200",
               width: "100%",
               justifyContent: "center",
               alignItems: "center",
               borderBottomColor: "#f4f4f4",
               borderBottomWidth: 1,
+              paddingBottom: 5,
             }}
           >
             <Image
@@ -69,19 +70,21 @@ function SideNavigation() {
             </Text>
           </View>
           <DrawerItemList {...props} />
-          <Text
-            onPress={onLogOutPress}
+          <View
             style={{
               width: "100%",
-              textAlign: "center",
-              color: "red",
-              marginTop: "auto",
-              marginVertical: 20,
-              fontSize: 20,
+              justifyContent: "center",
+              alignItems: "center",
+              borderTopColor: "#f4f4f4",
+              borderTopWidth: 1,
             }}
-          >
-            Sign out
-          </Text>
+          ></View>
+          <DrawerItem
+            label="Log out"
+            onPress={onLogOutPress}
+            icon={() => <MaterialIcons name="logout" size={24} color="red" />}
+            style={[{ justifyContent: "space-between", alignItems: "center" }]}
+          />
         </DrawerContentScrollView>
       )}
       initialRouteName="Dashboard"

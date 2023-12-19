@@ -6,18 +6,16 @@ import styles from "../../styles/styles";
 
 export default function SettingsScreen() {
   const { goTo } = useNavigationHelpers();
+
   const onButtonPress = (page) => {
     goTo(page);
   };
+  
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
       <View style={styles.container}>
         <CustomButton text="Company" onPress={() => onButtonPress("Company")} />
         <CustomButton text="Profile" onPress={() => onButtonPress("User")} />
-        <CustomButton
-          text="Appearance"
-          onPress={() => onButtonPress("Appearance")}
-        />
       </View>
     </ScrollView>
   );

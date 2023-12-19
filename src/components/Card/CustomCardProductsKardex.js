@@ -11,14 +11,11 @@ import {
 import React, { useEffect, useState } from "react";
 import CustomButton from "../Buttons/CustomButton";
 import useNavigationHelpers from "../../utils/navigationHelpers";
-import CustomSearchInput from "../Inputs/CustomSearchInput";
-import { useForm } from "react-hook-form";
 
-const numColumns = 4;
+const numColumns = 3;
 
-const CustomCardSuppliers = ({ data, helper }) => {
+const CustomCardProductsKardex = ({ data, helper, type }) => {
   const { goTo } = useNavigationHelpers();
-  const { control } = useForm();
   const [filter, setFilter] = useState([]);
   const [master, setMaster] = useState([]);
   const [search, setSearch] = useState("");
@@ -31,14 +28,11 @@ const CustomCardSuppliers = ({ data, helper }) => {
   const searchFilter = (text) => {
     if (text) {
       const newData = master.filter((item) => {
-        const itemData = item.commercial
-          ? item.commercial.toUpperCase()
+        const itemData = item.name
+          ? item.name.toUpperCase()
           : "".toUpperCase();
-        const rucData = item.ruc ? item.ruc.toUpperCase() : "".toUpperCase();
         const textData = text.toUpperCase();
-        return (
-          itemData.indexOf(textData) > -1 || rucData.indexOf(textData) > -1
-        );
+        return itemData.indexOf(textData) > -1;
       });
       setFilter(newData);
       setSearch(text);
@@ -49,30 +43,33 @@ const CustomCardSuppliers = ({ data, helper }) => {
   };
 
   const onMorePressed = (item) => {
-    goTo("UserProfile", { person: item });
+    goTo("HistoryProduct", { item: item });
   };
 
   return (
     <>
       <View style={styles.container}>
-        <CustomSearchInput
+        <TextInput
+          style={styles.input}
           placeholder="Search Here"
-          name={"search"}
-          label={"Search"}
-          control={control}
-          handleInputChange={(text) => searchFilter(text)}
+          value={search}
+          onChangeText={(text) => searchFilter(text)}
         />
       </View>
       <FlatList
         data={filter}
         numColumns={numColumns}
-        style={styles.container}
+        
         renderItem={({ item }) => {
           return (
             <View style={styles.card}>
-              {/* <Image style={styles.cardImage} source={{ uri: item.image }} /> */}
-              <Text style={styles.cardText}>{item.commercial}</Text>
-              <Text style={styles.cardText}>RUC: {item.ruc}</Text>
+              {/* <Image
+                  style={styles.cardImage}
+                  source={{ uri: item.images[0] }}
+                /> */}
+              <Text style={styles.cardText}>{item.name}</Text>
+              <Text style={styles.cardText}>Category: {item.category}</Text>
+              <Text style={styles.cardText}>Main Code: {item.code}</Text>
               <CustomButton
                 text={helper}
                 type="TERTIARY"
@@ -81,21 +78,21 @@ const CustomCardSuppliers = ({ data, helper }) => {
             </View>
           );
         }}
-        keyExtractor={(item) => {
+        /* keyExtractor={(item) => {
           item.id.toString();
-        }}
+        }} */
       />
     </>
   );
 };
 
-export default CustomCardSuppliers;
+export default CustomCardProductsKardex;
 
 const styles = StyleSheet.create({
   card: {
     backgroundColor: "#fff",
     marginBottom: 10,
-    marginLeft: 20,
+    marginLeft: 10,
     width: "100%",
     shadowColor: "#000",
     shadowOpacity: 0.2,

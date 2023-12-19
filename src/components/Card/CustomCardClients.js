@@ -11,11 +11,14 @@ import {
 import React, { useEffect, useState } from "react";
 import CustomButton from "../Buttons/CustomButton";
 import useNavigationHelpers from "../../utils/navigationHelpers";
+import CustomSearchInput from "../Inputs/CustomSearchInput";
+import { useForm } from "react-hook-form";
 
 const numColumns = 4;
 
 const CustomCardClients = ({ data, helper }) => {
   const { goTo } = useNavigationHelpers();
+  const { control } = useForm();
   const [filter, setFilter] = useState([]);
   const [master, setMaster] = useState([]);
   const [search, setSearch] = useState("");
@@ -28,9 +31,21 @@ const CustomCardClients = ({ data, helper }) => {
   const searchFilter = (text) => {
     if (text) {
       const newData = master.filter((item) => {
-        const itemData = item.lastname ? item.lastname.toUpperCase() : "".toUpperCase();
+        const itemData = item.lastname
+          ? item.lastname.toUpperCase()
+          : "".toUpperCase();
         const textData = text.toUpperCase();
-        return itemData.indexOf(textData) > -1;
+        const firstNameData = item.firstname
+          ? item.firstname.toUpperCase()
+          : "".toUpperCase();
+        const ciData = item.ci
+          ? item.ci.toString().toUpperCase()
+          : "".toUpperCase();
+        return (
+          itemData.indexOf(textData) > -1 ||
+          firstNameData.indexOf(textData) > -1 ||
+          ciData.indexOf(textData) > -1
+        );
       });
       setFilter(newData);
       setSearch(text);
@@ -41,17 +56,18 @@ const CustomCardClients = ({ data, helper }) => {
   };
 
   const onMorePressed = (item) => {
-    goTo("UserProfile", { id: item.id });
+    goTo("UserProfile", { person: item });
   };
 
   return (
     <>
       <View style={styles.container}>
-        <TextInput
-          style={styles.input}
+        <CustomSearchInput
           placeholder="Search Here"
-          value={search}
-          onChangeText={(text) => searchFilter(text)}
+          name={"search"}
+          label={"Search"}
+          control={control}
+          handleInputChange={(text) => searchFilter(text)}
         />
       </View>
       <FlatList
@@ -62,7 +78,9 @@ const CustomCardClients = ({ data, helper }) => {
           return (
             <View style={styles.card}>
               {/* <Image style={styles.cardImage} source={{ uri: item.image }} /> */}
-              <Text style={styles.cardText}>{item.lastname} {item.firstname}</Text>
+              <Text style={styles.cardText}>
+                {item.lastname} {item.firstname}
+              </Text>
               <Text style={styles.cardText}>{item.ci}</Text>
               <CustomButton
                 text={helper}

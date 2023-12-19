@@ -6,12 +6,15 @@ import useNavigationHelpers from "../../utils/navigationHelpers";
 import { confirmEmailStyles } from "../../styles/screenStyles/ConfirmEmailStyles";
 import { useForm } from "react-hook-form";
 import useConfirmation from "../../utils/useConfirmation";
+import styles from "../../styles/styles";
+import CustomInputText from "../../components/Inputs/CustomInputText";
 
 const ConfirmEmailScreen = ({ route }) => {
   const { control, handleSubmit } = useForm();
   const { goTo } = useNavigationHelpers();
   const { username } = route.params;
-  const { confirmEmailCode, resendCodeMail, clearError, error } = useConfirmation();
+  const { confirmEmailCode, resendCodeMail, clearError, error } =
+    useConfirmation();
 
   const onConfirmPressed = ({ confirmationCode }) => {
     clearError();
@@ -33,11 +36,27 @@ const ConfirmEmailScreen = ({ route }) => {
 
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
-      <View style={confirmEmailStyles.root}>
-        <Text style={confirmEmailStyles.title}>Confirm your email</Text>
+      <View style={styles.container}>
+        <View
+          style={[
+            styles.void,
+            {
+              flex: 1,
+              alignItems: "center",
+              justifyContent: "center",
+              padding: 20,
+              marginTop: 50,
+            },
+          ]}
+        >
+          <Text style={[styles.title, { color: "#051C60" }]}>
+            Confirm your email
+          </Text>
+        </View>
         {error ? <Text style={{ color: "red" }}>{error}</Text> : null}
-        <CustomInput
+        <CustomInputText
           name="confirmationCode"
+          label={"Code"}
           control={control}
           handleInputChange={handleInputChange}
           placeholder="Enter your confirmation code"
@@ -45,15 +64,12 @@ const ConfirmEmailScreen = ({ route }) => {
             required: "Confirmation code is required",
           }}
         />
-
         <CustomButton text="Confirm" onPress={handleSubmit(onConfirmPressed)} />
-
         <CustomButton
           text="Resend code"
           onPress={onResendPress}
           type="SECONDARY"
         />
-
         <CustomButton
           text="Back to Sign in"
           onPress={onSignInPress}

@@ -6,6 +6,7 @@ export const signInStyles = StyleSheet.create({
     padding: 20,
   },
   logo: {
+    alignItems: 'center',
     width: '70%',
     maxWidth: 300,
     maxHeight: 200,

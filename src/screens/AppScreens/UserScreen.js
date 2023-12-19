@@ -5,11 +5,12 @@ import { AuthContext } from "../../context/AuthContext";
 import CustomInputText from "../../components/Inputs/CustomInputText";
 import { useForm } from "react-hook-form";
 import CustomButton from "../../components/Buttons/CustomButton";
+import styles from "../../styles/styles";
 
 const UserScreen = () => {
   const { user } = useContext(AuthContext);
   const { control, handleSubmit, setValue } = useForm();
-
+  console.log(user.payload);
   useEffect(() => {
     setValue("name", user.payload.name);
     setValue("ruc", user.payload["cognito:username"]);
@@ -22,36 +23,44 @@ const UserScreen = () => {
 
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
-      <View style={newPasswordStyles.root}>
-        <Text style={newPasswordStyles.title}>User Data</Text>
-        <CustomInputText
-          name="name"
-          control={control}
-          rules={{
-            required: "Name is required",
-          }}
-        />
-        <CustomInputText
-          disabled
-          name="ruc"
-          control={control}
-          rules={{
-            required: "RUC is required",
-          }}
-        />
-        <CustomInputText
-          name="email"
-          control={control}
-          rules={{
-            required: "Email is required",
-          }}
-        />
-        <CustomInputText
-          name="newPassword"
-          placeholder={"New Password"}
-          control={control}
-          rules={{}}
-        />
+      <View style={styles.container}>
+        <Text style={styles.title}>User Data</Text>
+        <View style={styles.customerDetails}>
+          <CustomInputText
+            name="name"
+            label="Name"
+            placeholder="Insert a new name"
+            control={control}
+            rules={{
+              required: "Name is required",
+            }}
+          />
+          <CustomInputText
+            disabled
+            name="ruc"
+            label="RUC"
+            control={control}
+            rules={{
+              required: "RUC is required",
+            }}
+          />
+          <CustomInputText
+            disabled
+            name="email"
+            label="Email"
+            placeholder="Insert a new email"
+            control={control}
+            rules={{
+              required: "Email is required",
+            }}
+          />
+          <CustomInputText
+            name="newPassword"
+            label="New Password"
+            placeholder="Insert a new password"
+            control={control}
+          />
+        </View>
         <CustomButton text={"Save"} onPress={handleSubmit(updateUserData)} />
       </View>
     </ScrollView>

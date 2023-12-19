@@ -12,6 +12,7 @@ import {
 } from "../../utils/dbFunctions";
 import CustomInputText from "../Inputs/CustomInputText";
 import CustomInputNumber from "../Inputs/CustomInputNumber";
+import styles from "../../styles/styles";
 
 const NewProductForm = ({ route }) => {
   const { control, handleSubmit, watch, setValue } = useForm();
@@ -31,7 +32,9 @@ const NewProductForm = ({ route }) => {
     load_data_cat();
     load_data_type();
     getSuggestedPrice(price);
-    getInternalCode(category, idCategory);
+    if (idCategory !== 0) {
+      getInternalCode(category, idCategory);
+    }
   }, [price, category, idCategory]);
 
   const load_data_sup = async () => {
@@ -83,9 +86,7 @@ const NewProductForm = ({ route }) => {
     if (category) {
       const sugCode = extractInitials(category);
       const quantity = await getDataByCategory(idCategory);
-      console.log(quantity);
       const newQuantity = quantity + 1;
-      console.log(newQuantity);
       setValue("intcod", sugCode + "-" + newQuantity);
     }
   };
@@ -129,11 +130,12 @@ const NewProductForm = ({ route }) => {
 
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
-      <View style={newPasswordStyles.root}>
-        <Text style={newPasswordStyles.title}>Register New Product</Text>
+      <View style={styles.container}>
+        <Text style={styles.title}>Register New Product</Text>
         <CustomInputText
           placeholder="Name"
           name="name"
+          label={"Name"}
           control={control}
           rules={{ required: "Name is required" }}
         />
@@ -149,8 +151,8 @@ const NewProductForm = ({ route }) => {
         <CustomInputText
           placeholder="Code Supplier"
           name="supcod"
+          label={"Supplier Code"}
           control={control}
-          rules={{ required: "Code supplier is required" }}
         />
         <CustomPicker
           name="category"
@@ -165,6 +167,7 @@ const NewProductForm = ({ route }) => {
           disabled
           placeholder="Internal Code"
           name="intcod"
+          label={"Internal Code"}
           control={control}
           editable={false}
           rules={{ required: "Code is required" }}
@@ -172,6 +175,7 @@ const NewProductForm = ({ route }) => {
         <CustomInputNumber
           placeholder="Price"
           name="price"
+          label="Price"
           type={"number"}
           valueAsNumber
           showDecimals={true}
@@ -189,6 +193,7 @@ const NewProductForm = ({ route }) => {
           disabled
           placeholder="Suggested Price"
           name="sugprice"
+          label="Suggested Price"
           control={control}
           editable={false}
           rules={{
@@ -203,6 +208,7 @@ const NewProductForm = ({ route }) => {
         <CustomInputNumber
           placeholder="Stock"
           name="stock"
+          label="Stock"
           control={control}
           type={"number"}
           showDecimals={false}
@@ -246,18 +252,18 @@ const NewProductForm = ({ route }) => {
         <CustomInputText
           placeholder="Details"
           name="details"
+          label={"Details"}
           control={control}
           rules={{}}
         />
-
         <CustomInputText
           placeholder="Image"
           name="image"
+          label={"Image"}
           control={control}
           rules={{}}
         />
         <CustomButton text="Submit" onPress={handleSubmit(onSubmitPressed)} />
-        <CustomButton text="Back" onPress={onBackPressed} type="PRIMARY" />
       </View>
     </ScrollView>
   );

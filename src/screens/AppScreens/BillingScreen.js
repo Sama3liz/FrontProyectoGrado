@@ -18,13 +18,13 @@ import {
   getCurrentDate,
 } from "../../utils/useBilling";
 import styles from "../../styles/styles";
-import CustomInput from "../../components/Inputs/CustomInput";
 import { useForm } from "react-hook-form";
 import { useError } from "../../context/ErrorContext";
 import { ScrollView } from "react-native-gesture-handler";
 import CartItem from "../../components/Card/CustomItemCard";
 import { Ionicons } from "@expo/vector-icons";
 import { searchCustomerById } from "../../utils/dbFunctions";
+import CustomInputText from "../../components/Inputs/CustomInputText";
 
 const BillingScreen = () => {
   const { goTo } = useNavigationHelpers();
@@ -60,7 +60,7 @@ const BillingScreen = () => {
   }, [selectedProducts]);
 
   const setSearchCustomer = (customerData) => {
-    console.log(customerData)
+    console.log(customerData);
     if (customerData !== null) {
       clearError();
       setValue("name", customerData.firstname);
@@ -185,23 +185,19 @@ const BillingScreen = () => {
     if (paymentMethod === "Cash") {
       return (
         <>
-          <View style={styles.root}>
-            <Text>Total:</Text>
-            <Text style={styles.input}>${totals.total.toFixed(2)}</Text>
-            <Text>Cash:</Text>
-            <TextInput
-              style={styles.input}
-              keyboardType="numeric"
-              placeholder="Ingrese el monto"
-              onChangeText={(text) => {
-                clearError();
-                setCashInput(text);
-                cashChange(text, totals);
-              }}
-            />
-            <Text>Change:</Text>
-            <Text style={styles.input}>${change ? change : 0}</Text>
-          </View>
+          <CustomInputText
+            name="cash"
+            placeholder="Insert cash value"
+            label="Search"
+            control={control}
+            onChangeText={(text) => {
+              clearError();
+              setCashInput(text);
+              cashChange(text, totals);
+            }}
+          />
+          <Text>Change:</Text>
+          <Text style={styles.input}>${change ? change : 0}</Text>
         </>
       );
     } else if (paymentMethod === "Card" || paymentMethod === "Transfer") {
@@ -315,9 +311,10 @@ const BillingScreen = () => {
               {errorMessage ? (
                 <Text style={styles.error}>{errorMessage}</Text>
               ) : null}
-              <CustomInput
+              <CustomInputText
                 name="ci"
-                placeholder="CI/RUC"
+                placeholder="Insert a CI or RUC"
+                label="CI/RUC"
                 control={control}
                 handleInputChange={handleIDChange}
                 rules={{ required: "CI/RUC is required" }}
@@ -325,34 +322,39 @@ const BillingScreen = () => {
               <View>
                 <CustomButton text={"Search"} onPress={searchCustomer} />
               </View>
-              <CustomInput
+              <CustomInputText
                 name="name"
-                placeholder="Name"
+                label="Name"
+                placeholder="Insert a name"
                 control={control}
                 rules={{ required: "Name is required" }}
                 handleInputChange={handleInputChange}
               />
-              <CustomInput
+              <CustomInputText
                 name="lastname"
-                placeholder="Last name"
+                label="Last Name"
+                placeholder="Insert a family name"
                 control={control}
                 rules={{ required: "Last name is required" }}
               />
-              <CustomInput
+              <CustomInputText
                 name="email"
-                placeholder="Email"
+                label="Email"
+                placeholder="Insert an email"
                 control={control}
                 rules={{ required: "Email is required" }}
               />
-              <CustomInput
+              <CustomInputText
                 name="phone"
-                placeholder="Phone"
+                label="Phone"
+                placeholder="Insert a phone"
                 control={control}
                 rules={{ required: "Phone is required" }}
               />
-              <CustomInput
+              <CustomInputText
                 name="address"
-                placeholder="Address"
+                label="Address"
+                placeholder="Insert an address"
                 control={control}
                 rules={{ required: "Address is required" }}
               />
@@ -374,11 +376,12 @@ const BillingScreen = () => {
                 {errorMessage ? (
                   <Text style={styles.error}>{errorMessage}</Text>
                 ) : null}
-                <TextInput
-                  style={styles.input}
-                  value={searchQuery}
+                <CustomInputText
+                  name="search"
+                  placeholder="Insert a name or code or just leave empty for list all"
+                  label="Search"
+                  control={control}
                   onChangeText={(text) => setSearchQuery(text)}
-                  placeholder="Search by name or code"
                 />
                 <CustomButton text={"Search"} onPress={handleSearch} />
               </View>
@@ -410,7 +413,7 @@ const BillingScreen = () => {
                   </View>
                 )}
               </View>
-              <View style={styles.buttonRowContainer}>
+              <View style={styles.container}>
                 <CustomButton text={"Back"} onPress={onBackPressed} />
                 <CustomButton
                   text={"Next"}
@@ -427,8 +430,16 @@ const BillingScreen = () => {
             {errorMessage ? (
               <Text style={styles.error}>{errorMessage}</Text>
             ) : null}
+            <Text
+              style={[
+                styles.subtitle,
+                { textAlign: "center", marginTop: 10, marginBottom: 0 },
+              ]}
+            >
+              Total: ${totals.total.toFixed(2)}
+            </Text>
             <View style={styles.customerDetails}>
-              <View style={styles.containerRow}>
+              <View style={styles.container}>
                 <CustomButton
                   text={"Cash"}
                   type="SECONDARY"
@@ -446,8 +457,12 @@ const BillingScreen = () => {
                 />
               </View>
             </View>
-            <View style={styles.customerDetails}>{renderPaymentFields()}</View>
-            <View style={styles.buttonRowContainer}>
+            {paymentMethod ? (
+              <View style={styles.customerDetails}>
+                {renderPaymentFields()}
+              </View>
+            ) : null}
+            <View style={styles.buttonContainer}>
               <CustomButton text={"Back"} onPress={onBackPressed} />
               <CustomButton
                 text={"Next"}
@@ -460,33 +475,33 @@ const BillingScreen = () => {
         return (
           <>
             <Text style={styles.title}>Resume</Text>
-            <View style={styles.billSummary}>
+            <View style={styles.customerDetails}>
               <Text>CI/RUC: {id}</Text>
               <Text>Name: {firstName + " " + lastName} </Text>
               <Text>Email: {email}</Text>
               <Text>Phone: {phone}</Text>
               <Text>Address: {email}</Text>
             </View>
-            {selectedProducts.map((product) => (
-              <CartItem
-                key={product.id}
-                item={product}
-                onRemoveProduct={() => removeFromInvoice(product.id)}
-                onQuantityIncrease={() => productSelection(product)}
-                onQuantityDecrease={() =>
-                  quantityChange(product.id, product.quantity - 1)
-                }
-                onQuantityChange={(text) =>
-                  quantityChange(product.id, text)
-                }
-              />
-            ))}
+            <View style={styles.customerDetails}>
+              {selectedProducts.map((product) => (
+                <CartItem
+                  key={product.id}
+                  item={product}
+                  onRemoveProduct={() => removeFromInvoice(product.id)}
+                  onQuantityIncrease={() => productSelection(product)}
+                  onQuantityDecrease={() =>
+                    quantityChange(product.id, product.quantity - 1)
+                  }
+                  onQuantityChange={(text) => quantityChange(product.id, text)}
+                />
+              ))}
+            </View>
             <View style={styles.billSummary}>
               {paymentMethod === "Cash" ? (
-                <View>
+                <>
                   <Text>Method: {paymentMethod}</Text>
                   <Text>Change: ${change}</Text>
-                </View>
+                </>
               ) : (
                 <Text>Method: {paymentMethod}</Text>
               )}
@@ -495,14 +510,12 @@ const BillingScreen = () => {
               <Text>Tarifa 12: ${totals.tariff12.toFixed(2)}</Text>
               <Text>12% IVA: ${totals.iva12.toFixed(2)}</Text>
               <Text>Total: ${totals.total.toFixed(2)}</Text>
-              <CustomButton
-                text={"Send"}
-                onPress={handleSubmit(onSubmitPressed)}
-              />
             </View>
-            <View style={styles.buttonContainer}>
-              <CustomButton text={"Back"} onPress={onBackPressed} />
-            </View>
+            <CustomButton
+              text={"Send"}
+              onPress={handleSubmit(onSubmitPressed)}
+            />
+            <CustomButton text={"Back"} onPress={onBackPressed} />
           </>
         );
       default:
@@ -511,10 +524,8 @@ const BillingScreen = () => {
   };
 
   return (
-    <ScrollView>
-      <View style={styles.container}>
-        <View style={styles.containerCol}>{renderStepContent()}</View>
-      </View>
+    <ScrollView showsVerticalScrollIndicator={false}>
+      <View style={styles.container}>{renderStepContent()}</View>
     </ScrollView>
   );
 };

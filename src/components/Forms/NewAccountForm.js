@@ -1,20 +1,18 @@
 import { useForm } from "react-hook-form";
-import { View, Text, ScrollView } from "react-native";
+import { View, Text, TextInput, ScrollView } from "react-native";
 import CustomButton from "../Buttons/CustomButton";
-import { newPasswordStyles } from "../../styles/screenStyles/NewPasswordStyles";
+import styles from "../../styles/styles";
 import { addCategory } from "../../utils/dbFunctions";
 import useNavigationHelpers from "../../utils/navigationHelpers";
 import CustomInputText from "../Inputs/CustomInputText";
-import styles from "../../styles/styles";
 
-const NewCategoryForm = ({ route }) => {
+const NewAccountForm = ({ route }) => {
   const { control, handleSubmit } = useForm();
   const { goBack } = useNavigationHelpers();
 
   const onSubmitPressed = async (data) => {
     try {
-      await addCategory(data);
-      route.params.updateCategories();
+      route.params.updateList();
       goBack();
     } catch (error) {
       console.log(error);
@@ -28,18 +26,18 @@ const NewCategoryForm = ({ route }) => {
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
       <View style={styles.container}>
-        <Text style={styles.title}>Category</Text>
-        <CustomInputText
-          placeholder="Name"
-          name="name"
-          label={"Category Name"}
-          control={control}
-          rules={{ required: "Name is required" }}
-        />
-        <CustomButton text="Submit" onPress={handleSubmit(onSubmitPressed)} />
+        <Text style={styles.title}>Account</Text>
+        <View style={styles.void}>
+          <View style={styles.inputContainer}>
+            <Text style={styles.label}>Name</Text>
+            <TextInput style={styles.input} />
+          </View>
+        </View>
       </View>
+      <CustomButton text="Submit" onPress={handleSubmit(onSubmitPressed)} />
+      <CustomButton text="Back" onPress={onBackPressed} type="PRIMARY" />
     </ScrollView>
   );
 };
 
-export default NewCategoryForm;
+export default NewAccountForm;

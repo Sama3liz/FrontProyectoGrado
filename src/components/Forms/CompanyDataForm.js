@@ -1,27 +1,26 @@
 import { useForm } from "react-hook-form";
 import { View, Text, ScrollView } from "react-native";
+import CustomInput from "../Inputs/CustomInput";
 import CustomButton from "../Buttons/CustomButton";
 import { newPasswordStyles } from "../../styles/screenStyles/NewPasswordStyles";
-import CustomPicker from "../Pickers/CustomPicker";
-import { addSupplier } from "../../utils/dbFunctions";
-import useNavigationHelpers from "../../utils/navigationHelpers";
 import CustomInputText from "../Inputs/CustomInputText";
+import { useContext, useEffect } from "react";
+import { AuthContext } from "../../context/AuthContext";
+import useNavigationHelpers from "../../utils/navigationHelpers";
 import styles from "../../styles/styles";
 import { EMAIL_REGEX, RUC_REGEX } from "../../utils/constants";
 
-const NewSupplierForm = ({ route }) => {
-  const { control, handleSubmit } = useForm();
-  const { goBack, goTo } = useNavigationHelpers();
+const Company = () => {
+  const { user } = useContext(AuthContext);
+  const { control, handleSubmit, setValue } = useForm();
+  const { goBack } = useNavigationHelpers();
 
-  const onSubmitPressed = async (data) => {
-    data.tid = 1;
-    const added = await addSupplier(data);
-    if (added) {
-      route.params.updateSuppliers();
-      goBack();
-    } else {
-      alert("Failed to add supplier");
-    }
+  useEffect(() => {
+    setValue("ruc", user.payload["cognito:username"]);
+  }, [setValue]);
+
+  const onSubmitPressed = /* async */ (data) => {
+    console.log(data);
   };
 
   const onBackPressed = () => {
@@ -31,20 +30,12 @@ const NewSupplierForm = ({ route }) => {
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
       <View style={styles.container}>
-        <Text style={styles.title}>Register New Supplier</Text>
+        <Text style={styles.title}>Company Data</Text>
         <View style={styles.customerDetails}>
-          <CustomPicker
-            able={false}
-            options={["RUC", "CI"]}
-            name="tid"
-            defaultValue={"RUC"}
-            control={control}
-            rules={{ required: "Type identification is required" }}
-          />
           <CustomInputText
-            placeholder="ID"
-            name="id"
-            label={"RUC"}
+            disabled
+            name="ruc"
+            label="RUC"
             control={control}
             rules={{
               required: "RUC is required",
@@ -63,12 +54,12 @@ const NewSupplierForm = ({ route }) => {
             }}
           />
           <CustomInputText
-            placeholder="Commercial Name"
+            placeholder="Insert the commercial name"
             name="commercial"
-            label={"Commercial Name"}
+            label="Commercial Name"
             control={control}
             rules={{
-              required: "Commercial name is required",
+              required: "Comercial name is required",
               minLength: {
                 value: 3,
                 message: "Name should be at least 3 characters long",
@@ -76,40 +67,6 @@ const NewSupplierForm = ({ route }) => {
               maxLength: {
                 value: 24,
                 message: "Name should be max 24 characters long",
-              },
-            }}
-          />
-          <CustomInputText
-            placeholder="Name"
-            name="name"
-            label={"First Name"}
-            control={control}
-            rules={{
-              required: "Name is required",
-              minLength: {
-                value: 3,
-                message: "Name should be at least 3 characters long",
-              },
-              maxLength: {
-                value: 24,
-                message: "Name should be max 24 characters long",
-              },
-            }}
-          />
-          <CustomInputText
-            placeholder="Lastname"
-            name="lastname"
-            label={"Last Name"}
-            control={control}
-            rules={{
-              required: "Lastname is required",
-              minLength: {
-                value: 3,
-                message: "Last name should be at least 3 characters long",
-              },
-              maxLength: {
-                value: 24,
-                message: "Last name should be max 24 characters long",
               },
             }}
           />
@@ -158,6 +115,7 @@ const NewSupplierForm = ({ route }) => {
             }}
           />
         </View>
+
         <CustomButton text="Submit" onPress={handleSubmit(onSubmitPressed)} />
         <CustomButton text="Back" onPress={onBackPressed} type="PRIMARY" />
       </View>
@@ -165,4 +123,4 @@ const NewSupplierForm = ({ route }) => {
   );
 };
 
-export default NewSupplierForm;
+export default Company;

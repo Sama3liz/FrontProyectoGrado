@@ -2,10 +2,11 @@ import React, { useState } from "react";
 import { View, Text, FlatList, StyleSheet } from "react-native";
 import CustomButton from "../../components/Buttons/CustomButton";
 import useNavigationHelpers from "../../utils/navigationHelpers";
+import styles from "../../styles/styles";
 
 const CardexScreen = ({ route }) => {
   const { goBack } = useNavigationHelpers();
-  const { id } = route.params;
+  const { id } = route.params.item;
   const [cardexEntries, setCardexEntries] = useState([
     {
       id: 1,
@@ -25,56 +26,32 @@ const CardexScreen = ({ route }) => {
   ]);
 
   const renderItem = ({ item }) => (
-    <View style={styles.item}>
-      <Text>{item.date}</Text>
-      <Text>{item.item}</Text>
-      <Text>{item.quantity}</Text>
-      <Text>{item.type}</Text>
+    <View style={styles.itemTable}>
+      <Text style={styles.cellTable}>{item.date}</Text>
+      <Text style={styles.cellTable}>{item.quantity}</Text>
+      <Text style={styles.cellTable}>{item.type}</Text>
     </View>
   );
 
   return (
     <View style={styles.container}>
-      <CustomButton text={"Back"} onPress={() => goBack()} />
-      <Text>Product: {id}</Text>
-      <View style={styles.header}>
-        <Text>Fecha</Text>
-        <Text>Producto</Text>
-        <Text>Cantidad</Text>
-        <Text>Tipo</Text>
+      <Text style={styles.title}>Product: {id}</Text>
+      <View style={styles.customerDetails}>
+        <View style={[styles.containerTable, { marginTop: 10 }]}>
+          <View style={styles.headerTable}>
+            <Text style={styles.headerTextTable}>Fecha</Text>
+            <Text style={styles.headerTextTable}>Cantidad</Text>
+            <Text style={styles.headerTextTable}>Tipo</Text>
+          </View>
+          <FlatList
+            data={cardexEntries}
+            renderItem={renderItem}
+            keyExtractor={(item) => item.id.toString()}
+          />
+        </View>
       </View>
-      <FlatList
-        data={cardexEntries}
-        renderItem={renderItem}
-        keyExtractor={(item) => item.id.toString()}
-      />
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    paddingHorizontal: 20,
-  },
-  header: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginBottom: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: "#ccc",
-    paddingBottom: 5,
-    fontWeight: "bold",
-  },
-  item: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    paddingVertical: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: "#eee",
-  },
-});
 
 export default CardexScreen;

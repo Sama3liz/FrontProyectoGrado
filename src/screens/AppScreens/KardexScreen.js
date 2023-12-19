@@ -5,6 +5,9 @@ import CustomCard from "../../components/Card/CustomCard";
 import CustomButton from "../../components/Buttons/CustomButton";
 import useNavigationHelpers from "../../utils/navigationHelpers";
 import { fetchData } from "../../utils/dbFunctions";
+import styles from "../../styles/styles";
+import CustomCardProducts from "../../components/Card/CustomCardProducts";
+import CustomCardProductsKardex from "../../components/Card/CustomCardProductsKardex";
 
 const KardexScreen = () => {
   const [products, setProducts] = useState([]);
@@ -17,9 +20,10 @@ const KardexScreen = () => {
   const loadData = async () => {
     try {
       const data = await fetchData(
-        "https://c9ng6xj8f5.execute-api.us-east-1.amazonaws.com/getInv"
+        "https://q20filkgq3.execute-api.us-east-1.amazonaws.com/dev/inventory"
       );
-      setProducts(data);
+      const body = JSON.parse(data.body);
+      setProducts(body);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -27,10 +31,9 @@ const KardexScreen = () => {
 
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
-      <View style={newPasswordStyles.root}>
-        <CustomButton text={"Back"} onPress={() => goBack()} />
-        <Text style={newPasswordStyles.title}>Products List</Text>
-        <CustomCard data={products} helper={"History"} type={"cardex"} />
+      <View style={styles.container}>
+        <Text style={styles.title}>Products List</Text>
+        <CustomCardProductsKardex data={products} helper={"History"} type={"cardex"} />
       </View>
     </ScrollView>
   );

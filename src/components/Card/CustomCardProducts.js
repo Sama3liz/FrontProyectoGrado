@@ -11,11 +11,15 @@ import {
 import React, { useEffect, useState } from "react";
 import CustomButton from "../Buttons/CustomButton";
 import useNavigationHelpers from "../../utils/navigationHelpers";
+import CustomInputText from "../Inputs/CustomInputText";
+import { useForm } from "react-hook-form";
+import CustomSearchInput from "../Inputs/CustomSearchInput";
 
-const numColumns = 4;
+const numColumns = 3;
 
-const CustomCardProducts = ({ data, helper, type }) => {
+const CustomCardProducts = ({ data, helper }) => {
   const { goTo } = useNavigationHelpers();
+  const { control } = useForm();
   const [filter, setFilter] = useState([]);
   const [master, setMaster] = useState([]);
   const [search, setSearch] = useState("");
@@ -28,11 +32,19 @@ const CustomCardProducts = ({ data, helper, type }) => {
   const searchFilter = (text) => {
     if (text) {
       const newData = master.filter((item) => {
-        const itemData = item.name
-          ? item.name.toUpperCase()
+        const itemData = item.name ? item.name.toUpperCase() : "".toUpperCase();
+        const itemCodeData = item.code
+          ? item.code.toUpperCase()
+          : "".toUpperCase();
+        const itemAuxData = item.aux
+          ? item.aux.toUpperCase()
           : "".toUpperCase();
         const textData = text.toUpperCase();
-        return itemData.indexOf(textData) > -1;
+        return (
+          itemData.indexOf(textData) > -1 ||
+          itemCodeData.indexOf(textData) > -1 ||
+          itemAuxData.indexOf(textData) > -1
+        );
       });
       setFilter(newData);
       setSearch(text);
@@ -43,23 +55,23 @@ const CustomCardProducts = ({ data, helper, type }) => {
   };
 
   const onMorePressed = (item) => {
-    goTo("ProductProfile", { id: item.id });
+    goTo("ProductProfile", { item: item });
   };
 
   return (
     <>
       <View style={styles.container}>
-        <TextInput
-          style={styles.input}
+        <CustomSearchInput
           placeholder="Search Here"
-          value={search}
-          onChangeText={(text) => searchFilter(text)}
+          name={"search"}
+          label={"Search"}
+          control={control}
+          handleInputChange={(text) => searchFilter(text)}
         />
       </View>
       <FlatList
         data={filter}
         numColumns={numColumns}
-        style={styles.container}
         renderItem={({ item }) => {
           return (
             <View style={styles.card}>
@@ -68,7 +80,6 @@ const CustomCardProducts = ({ data, helper, type }) => {
                   source={{ uri: item.images[0] }}
                 /> */}
               <Text style={styles.cardText}>{item.name}</Text>
-              <Text style={styles.cardText}>Category: {item.category}</Text>
               <Text style={styles.cardText}>Main Code: {item.code}</Text>
               <Text style={styles.cardText}>Code: {item.aux}</Text>
               <Text style={styles.cardText}>Stock: {item.stock}</Text>
@@ -81,9 +92,9 @@ const CustomCardProducts = ({ data, helper, type }) => {
             </View>
           );
         }}
-        keyExtractor={(item) => {
+        /* keyExtractor={(item) => {
           item.id.toString();
-        }}
+        }} */
       />
     </>
   );
@@ -95,7 +106,7 @@ const styles = StyleSheet.create({
   card: {
     backgroundColor: "#fff",
     marginBottom: 10,
-    marginLeft: 20,
+    marginLeft: 10,
     width: "100%",
     shadowColor: "#000",
     shadowOpacity: 0.2,

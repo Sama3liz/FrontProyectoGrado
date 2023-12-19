@@ -1,10 +1,7 @@
 import React, { useState } from "react";
 import { View, Text, FlatList, StyleSheet } from "react-native";
-import CustomButton from "../../components/Buttons/CustomButton";
-import useNavigationHelpers from "../../utils/navigationHelpers";
 
 const LedgerScreen = () => {
-  const { goBack } = useNavigationHelpers();
   const [ledgerEntries, setLedgerEntries] = useState([
     {
       id: 1,
@@ -32,7 +29,6 @@ const LedgerScreen = () => {
 
   return (
     <View style={styles.container}>
-      <CustomButton text={"Back"} onPress={() => goBack()} />
       <View style={styles.header}>
         <Text style={styles.headerText}>Cuenta</Text>
         <Text style={styles.headerText}>Débito</Text>
