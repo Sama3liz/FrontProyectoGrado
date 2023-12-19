@@ -25,6 +25,7 @@ import CartItem from "../../components/Card/CustomItemCard";
 import { Ionicons } from "@expo/vector-icons";
 import { searchCustomerById } from "../../utils/dbFunctions";
 import CustomInputText from "../../components/Inputs/CustomInputText";
+import { EMAIL_REGEX, RUC_REGEX } from "../../utils/constants";
 
 const BillingScreen = () => {
   const { goTo } = useNavigationHelpers();
@@ -105,10 +106,8 @@ const BillingScreen = () => {
     handleAddToInvoice(
       productId,
       products,
-      product,
       selectedProducts,
-      setSelectedProducts,
-      setProducts
+      setSelectedProducts
     );
   };
 
@@ -152,7 +151,7 @@ const BillingScreen = () => {
   };
 
   const renderProductSelected = ({ item }) => (
-    <View style={styles.itemContainer}>
+    <View style={[styles.itemContainer, { marginRight: 1 }]}>
       <TouchableOpacity
         style={styles.removeButton}
         onPress={() => removeFromInvoice(item.id)}
@@ -170,7 +169,7 @@ const BillingScreen = () => {
     <View style={styles.itemContainer}>
       <View style={styles.itemDetails}>
         <Text style={styles.itemName}>{item.name}</Text>
-        <Text style={styles.itemDescription}>Stock: {item.stock}</Text>
+        {/* <Text style={styles.itemDescription}>Stock: {item.stock}</Text> */}
       </View>
       <TouchableOpacity
         style={styles.removeButton}
@@ -317,7 +316,21 @@ const BillingScreen = () => {
                 label="CI/RUC"
                 control={control}
                 handleInputChange={handleIDChange}
-                rules={{ required: "CI/RUC is required" }}
+                rules={{
+                  required: "CI/RUC is required",
+                  pattern: {
+                    value: RUC_REGEX,
+                    message: "RUC should contain only numbers",
+                  },
+                  minLength: {
+                    value: 10,
+                    message: "CI/RUC should be at least 10 digits long",
+                  },
+                  maxLength: {
+                    value: 13,
+                    message: "CI/RUC should be maximum 13 digits long",
+                  },
+                }}
               />
               <View>
                 <CustomButton text={"Search"} onPress={searchCustomer} />
@@ -327,7 +340,17 @@ const BillingScreen = () => {
                 label="Name"
                 placeholder="Insert a name"
                 control={control}
-                rules={{ required: "Name is required" }}
+                rules={{
+                  required: "Name is required",
+                  minLength: {
+                    value: 3,
+                    message: "Name should be at least 3 characters long",
+                  },
+                  maxLength: {
+                    value: 24,
+                    message: "Name should be max 24 characters long",
+                  },
+                }}
                 handleInputChange={handleInputChange}
               />
               <CustomInputText
@@ -335,28 +358,61 @@ const BillingScreen = () => {
                 label="Last Name"
                 placeholder="Insert a family name"
                 control={control}
-                rules={{ required: "Last name is required" }}
+                rules={{
+                  required: "Last name is required",
+                  minLength: {
+                    value: 3,
+                    message: "Last name should be at least 3 characters long",
+                  },
+                  maxLength: {
+                    value: 24,
+                    message: "Last name should be max 24 characters long",
+                  },
+                }}
               />
               <CustomInputText
                 name="email"
                 label="Email"
                 placeholder="Insert an email"
                 control={control}
-                rules={{ required: "Email is required" }}
+                rules={{
+                  required: "Email is required",
+                  pattern: { value: EMAIL_REGEX, message: "Email is invalid" },
+                }}
               />
               <CustomInputText
                 name="phone"
                 label="Phone"
                 placeholder="Insert a phone"
                 control={control}
-                rules={{ required: "Phone is required" }}
+                rules={{
+                  required: "Phone is required",
+                  minLength: {
+                    value: 7,
+                    message: "Phone should be at least 7 characters long",
+                  },
+                  maxLength: {
+                    value: 10,
+                    message: "Phone should be max 10 characters long",
+                  },
+                }}
               />
               <CustomInputText
                 name="address"
                 label="Address"
                 placeholder="Insert an address"
                 control={control}
-                rules={{ required: "Address is required" }}
+                rules={{
+                  required: "Address is required",
+                  minLength: {
+                    value: 3,
+                    message: "Name should be at least 3 characters long",
+                  },
+                  maxLength: {
+                    value: 50,
+                    message: "Address should be max 50 characters long",
+                  },
+                }}
               />
             </View>
             <View style={styles.buttonContainer}>
@@ -400,7 +456,7 @@ const BillingScreen = () => {
                   </View>
                 )}
                 {selectedProducts.length !== 0 ? (
-                  <View style={[styles.selectedProducts, { height: 300 }]}>
+                  <View style={[styles.searchProduct, { height: 300 }]}>
                     <FlatList
                       data={selectedProducts}
                       renderItem={renderProductSelected}

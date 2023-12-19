@@ -77,10 +77,8 @@ export const calculateTotals = (selectedProducts, setTotals) => {
 export const handleAddToInvoice = (
   productId,
   products,
-  product,
   selectedProducts,
   setSelectedProducts,
-  setProducts
 ) => {
   const productToAdd = products.find(
     (product) => product.id === productId

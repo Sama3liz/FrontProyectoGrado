@@ -81,9 +81,9 @@ const CustomCardSuppliers = ({ data, helper }) => {
             </View>
           );
         }}
-        keyExtractor={(item) => {
+        /* keyExtractor={(item) => {
           item.id.toString();
-        }}
+        }} */
       />
     </>
   );
