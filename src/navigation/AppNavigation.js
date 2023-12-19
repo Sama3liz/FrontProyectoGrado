@@ -1,18 +1,16 @@
-import {
-  ActivityIndicator,
-  SafeAreaView,
-  View,
-} from "react-native";
+import { ActivityIndicator, SafeAreaView, View } from "react-native";
 import React, { useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
 import { useError } from "../context/ErrorContext";
 import AppStack from "./AppStack";
 import AuthStack from "./AuthStack";
+import ConfigStack from "./ConfigStack";
 import styles from "../styles/styles";
 
 const AppNavigation = () => {
   const { loading, user } = useContext(AuthContext);
   const { error } = useError();
+  const config = user ? user.payload["custom:config"] : false;
 
   if (loading) {
     return (
@@ -26,7 +24,15 @@ const AppNavigation = () => {
 
   return (
     <SafeAreaView style={styles.root}>
-      {user ? <AppStack /> : <AuthStack />}
+      {user ? (
+        config === "true" ? (
+          <AppStack />
+        ) : (
+          <ConfigStack />
+        )
+      ) : (
+        <AuthStack />
+      )}
     </SafeAreaView>
   );
 };

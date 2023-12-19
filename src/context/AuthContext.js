@@ -3,6 +3,7 @@ import {
   signIn,
   signOut,
   fetchAuthSession,
+  updateUserAttributes,
   getCurrentUser,
 } from "aws-amplify/auth";
 
@@ -11,7 +12,7 @@ export const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null)
+  const [error, setError] = useState(null);
   const [config, setConfig] = useState("");
 
   useEffect(() => {
@@ -19,19 +20,19 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   const clearError = () => {
-    setError(null)
-  }
+    setError(null);
+  };
 
   const checkUser = async () => {
     try {
       const { idToken } = (await fetchAuthSession()).tokens ?? {};
       setUser(idToken);
     } catch (err) {
-      setUser(null)
+      setUser(null);
       if (err && err.message) {
         setError(err.message);
       } else {
-        setError('An unknown error occurred');
+        setError("An unknown error occurred");
       }
     } finally {
       setLoading(false);
@@ -44,23 +45,45 @@ export const AuthProvider = ({ children }) => {
       const { idToken } = (await fetchAuthSession()).tokens ?? {};
       setUser(idToken);
     } catch (error) {
-      setError(error.message)
+      setError(error.message);
     }
   }
 
   const logOut = async () => {
     try {
       await signOut();
-      setUser(undefined);
+      setUser(null);
     } catch (error) {
-      setError(error.message)
+      setError(error.message);
     }
   };
 
+  async function updateAttribute() {
+    try {
+      await updateUserAttributes({
+        userAttributes: {
+          "custom:config": "true",
+        },
+      });
+      await logOut();
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   return (
-    <AuthContext.Provider value={{ user, loading, error, logIn, logOut, clearError }}>
+    <AuthContext.Provider
+      value={{
+        user,
+        loading,
+        error,
+        logIn,
+        logOut,
+        clearError,
+        updateAttribute,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );
 };
-

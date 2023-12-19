@@ -1,5 +1,9 @@
 import { useState } from "react";
-import { signUp, currentAuthenticatedUser, updateUserAttribute } from "aws-amplify/auth";
+import {
+  signUp,
+  currentAuthenticatedUser,
+  updateUserAttribute,
+} from "aws-amplify/auth";
 import useNavigationHelpers from "../utils/navigationHelpers";
 
 const useRegistration = () => {
@@ -21,6 +25,7 @@ const useRegistration = () => {
             picture,
             updated_at,
             email,
+            "custom:config": config,
           },
         },
       });
