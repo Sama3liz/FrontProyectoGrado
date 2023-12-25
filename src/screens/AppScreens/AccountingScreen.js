@@ -15,9 +15,9 @@ const AccountingScreen = () => {
     <ScrollView showsVerticalScrollIndicator={false}>
       <View style={styles.container}>
         <CustomButton text={"Kardex"} onPress={() => onButtonPress("Kardex")} />
-        <CustomButton
-          text={"Reports"} /* onPress={() => onButtonPress("Reports")} */
-        />
+        {/* <CustomButton
+          text={"Reports"} onPress={() => onButtonPress("Reports")}
+        /> */}
         <CustomButton
           text={"Accounts"}
           onPress={() => onButtonPress("Accounts")}

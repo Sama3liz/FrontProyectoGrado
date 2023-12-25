@@ -17,7 +17,24 @@ const Company = () => {
 
   useEffect(() => {
     setValue("ruc", user.payload["cognito:username"]);
+    loadData();
   }, [setValue]);
+
+  const loadData = async () => {
+    try {
+      const data = await fetchData(
+        "https://q20filkgq3.execute-api.us-east-1.amazonaws.com/dev/inventory"
+      );
+      const body = JSON.parse(data.body);
+      console.log(data);
+      setValue("commercial", body.commercial);
+      setValue("email", body.email);
+      setValue("phone", body.phone);
+      setValue("address", body.address);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
 
   const onSubmitPressed = /* async */ (data) => {
     console.log(data);

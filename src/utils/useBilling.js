@@ -12,10 +12,11 @@ export const loadData = async (setProducts) => {
     );
     const data = await response.json();
     const body = JSON.parse(data.body);
+    console.log(body)
     const initialProducts = body.map((product) => ({
       ...product,
       quantity: 0,
-      appliesIVA: true,
+      appliesIVA: product.prediccion === "0" ? false : true,
     }));
     setProducts(initialProducts);
   } catch (error) {
@@ -78,11 +79,9 @@ export const handleAddToInvoice = (
   productId,
   products,
   selectedProducts,
-  setSelectedProducts,
+  setSelectedProducts
 ) => {
-  const productToAdd = products.find(
-    (product) => product.id === productId
-  );
+  const productToAdd = products.find((product) => product.id === productId);
   if (productToAdd) {
     const existingProduct = selectedProducts.find(
       (product) => product.id === productId
