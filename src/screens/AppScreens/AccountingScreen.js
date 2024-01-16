@@ -12,8 +12,15 @@ const AccountingScreen = () => {
   };
 
   return (
-    <ScrollView showsVerticalScrollIndicator={false}>
-      <View style={styles.container}>
+    <ScrollView
+      showsVerticalScrollIndicator={false}
+      style={styles.root}
+      contentContainerStyle={{
+        justifyContent: "center",
+        flex: 1,
+      }}
+    >
+      <View style={[styles.container, { justifyContent: 'center', }]}>
         <CustomButton text={"Kardex"} onPress={() => onButtonPress("Kardex")} />
         {/* <CustomButton
           text={"Reports"} onPress={() => onButtonPress("Reports")}

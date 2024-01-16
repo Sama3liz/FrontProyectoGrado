@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { View, Text, FlatList, TouchableOpacity } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import styles from "../../styles/styles";
+import { getCurrentDate } from "../../utils/useBilling";
 
 const JournalScreen = () => {
   const [journalEntries, setJournalEntries] = useState([
@@ -30,45 +31,56 @@ const JournalScreen = () => {
 
   const renderItem = ({ item }) => (
     <View style={styles.itemTable}>
-      <Text style={styles.cellTable}>{item.date}</Text>
-      <Text style={styles.cellTable}>{item.account}</Text>
-      <View style={styles.cellRowTable}>
-        <TouchableOpacity style={styles.removeButton}>
-          <MaterialCommunityIcons
-            name="plus-circle-outline"
-            size={24}
-            color="black"
-          />
-        </TouchableOpacity>
-      </View>
-      {/* <TouchableOpacity onPress={() => toggleExpanded(item.id)}>
-        <Text style={styles.expand}>
-          {expandedEntry === item.id ? "-" : "+"}
-        </Text>
-      </TouchableOpacity>
-      {expandedEntry === item.id && (
-        <View style={styles.expanded}>
-          <Text>{item.details}</Text>
+      <View style={{ flexDirection: "column", width: "100%" }}>
+        <View style={{ flexDirection: "row" }}>
+          <Text style={styles.cellTable}>{item.date}</Text>
+          <Text style={styles.cellTable}>{item.invoice}</Text>
+          <View style={styles.cellRowTable}>
+            <TouchableOpacity
+              style={styles.removeButton}
+              onPress={() => toggleExpanded(item.id)}
+            >
+              {expandedEntry === item.id ? (
+                <MaterialCommunityIcons
+                  name="minus-circle-outline"
+                  size={24}
+                  color="black"
+                />
+              ) : (
+                <MaterialCommunityIcons
+                  name="plus-circle-outline"
+                  size={24}
+                  color="black"
+                />
+              )}
+            </TouchableOpacity>
+          </View>
         </View>
-      )} */}
+        <View style={{ justifyContent: "row" }}>
+          {expandedEntry === item.id && (
+            <View style={styles.customerDetails}>
+              <Text>Account: {item.account}</Text>
+              <Text>Details: {item.details}</Text>
+            </View>
+          )}
+        </View>
+      </View>
     </View>
   );
 
   return (
     <View style={styles.container}>
       <View style={styles.customerDetails}>
-        <View style={[styles.containerTable, { marginTop: 10 }]}>
-          <View style={styles.headerTable}>
-            <Text style={styles.headerTextTable}>Fecha</Text>
-            <Text style={styles.headerTextTable}>Cuenta</Text>
-            <Text style={styles.headerTextTable}>More</Text>            
-          </View>
-          <FlatList
-            data={journalEntries}
-            renderItem={renderItem}
-            keyExtractor={(item) => item.id.toString()}
-          />
+        <View style={styles.headerTable}>
+          <Text style={styles.headerTextTable}>Date</Text>
+          <Text style={styles.headerTextTable}>Document</Text>
+          <Text style={styles.headerTextTable}>More</Text>
         </View>
+        <FlatList
+          data={journalEntries}
+          renderItem={renderItem}
+          keyExtractor={(item) => item.id.toString()}
+        />
       </View>
     </View>
   );

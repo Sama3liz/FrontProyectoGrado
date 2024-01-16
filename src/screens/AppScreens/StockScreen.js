@@ -15,14 +15,14 @@ import { loadData } from "../../utils/useBilling";
 import { Ionicons } from "@expo/vector-icons";
 import CustomInputNumber from "../../components/Inputs/CustomInputNumber";
 
-const NewAccountForm = ({ route }) => {
+const StockScreen = ({ route }) => {
+  const { type } = route.params;
   const { errorMessage, setErrorMessage, clearError } = useError();
   const { control, handleSubmit, watch, setValue } = useForm();
   const [products, setProducts] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [selectedProducts, setSelectedProducts] = useState([]);
-  const [newCode, setNewCode] = useState([]);
 
   useEffect(() => {
     loadData(setProducts);
@@ -54,7 +54,6 @@ const NewAccountForm = ({ route }) => {
       } else {
         const newProduct = { ...productToAdd, quantity: 1 };
         setSelectedProducts((prev) => [...prev, newProduct]);
-        splitCodeAndSum(product.code);
       }
     }
   };
@@ -73,7 +72,7 @@ const NewAccountForm = ({ route }) => {
       <View style={styles.itemDetails}>
         <Text style={styles.itemName}>{item.name}</Text>
         <Text style={styles.itemDescription}>Stock: {item.stock}</Text>
-        <Text style={styles.itemDescription}>Code: {item.code}</Text>
+        <Text style={styles.itemDescription}>Stock: {item.code}</Text>
       </View>
       <TouchableOpacity
         style={styles.removeButton}
@@ -84,18 +83,14 @@ const NewAccountForm = ({ route }) => {
     </View>
   );
 
-  const splitCodeAndSum = (code) => {
-    const splitCode = code.split("-");
-    const level = 1;
-    console.log(splitCode);
-    const summedCode = Number(splitCode[level]) + 1;
-    const newCodeComplete = splitCode[0] + "-" + summedCode;
-    console.log(summedCode);
-    setValue("code", newCodeComplete);
-  };
-
   const onSavePressed = (data) => {
-    console.log(data);
+    const newStock =
+      type === "add"
+        ? Number(data.quantity) + Number(selectedProducts[0].stock)
+        : Number(selectedProducts[0].stock) >= Number(data.quantity)
+        ? Number(selectedProducts[0].stock) - Number(data.quantity)
+        : setErrorMessage("Cantidad invalida");
+    console.log(newStock);
   };
 
   return (
@@ -105,6 +100,9 @@ const NewAccountForm = ({ route }) => {
       style={styles.root}
     >
       <View style={styles.container}>
+        <Text style={[styles.title, { alignSelf: "center" }]}>
+          {type === "add" ? "Add to inventory" : "Get from inventory"}
+        </Text>
         {selectedProducts.length === 0 ? (
           <View style={styles.customerDetails}>
             {errorMessage !== "Cantidad invalida" ? (
@@ -112,7 +110,7 @@ const NewAccountForm = ({ route }) => {
             ) : null}
             <CustomInputText
               name="search"
-              placeholder="Insert a name or code or empty for list all"
+              placeholder="Insert a name or code or just leave empty for list all"
               label="Search"
               control={control}
               handleInputChange={(text) => setSearchQuery(text)}
@@ -122,12 +120,9 @@ const NewAccountForm = ({ route }) => {
         ) : null}
         <View style={styles.containerCol}>
           {selectedProducts.length !== 0 ? (
-            <View style={[styles.customerDetails, { height: 400 }]}>
+            <View style={[styles.customerDetails, { height: 300 }]}>
               <View style={[styles.itemContainer, { marginRight: 1 }]}>
                 <View style={styles.itemDetails}>
-                  <Text style={[styles.title, { alignSelf: "center" }]}>
-                    Father
-                  </Text>
                   <View
                     style={[styles.containerRow, { alignSelf: "baseline" }]}
                   >
@@ -144,33 +139,34 @@ const NewAccountForm = ({ route }) => {
                       {selectedProducts[0].code}
                     </Text>
                   </View>
-
-                  <View style={styles.customerDetails}>
-                    <Text style={[styles.title, { alignSelf: "center" }]}>
-                      Child
+                  <View
+                    style={[styles.containerRow, { alignSelf: "baseline" }]}
+                  >
+                    <Text style={styles.itemName}>Stock: </Text>
+                    <Text style={styles.itemDescription}>
+                      {selectedProducts[0].stock}
                     </Text>
-                    <CustomInputText
-                      placeholder="Insert a code"
-                      name="code"
-                      label="Code"
+                  </View>
+                  <View style={styles.customerDetails}>
+                    <CustomInputNumber
+                      placeholder="Insert a quantity"
+                      name="quantity"
+                      label="Quantity"
                       control={control}
-                      
+                      type={"number"}
+                      showDecimals={false}
                       rules={{
-                        required: "Code is required",
+                        required: "Stock is required",
+                        pattern: {
+                          value: /^[0-9]*$/,
+                          message: "Only numbers allowed",
+                        },
                       }}
                       handleInputChange={() => clearError()}
                     />
-                    <CustomInputText
-                      placeholder="Insert a name"
-                      name="name"
-                      label="Name"
-                      control={control}
-                      disabled
-                      rules={{
-                        required: "Name is required",
-                      }}
-                      handleInputChange={() => clearError()}
-                    />
+                    {errorMessage === "Cantidad invalida" ? (
+                      <Text style={styles.error}>{errorMessage}</Text>
+                    ) : null}
                     <CustomButton
                       text={"Save"}
                       onPress={handleSubmit(onSavePressed)}
@@ -198,4 +194,4 @@ const NewAccountForm = ({ route }) => {
   );
 };
 
-export default NewAccountForm;
+export default StockScreen;

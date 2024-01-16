@@ -35,24 +35,23 @@ const ConfirmEmailScreen = ({ route }) => {
   };
 
   return (
-    <ScrollView showsVerticalScrollIndicator={false}>
-      <View style={styles.container}>
-        <View
+    <ScrollView
+      showsVerticalScrollIndicator={false}
+      style={styles.root}
+      contentContainerStyle={{
+        justifyContent: "center",
+        flex: 1,
+      }}
+    >
+      <View style={[styles.container, { justifyContent: "center" }]}>
+        <Text
           style={[
-            styles.void,
-            {
-              flex: 1,
-              alignItems: "center",
-              justifyContent: "center",
-              padding: 20,
-              marginTop: 50,
-            },
+            styles.title,
+            { color: "#051C60", textAlign: "center", marginBottom: 10 },
           ]}
         >
-          <Text style={[styles.title, { color: "#051C60" }]}>
-            Confirm your email
-          </Text>
-        </View>
+          Confirm your email
+        </Text>
         {error ? <Text style={{ color: "red" }}>{error}</Text> : null}
         <CustomInputText
           name="confirmationCode"

@@ -9,6 +9,7 @@ import { AuthContext } from "../../context/AuthContext";
 import useNavigationHelpers from "../../utils/navigationHelpers";
 import styles from "../../styles/styles";
 import { EMAIL_REGEX, RUC_REGEX } from "../../utils/constants";
+import { fetchData } from "../../utils/dbFunctions";
 
 const Company = () => {
   const { user } = useContext(AuthContext);
@@ -17,6 +18,7 @@ const Company = () => {
 
   useEffect(() => {
     setValue("ruc", user.payload["cognito:username"]);
+    setValue("email", user.payload.email);
     loadData();
   }, [setValue]);
 
@@ -28,7 +30,6 @@ const Company = () => {
       const body = JSON.parse(data.body);
       console.log(data);
       setValue("commercial", body.commercial);
-      setValue("email", body.email);
       setValue("phone", body.phone);
       setValue("address", body.address);
     } catch (error) {
@@ -45,9 +46,15 @@ const Company = () => {
   };
 
   return (
-    <ScrollView showsVerticalScrollIndicator={false}>
-      <View style={styles.container}>
-        <Text style={styles.title}>Company Data</Text>
+    <ScrollView
+      showsVerticalScrollIndicator={false}
+      style={styles.root}
+      contentContainerStyle={{
+        justifyContent: "center",
+        flex: 1,
+      }}
+    >
+      <View style={[styles.container, { justifyContent: "center" }]}>
         <View style={styles.customerDetails}>
           <CustomInputText
             disabled
@@ -132,9 +139,7 @@ const Company = () => {
             }}
           />
         </View>
-
         <CustomButton text="Submit" onPress={handleSubmit(onSubmitPressed)} />
-        <CustomButton text="Back" onPress={onBackPressed} type="PRIMARY" />
       </View>
     </ScrollView>
   );

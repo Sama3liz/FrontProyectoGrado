@@ -7,14 +7,17 @@ import {
   View,
   Dimensions,
   TextInput,
+  Platform,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import CustomButton from "../Buttons/CustomButton";
 import useNavigationHelpers from "../../utils/navigationHelpers";
 import CustomSearchInput from "../Inputs/CustomSearchInput";
 import { useForm } from "react-hook-form";
+import styles from "../../styles/styles";
 
-const numColumns = 4;
+const device = Platform.OS;
+const numColumns = device === "web" ? 6 : 2;
 
 const CustomCardSuppliers = ({ data, helper }) => {
   const { goTo } = useNavigationHelpers();
@@ -54,7 +57,18 @@ const CustomCardSuppliers = ({ data, helper }) => {
 
   return (
     <>
-      <View style={styles.container}>
+      <View style={[
+          styles.void,
+          {
+            backgroundColor: "white",
+            width: "100%",
+            borderColor: "#e8e8e8",
+            borderWidth: 1,
+            borderRadius: 5,
+            paddingHorizontal: 10,
+            marginVertical: 5,
+          },
+        ]}>
         <CustomSearchInput
           placeholder="Search Here"
           name={"search"}
@@ -90,44 +104,3 @@ const CustomCardSuppliers = ({ data, helper }) => {
 };
 
 export default CustomCardSuppliers;
-
-const styles = StyleSheet.create({
-  card: {
-    backgroundColor: "#fff",
-    marginBottom: 10,
-    marginLeft: 20,
-    width: "100%",
-    shadowColor: "#000",
-    shadowOpacity: 0.2,
-    shadowRadius: 1,
-    shadowOffset: {
-      width: 3,
-      height: 3,
-    },
-    flex: 1,
-  },
-  cardImage: {
-    width: "100%",
-    height: 200,
-  },
-  cardText: {
-    padding: 10,
-    fontSize: 16,
-  },
-  cardSubText: {
-    padding: 10,
-    fontSize: 12,
-  },
-  container: {
-    backgroundColor: "white",
-    width: "100%",
-
-    borderColor: "#e8e8e8",
-    borderWidth: 1,
-    borderRadius: 5,
-
-    paddingHorizontal: 10,
-    marginVertical: 5,
-  },
-  input: {},
-});

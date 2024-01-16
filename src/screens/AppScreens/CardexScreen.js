@@ -6,7 +6,7 @@ import styles from "../../styles/styles";
 
 const CardexScreen = ({ route }) => {
   const { goBack } = useNavigationHelpers();
-  const { id } = route.params.item;
+  const { item } = route.params;
   const [cardexEntries, setCardexEntries] = useState([
     {
       id: 1,
@@ -35,7 +35,8 @@ const CardexScreen = ({ route }) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Product: {id}</Text>
+      <Text style={styles.title}>Product: {item.name}</Text>
+      <Text style={styles.title}>Stock: {item.stock}</Text>
       <View style={styles.customerDetails}>
         <View style={[styles.containerTable, { marginTop: 10 }]}>
           <View style={styles.headerTable}>

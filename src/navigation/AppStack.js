@@ -17,6 +17,7 @@ import CardexScreen from "../screens/AppScreens/CardexScreen";
 import UserScreen from "../screens/AppScreens/UserScreen";
 import ProductScreen from "../screens/AppScreens/ProductScreen";
 import NewAccountForm from "../components/Forms/NewAccountForm";
+import StockScreen from "../screens/AppScreens/StockScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -26,6 +27,10 @@ function AppStack() {
       <Stack.Navigator
         /* screenOptions={{ headerShown: false }} */
         initialRouteName="Home"
+        screenOptions={{
+          headerStyle: { backgroundColor: "#531158" },
+          headerTintColor: "#fff",
+        }}
       >
         <Stack.Screen
           name="Home"
@@ -48,71 +53,76 @@ function AppStack() {
         <Stack.Screen
           name="NewProduct"
           component={NewProductForm}
-          options={{ headerTitle: "" }}
+          options={{ headerTitle: "New Product" }}
         />
         <Stack.Screen
           name="NewCategory"
           component={NewCategoryForm}
-          options={{ headerTitle: "" }}
+          options={{ headerTitle: "New Category" }}
+        />
+        <Stack.Screen
+          name="StockChange"
+          component={StockScreen}
+          options={{ headerTitle: "Stock Change" }}
         />
         {/* Clients */}
         <Stack.Screen
           name="NewClient"
           component={NewClientForm}
-          options={{ headerTitle: "" }}
+          options={{ headerTitle: "New Costumer" }}
         />
         {/* Profile */}
         <Stack.Screen
           name="UserProfile"
           component={ProfileScreen}
-          options={{ headerTitle: "" }}
+          options={{ headerTitle: "User Profile" }}
         />
         <Stack.Screen
           name="ProductProfile"
           component={ProductScreen}
-          options={{ headerTitle: "" }}
+          options={{ headerTitle: "Product Profile" }}
         />
         {/* Accounting */}
         <Stack.Screen
           name="Kardex"
           component={KardexScreen}
-          options={{ headerTitle: "" }}
+          options={{ headerTitle: "Kardex Registry" }}
         />
         <Stack.Screen
           name="HistoryProduct"
           component={CardexScreen}
-          options={{ headerTitle: "" }}
+          options={{ headerTitle: "Product History" }}
         />
         <Stack.Screen
           name="Accounts"
           component={AccountsScreen}
-          options={{ headerTitle: "" }}
+          options={{ headerTitle: "Accounting Accounts" }}
         />
         <Stack.Screen
           name="NewAccount"
           component={NewAccountForm}
-          options={{ headerTitle: "" }}
+          options={{ headerTitle: "New Account" }}
         />
         <Stack.Screen
           name="Journal"
           component={JournalScreen}
-          options={{ headerTitle: "" }}
+          options={{ headerTitle: "Journal" }}
         />
         <Stack.Screen
           name="Major"
           component={LedgerScreen}
-          options={{ headerTitle: "" }}
+          options={{ headerTitle: "Major" }}
         />
         {/* Settings */}
         <Stack.Screen
           name="Company"
           component={Company}
-          options={{ headerTitle: "" }}
+          options={{ headerTitle: "Company Profile" }}
         />
         <Stack.Screen
           name="User"
           component={UserScreen}
-          options={{ headerTitle: "" }}
+          options={{ headerTitle: "User Data" }}
         />
       </Stack.Navigator>
     </NavigationContainer>

@@ -10,10 +10,17 @@ export default function SettingsScreen() {
   const onButtonPress = (page) => {
     goTo(page);
   };
-  
+
   return (
-    <ScrollView showsVerticalScrollIndicator={false}>
-      <View style={styles.container}>
+    <ScrollView
+      showsVerticalScrollIndicator={false}
+      style={styles.root}
+      contentContainerStyle={{
+        justifyContent: "center",
+        flex: 1,
+      }}
+    >
+      <View style={[styles.container, { justifyContent: "center" }]}>
         <CustomButton text="Company" onPress={() => onButtonPress("Company")} />
         <CustomButton text="Profile" onPress={() => onButtonPress("User")} />
       </View>

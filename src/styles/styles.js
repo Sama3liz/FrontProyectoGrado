@@ -17,17 +17,14 @@ export default StyleSheet.create({
     backgroundColor: "#F9FBFC",
   },
   containerRow: {
-    marginTop: 10,
-    width: "100%",
     flexDirection: "row",
     justifyContent: "space-between",
+    columnGap: 1,
   },
   containerCol: {
-    flex: 1,
-    marginTop: 10,
-    width: "100%",
-    justifyContent: "center",
-    paddingHorizontal: 10,
+    flexDirection: "column",
+    justifyContent: "space-between",
+    rowGap: 1,
   },
   containerTable: {
     backgroundColor: "#fff",
@@ -39,16 +36,6 @@ export default StyleSheet.create({
     marginVertical: 5,
     alignItems: "center",
     borderRadius: 5,
-    justifyContent: "space-between",
-  },
-  buttonRowContainer: {
-    width: "100%",
-    padding: 15,
-    marginVertical: 5,
-    alignItems: "center",
-    borderRadius: 5,
-    flex: 1,
-    flexDirection: "row",
     justifyContent: "space-between",
   },
   inputContainer: {
@@ -147,10 +134,10 @@ export default StyleSheet.create({
   },
   /* Buttons Styles */
   container_PRIMARY: {
-    backgroundColor: "#3B71F3",
+    backgroundColor: "#531158",
   },
   container_SECONDARY: {
-    borderColor: "#3B71F3",
+    borderColor: "#531158",
     borderWidth: 2,
   },
   container_TERTIARY: {},
@@ -160,7 +147,7 @@ export default StyleSheet.create({
     color: "white",
   },
   text_SECONDARY: {
-    color: "#3B71F3",
+    color: "#531158",
   },
   text_TERTIARY: {
     color: "gray",
@@ -325,11 +312,36 @@ export default StyleSheet.create({
   },
   /* Text */
   text: {
-    color: 'gray',
+    color: "gray",
     marginVertical: 10,
   },
   /* Link */
   link: {
-    color: '#FDB075',
+    color: "#FDB075",
+  },
+  /* Card */
+  card: {
+    backgroundColor: "#fff",
+    marginBottom: 10,
+    marginLeft: 10,
+    marginRight: 10,
+    width: "100%",
+    borderWidth: 2,
+    borderRadius: 5,
+    borderColor: "#531158",
+    flex: 1,
+    justifyContent: "space-between",
+  },
+  cardImage: {
+    width: "100%",
+    height: 200,
+  },
+  cardText: {
+    padding: 10,
+    fontSize: 16,
+  },
+  cardSubText: {
+    padding: 10,
+    fontSize: 12,
   },
 });

@@ -5,6 +5,7 @@ import {
   useWindowDimensions,
   ScrollView,
   Text,
+  StatusBar,
 } from "react-native";
 import Logo from "../../assets/Logo_1.png";
 import CustomButton from "../../components/Buttons/CustomButton";
@@ -30,7 +31,7 @@ const SignInScreen = () => {
   };
 
   const onSignUpPress = () => {
-    goTo("SignUp");
+    goTo("Register");
   };
 
   const handleInputChange = () => {
@@ -38,8 +39,16 @@ const SignInScreen = () => {
   };
 
   return (
-    <ScrollView showsVerticalScrollIndicator={false}>
-      <View style={styles.container}>
+    <ScrollView
+      showsVerticalScrollIndicator={false}
+      style={styles.root}
+      contentContainerStyle={{
+        justifyContent: "center",
+        flex: 1,
+      }}
+    >
+      
+      <View style={[styles.container, { justifyContent: 'center', }]}>
         <View style={[styles.void, { alignItems: "center" }]}>
           <Image
             source={Logo}

@@ -1,92 +1,23 @@
-import React, { useContext } from "react";
+import React from "react";
 import "react-native-gesture-handler";
-import { Text, View, Image, Dimensions } from "react-native";
-import {
-  MaterialIcons,
-  MaterialCommunityIcons,
-  FontAwesome,
-  FontAwesome5,
-} from "@expo/vector-icons";
-import {
-  DrawerContentScrollView,
-  DrawerItem,
-  DrawerItemList,
-  createDrawerNavigator,
-} from "@react-navigation/drawer";
-import USER from "../assets/user-default-96.png";
+import { Ionicons } from "@expo/vector-icons";
+import { createDrawerNavigator } from "@react-navigation/drawer";
+import CustomDrawer from "../components/Drawer/CustomDrawer";
 import HomeScreen from "../screens/AppScreens/HomeScreen";
 import SuppliersScreen from "../screens/AppScreens/SuppliersScreen";
 import AccountingScreen from "../screens/AppScreens/AccountingScreen";
 import InventoryScreen from "../screens/AppScreens/InventoryScreen";
 import ClientsScreen from "../screens/AppScreens/ClientsScreen";
 import SettingsScreen from "../screens/AppScreens/SettingsScreen";
-import { AuthContext } from "../context/AuthContext";
 import BillingScreen from "../screens/AppScreens/BillingScreen";
 
 const Drawer = createDrawerNavigator();
 
 function SideNavigation() {
-  const { logOut, user } = useContext(AuthContext);
-  const onLogOutPress = () => {
-    logOut();
-  };
   return (
     <Drawer.Navigator
       drawerLockMode={"locked-closed"}
-      drawerContent={(props) => (
-        <DrawerContentScrollView {...props}>
-          <View
-            style={{
-              height: "200",
-              width: "100%",
-              justifyContent: "center",
-              alignItems: "center",
-              borderBottomColor: "#f4f4f4",
-              borderBottomWidth: 1,
-              paddingBottom: 5,
-            }}
-          >
-            <Image
-              source={USER}
-              style={{ height: 130, width: 130, borderRadius: 65 }}
-            />
-            <Text
-              style={{
-                fontSize: 22,
-                marginVertical: 6,
-                fontWeight: "bold",
-                color: "#111",
-              }}
-            >
-              {user.payload["name"]}
-            </Text>
-            <Text
-              style={{
-                fontSize: 16,
-                color: "#111",
-              }}
-            >
-              {user.payload["cognito:username"]}
-            </Text>
-          </View>
-          <DrawerItemList {...props} />
-          <View
-            style={{
-              width: "100%",
-              justifyContent: "center",
-              alignItems: "center",
-              borderTopColor: "#f4f4f4",
-              borderTopWidth: 1,
-            }}
-          ></View>
-          <DrawerItem
-            label="Log out"
-            onPress={onLogOutPress}
-            icon={() => <MaterialIcons name="logout" size={24} color="red" />}
-            style={[{ justifyContent: "space-between", alignItems: "center" }]}
-          />
-        </DrawerContentScrollView>
-      )}
+      drawerContent={(props) => <CustomDrawer {...props} />}
       initialRouteName="Dashboard"
       screenOptions={{
         drawerStyle: {
@@ -94,18 +25,19 @@ function SideNavigation() {
           width: 250,
         },
         headerStyle: {
-          backgroundColor: "#f4511e",
+          backgroundColor: "#531158",
         },
         headerTintColor: "#fff",
         headerTitleAlign: "center",
         headerTitleStyle: {
           fontWeight: "bold",
         },
-        drawerActiveTintColor: "blue",
+        drawerActiveTintColor: "#fff",
+        drawerActiveBackgroundColor: "#531158",
+        drawerInactiveTintColor: "#333",
         drawerLabelStyle: {
-          color: "#111",
+          marginLeft: -25,
         },
-        drawerActiveTintColor: "#531158",
       }}
     >
       <Drawer.Screen
@@ -113,8 +45,8 @@ function SideNavigation() {
         options={{
           drawerLabel: "Dashboard",
           title: "Dashboard",
-          drawerIcon: () => (
-            <MaterialCommunityIcons name="home" size={20} color={"#808080"} />
+          drawerIcon: ({ color }) => (
+            <Ionicons name="home-outline" size={24} color={color} />
           ),
         }}
         component={HomeScreen}
@@ -124,8 +56,8 @@ function SideNavigation() {
         options={{
           drawerLabel: "Inventory",
           title: "Inventory",
-          drawerIcon: () => (
-            <MaterialIcons name="inventory" size={20} color={"#808080"} />
+          drawerIcon: ({ color }) => (
+            <Ionicons name="archive-outline" size={24} color={color} />
           ),
         }}
         component={InventoryScreen}
@@ -135,8 +67,8 @@ function SideNavigation() {
         options={{
           drawerLabel: "Suppliers",
           title: "Suppliers",
-          drawerIcon: () => (
-            <FontAwesome name="user-secret" size={20} color={"#808080"} />
+          drawerIcon: ({ color }) => (
+            <Ionicons name="briefcase-outline" size={24} color={color} />
           ),
         }}
         component={SuppliersScreen}
@@ -146,8 +78,8 @@ function SideNavigation() {
         options={{
           drawerLabel: "Clients",
           title: "Clients",
-          drawerIcon: () => (
-            <FontAwesome name="users" size={20} color={"#808080"} />
+          drawerIcon: ({ color }) => (
+            <Ionicons name="people-outline" size={24} color={color} />
           ),
         }}
         component={ClientsScreen}
@@ -157,8 +89,8 @@ function SideNavigation() {
         options={{
           drawerLabel: "Billing",
           title: "Billing",
-          drawerIcon: () => (
-            <FontAwesome5 name="money-bill" size={20} color={"#808080"} />
+          drawerIcon: ({ color }) => (
+            <Ionicons name="basket-outline" size={24} color={color} />
           ),
         }}
         component={BillingScreen}
@@ -168,8 +100,8 @@ function SideNavigation() {
         options={{
           drawerLabel: "Accounting",
           title: "Accounting",
-          drawerIcon: () => (
-            <FontAwesome5 name="cash-register" size={20} color={"#808080"} />
+          drawerIcon: ({ color }) => (
+            <Ionicons name="calculator-outline" size={24} color={color} />
           ),
         }}
         component={AccountingScreen}
@@ -179,8 +111,8 @@ function SideNavigation() {
         options={{
           drawerLabel: "Settings",
           title: "Settings",
-          drawerIcon: () => (
-            <MaterialIcons name="settings" size={20} color={"#808080"} />
+          drawerIcon: ({ color }) => (
+            <Ionicons name="settings-outline" size={24} color={color} />
           ),
         }}
         component={SettingsScreen}

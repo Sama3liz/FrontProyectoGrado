@@ -72,7 +72,13 @@ const AccountsScreen = () => {
   );
 
   return (
-    <ScrollView showsVerticalScrollIndicator={false}>
+    <ScrollView
+      showsVerticalScrollIndicator={false}
+      style={styles.root}
+      contentContainerStyle={{
+        flex: 1,
+      }}
+    >
       <View style={styles.container}>
         <CustomButton text={"New"} onPress={() => addAccount()} />
         <View style={[styles.containerTable, { marginTop: 10 }]}>

@@ -1,20 +1,13 @@
-import {
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  FlatList,
-  Image,
-  View,
-  Dimensions,
-  TextInput,
-} from "react-native";
+import { Text, FlatList, Image, View, Platform } from "react-native";
 import React, { useEffect, useState } from "react";
 import CustomButton from "../Buttons/CustomButton";
 import useNavigationHelpers from "../../utils/navigationHelpers";
 import CustomSearchInput from "../Inputs/CustomSearchInput";
 import { useForm } from "react-hook-form";
+import styles from "../../styles/styles";
 
-const numColumns = 4;
+const device = Platform.OS;
+const numColumns = device === "web" ? 6 : 2;
 
 const CustomCardClients = ({ data, helper }) => {
   const { goTo } = useNavigationHelpers();
@@ -58,12 +51,25 @@ const CustomCardClients = ({ data, helper }) => {
   const onMorePressed = (item) => {
     goTo("UserProfile", { person: item });
   };
-
+  
   return (
     <>
-      <View style={styles.container}>
+      <View
+        style={[
+          styles.void,
+          {
+            backgroundColor: "white",
+            width: "100%",
+            borderColor: "#e8e8e8",
+            borderWidth: 1,
+            borderRadius: 5,
+            paddingHorizontal: 10,
+            marginVertical: 5,
+          },
+        ]}
+      >
         <CustomSearchInput
-          placeholder="Search Here"
+          placeholder="Keyword Here"
           name={"search"}
           label={"Search"}
           control={control}
@@ -73,8 +79,7 @@ const CustomCardClients = ({ data, helper }) => {
       <FlatList
         data={filter}
         numColumns={numColumns}
-        style={styles.container}
-        renderItem={({ item }) => {
+        renderItem={({ item, index }) => {
           return (
             <View style={styles.card}>
               {/* <Image style={styles.cardImage} source={{ uri: item.image }} /> */}
@@ -99,44 +104,3 @@ const CustomCardClients = ({ data, helper }) => {
 };
 
 export default CustomCardClients;
-
-const styles = StyleSheet.create({
-  card: {
-    backgroundColor: "#fff",
-    marginBottom: 10,
-    marginLeft: 20,
-    width: "100%",
-    shadowColor: "#000",
-    shadowOpacity: 0.2,
-    shadowRadius: 1,
-    shadowOffset: {
-      width: 3,
-      height: 3,
-    },
-    flex: 1,
-  },
-  cardImage: {
-    width: "100%",
-    height: 200,
-  },
-  cardText: {
-    padding: 10,
-    fontSize: 16,
-  },
-  cardSubText: {
-    padding: 10,
-    fontSize: 12,
-  },
-  container: {
-    backgroundColor: "white",
-    width: "100%",
-
-    borderColor: "#e8e8e8",
-    borderWidth: 1,
-    borderRadius: 5,
-
-    paddingHorizontal: 10,
-    marginVertical: 5,
-  },
-  input: {},
-});

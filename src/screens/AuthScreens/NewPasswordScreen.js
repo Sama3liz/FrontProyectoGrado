@@ -32,24 +32,23 @@ const NewPasswordScreen = ({ route }) => {
   };
 
   return (
-    <ScrollView showsVerticalScrollIndicator={false}>
-      <View style={styles.container}>
-        <View
+    <ScrollView
+      showsVerticalScrollIndicator={false}
+      style={styles.root}
+      contentContainerStyle={{
+        justifyContent: "center",
+        flex: 1,
+      }}
+    >
+      <View style={[styles.container, { justifyContent: "center" }]}>
+        <Text
           style={[
-            styles.void,
-            {
-              flex: 1,
-              alignItems: "center",
-              justifyContent: "center",
-              padding: 20,
-              marginTop: 50,
-            },
+            styles.title,
+            { color: "#051C60", textAlign: "center", marginBottom: 10 },
           ]}
         >
-          <Text style={[styles.title, { color: "#051C60" }]}>
-            Reset your password
-          </Text>
-        </View>
+          Reset your password
+        </Text>
         {error ? <Text style={{ color: "red" }}>{error}</Text> : null}
         <CustomInputText
           placeholder="Code"
@@ -73,12 +72,20 @@ const NewPasswordScreen = ({ route }) => {
             },
           }}
         />
-        <PasswordChecklist
-          rules={["minLength", "specialChar", "number", "capital", "lowercase"]}
-          minLength={12}
-          value={password}
-          onChange={(isValid) => {}}
-        />
+        {/* <View style={{ alignItems: "center", margin: 10 }}>
+          <PasswordChecklist
+            rules={[
+              "minLength",
+              "specialChar",
+              "number",
+              "capital",
+              "lowercase",
+            ]}
+            minLength={12}
+            value={password}
+            onChange={(isValid) => {}}
+          />
+        </View> */}
         <CustomButton text="Submit" onPress={handleSubmit(onSubmitPressed)} />
         <CustomButton
           text="Back to Sign in"

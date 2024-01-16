@@ -1,15 +1,6 @@
 import React, { useState } from "react";
-import {
-  View,
-  Text,
-  ScrollView,
-  Image,
-  useWindowDimensions,
-} from "react-native";
-import Logo from "../../assets/Logo_1.png";
-import CustomInput from "../../components/Inputs/CustomInput";
+import { View, Text, ScrollView } from "react-native";
 import CustomButton from "../../components/Buttons/CustomButton";
-import { signUpStyles } from "../../styles/screenStyles/SignUpStyles";
 import { useForm } from "react-hook-form";
 import PasswordChecklist from "react-password-checklist";
 import useNavigationHelpers from "../../utils/navigationHelpers";
@@ -24,7 +15,6 @@ const SignUpScreen = () => {
   const { control, handleSubmit, watch } = useForm();
   const [password, setPassword] = useState("");
   const pwd = watch("password");
-  const { height } = useWindowDimensions();
 
   const onRegisterPressed = (data) => {
     clearError();
@@ -53,24 +43,23 @@ const SignUpScreen = () => {
   };
 
   return (
-    <ScrollView showsVerticalScrollIndicator={false}>
-      <View style={styles.container}>
-        <View
+    <ScrollView
+      showsVerticalScrollIndicator={false}
+      style={styles.root}
+      contentContainerStyle={{
+        justifyContent: "center",
+        flex: 1,
+      }}
+    >
+      <View style={[styles.container, { justifyContent: "center" }]}>
+        <Text
           style={[
-            styles.void,
-            {
-              flex: 1,
-              alignItems: "center",
-              justifyContent: "center",
-              padding: 20,
-              marginTop: 50,
-            },
+            styles.title,
+            { color: "#051C60", textAlign: "center", marginBottom: 10 },
           ]}
         >
-          <Text style={[styles.title, { color: "#051C60" }]}>
-            Create an account
-          </Text>
-        </View>
+          Create an account
+        </Text>
         {error && <Text style={{ color: "red" }}>Error: {error}</Text>}
         <CustomInputText
           name="username"
@@ -148,12 +137,20 @@ const SignUpScreen = () => {
             validate: (value) => value === pwd || "Password do not match",
           }}
         />
-        <PasswordChecklist
-          rules={["minLength", "specialChar", "number", "capital", "lowercase"]}
-          minLength={12}
-          value={password}
-          onChange={(isValid) => {}}
-        />
+        {/* <View style={{ alignItems: "center", margin: 10 }}>
+          <PasswordChecklist
+            rules={[
+              "minLength",
+              "specialChar",
+              "number",
+              "capital",
+              "lowercase",
+            ]}
+            minLength={12}
+            value={password}
+            onChange={(isValid) => {}}
+          />
+        </View> */}
         <CustomButton
           text="Register"
           onPress={handleSubmit(onRegisterPressed)}

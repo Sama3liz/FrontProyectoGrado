@@ -6,4 +6,7 @@ export {
   VictoryPie,
   VictoryLabel,
   VictoryTooltip,
+  VictoryGroup,
+  VictoryLine,
+  VictoryScatter,
 } from "victory-native";

@@ -12,7 +12,7 @@ export const loadData = async (setProducts) => {
     );
     const data = await response.json();
     const body = JSON.parse(data.body);
-    console.log(body)
+    console.log(body);
     const initialProducts = body.map((product) => ({
       ...product,
       quantity: 0,
@@ -36,6 +36,7 @@ export const getCurrentDate = () => {
 };
 
 export const calculateChange = (text, totals, setChange) => {
+  console.log(text);
   if (parseFloat(text) >= totals.total.toFixed(2)) {
     const newChange = parseFloat(text) - totals.total.toFixed(2);
     setChange(newChange.toFixed(2));
@@ -43,34 +44,28 @@ export const calculateChange = (text, totals, setChange) => {
 };
 
 export const calculateTotals = (selectedProducts, setTotals) => {
+  const subtotal = selectedProducts.reduce(
+    (total, product) => total + product.price * product.quantity,
+    0
+  );
+  const tariff0 = selectedProducts.reduce(
+    (total, product) =>
+      !product.appliesIVA ? total + product.price * product.quantity : total,
+    0
+  );
+  const tariff12 = selectedProducts.reduce(
+    (total, product) =>
+      product.appliesIVA ? total + product.price * product.quantity : total,
+    0
+  );
+  const iva12 = tariff12 * 0.12;
+  const total = subtotal + iva12;
   const newTotals = {
-    subtotal: selectedProducts.reduce(
-      (total, product) =>
-        product.appliesIVA ? total + product.price * product.quantity : total,
-      0
-    ),
-    tariff0: selectedProducts.reduce(
-      (total, product) =>
-        !product.appliesIVA ? total + product.price * product.quantity : total,
-      0
-    ),
-    tariff12: selectedProducts.reduce(
-      (total, product) =>
-        product.appliesIVA ? total + product.price * product.quantity : total,
-      0
-    ),
-    iva12:
-      selectedProducts.reduce(
-        (total, product) =>
-          product.appliesIVA ? total + product.price * product.quantity : total,
-        0
-      ) * 0.12,
-    total:
-      selectedProducts.reduce(
-        (total, product) =>
-          product.appliesIVA ? total + product.price * product.quantity : total,
-        0
-      ) * 1.12,
+    subtotal,
+    tariff0,
+    tariff12,
+    iva12,
+    total,
   };
   setTotals(newTotals);
 };

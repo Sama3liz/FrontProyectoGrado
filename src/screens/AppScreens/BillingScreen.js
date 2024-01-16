@@ -26,6 +26,8 @@ import { Ionicons } from "@expo/vector-icons";
 import { searchCustomerById } from "../../utils/dbFunctions";
 import CustomInputText from "../../components/Inputs/CustomInputText";
 import { EMAIL_REGEX, RUC_REGEX } from "../../utils/constants";
+import CustomInputNumber from "../../components/Inputs/CustomInputNumber";
+import ResumeCart from "../../components/Card/CustomResumeCart";
 
 const BillingScreen = () => {
   const { goTo } = useNavigationHelpers();
@@ -54,10 +56,12 @@ const BillingScreen = () => {
   const address = watch("address");
   const phone = watch("phone");
   const email = watch("email");
+  const cash = watch("cash");
 
   useEffect(() => {
     loadData(setProducts);
     calculateTotals(selectedProducts, setTotals);
+    cashChange(cash);
   }, [selectedProducts]);
 
   const setSearchCustomer = (customerData) => {
@@ -184,12 +188,13 @@ const BillingScreen = () => {
     if (paymentMethod === "Cash") {
       return (
         <>
-          <CustomInputText
+          <CustomInputNumber
             name="cash"
             placeholder="Insert cash value"
-            label="Search"
+            label="Cash"
             control={control}
-            onChangeText={(text) => {
+            handleInputChange={(text) => {
+              console.log(text);
               clearError();
               setCashInput(text);
               cashChange(text, totals);
@@ -213,7 +218,6 @@ const BillingScreen = () => {
 
   const onNextPressed = (data) => {
     if (step === 1) {
-      console.log(data);
       clearError();
       setStep(step + 1);
     }
@@ -228,7 +232,7 @@ const BillingScreen = () => {
     if (step === 3) {
       if (paymentMethod !== "") {
         if (paymentMethod === "Cash" && cashInput !== "") {
-          if (parseFloat(cashInput) > totals.total.toFixed(2)) {
+          if (parseFloat(cashInput) >= totals.total.toFixed(2)) {
             clearError();
             setStep(step + 1);
           } else {
@@ -245,6 +249,7 @@ const BillingScreen = () => {
   };
 
   const onBackPressed = () => {
+    clearError();
     setStep(step - 1);
   };
 
@@ -305,7 +310,9 @@ const BillingScreen = () => {
       case 1:
         return (
           <>
-            <Text style={styles.title}>Customer Data</Text>
+            <Text style={[styles.title, { alignSelf: "center" }]}>
+              Customer Data
+            </Text>
             <View style={styles.customerDetails}>
               {errorMessage ? (
                 <Text style={styles.error}>{errorMessage}</Text>
@@ -427,7 +434,9 @@ const BillingScreen = () => {
         return (
           <>
             <View style={styles.containerCol}>
-              <Text style={styles.title}>Products</Text>
+              <Text style={[styles.title, { alignSelf: "center" }]}>
+                Select Products
+              </Text>
               <View style={styles.customerDetails}>
                 {errorMessage ? (
                   <Text style={styles.error}>{errorMessage}</Text>
@@ -437,13 +446,13 @@ const BillingScreen = () => {
                   placeholder="Insert a name or code or just leave empty for list all"
                   label="Search"
                   control={control}
-                  onChangeText={(text) => setSearchQuery(text)}
+                  handleInputChange={(text) => setSearchQuery(text)}
                 />
                 <CustomButton text={"Search"} onPress={handleSearch} />
               </View>
               <View style={styles.containerRow}>
                 {filteredProducts.length !== 0 ? (
-                  <View style={[styles.searchProduct, { height: 300 }]}>
+                  <View style={[styles.searchProduct, { height: 400 }]}>
                     <FlatList
                       data={filteredProducts}
                       renderItem={renderProductList}
@@ -456,7 +465,7 @@ const BillingScreen = () => {
                   </View>
                 )}
                 {selectedProducts.length !== 0 ? (
-                  <View style={[styles.searchProduct, { height: 300 }]}>
+                  <View style={[styles.searchProduct, { height: 400 }]}>
                     <FlatList
                       data={selectedProducts}
                       renderItem={renderProductSelected}
@@ -469,7 +478,14 @@ const BillingScreen = () => {
                   </View>
                 )}
               </View>
-              <View style={styles.container}>
+              <View
+                style={[
+                  styles.containerRow,
+                  {
+                    width: "50%",
+                  },
+                ]}
+              >
                 <CustomButton text={"Back"} onPress={onBackPressed} />
                 <CustomButton
                   text={"Next"}
@@ -482,10 +498,10 @@ const BillingScreen = () => {
       case 3:
         return (
           <>
-            <Text style={styles.title}>Choose Payment</Text>
-            {errorMessage ? (
-              <Text style={styles.error}>{errorMessage}</Text>
-            ) : null}
+            <Text style={[styles.title, { alignSelf: "center" }]}>
+              Choose Payment
+            </Text>
+
             <Text
               style={[
                 styles.subtitle,
@@ -494,31 +510,41 @@ const BillingScreen = () => {
             >
               Total: ${totals.total.toFixed(2)}
             </Text>
+            {errorMessage ? (
+              <Text style={[styles.error, { alignSelf: "center" }]}>
+                {errorMessage}
+              </Text>
+            ) : null}
             <View style={styles.customerDetails}>
-              <View style={styles.container}>
-                <CustomButton
-                  text={"Cash"}
-                  type="SECONDARY"
-                  onPress={() => setPaymentMethod("Cash")}
-                />
-                <CustomButton
-                  text={"Card"}
-                  type="SECONDARY"
-                  onPress={() => setPaymentMethod("Card")}
-                />
-                <CustomButton
-                  text={"Transfer"}
-                  type="SECONDARY"
-                  onPress={() => setPaymentMethod("Transfer")}
-                />
-              </View>
+              <CustomButton
+                text={"Cash"}
+                type="SECONDARY"
+                onPress={() => setPaymentMethod("Cash")}
+              />
+              <CustomButton
+                text={"Card"}
+                type="SECONDARY"
+                onPress={() => setPaymentMethod("Card")}
+              />
+              <CustomButton
+                text={"Transfer"}
+                type="SECONDARY"
+                onPress={() => setPaymentMethod("Transfer")}
+              />
             </View>
             {paymentMethod ? (
               <View style={styles.customerDetails}>
                 {renderPaymentFields()}
               </View>
             ) : null}
-            <View style={styles.buttonContainer}>
+            <View
+              style={[
+                styles.containerRow,
+                {
+                  width: "50%",
+                },
+              ]}
+            >
               <CustomButton text={"Back"} onPress={onBackPressed} />
               <CustomButton
                 text={"Next"}
@@ -530,48 +556,59 @@ const BillingScreen = () => {
       case 4:
         return (
           <>
-            <Text style={styles.title}>Resume</Text>
-            <View style={styles.customerDetails}>
-              <Text>CI/RUC: {id}</Text>
-              <Text>Name: {firstName + " " + lastName} </Text>
-              <Text>Email: {email}</Text>
-              <Text>Phone: {phone}</Text>
-              <Text>Address: {email}</Text>
-            </View>
-            <View style={styles.customerDetails}>
-              {selectedProducts.map((product) => (
-                <CartItem
-                  key={product.id}
-                  item={product}
-                  onRemoveProduct={() => removeFromInvoice(product.id)}
-                  onQuantityIncrease={() => productSelection(product)}
-                  onQuantityDecrease={() =>
-                    quantityChange(product.id, product.quantity - 1)
-                  }
-                  onQuantityChange={(text) => quantityChange(product.id, text)}
-                />
-              ))}
-            </View>
-            <View style={styles.billSummary}>
-              {paymentMethod === "Cash" ? (
-                <>
+            <View
+              style={[
+                styles.containerCol,
+                {
+                  rowGap: 20,
+                },
+              ]}
+            >
+              <Text style={[styles.title, { alignSelf: "center" }]}>
+                Resume
+              </Text>
+              <View style={styles.customerDetails}>
+                <Text>CI/RUC: {id}</Text>
+                <Text>Name: {firstName + " " + lastName} </Text>
+                <Text>Email: {email}</Text>
+                <Text>Phone: {phone}</Text>
+                <Text>Address: {email}</Text>
+              </View>
+              <View style={styles.customerDetails}>
+                {selectedProducts.map((product) => (
+                  <ResumeCart key={product.id} item={product} />
+                ))}
+              </View>
+              <View style={styles.billSummary}>
+                {paymentMethod === "Cash" ? (
+                  <>
+                    <Text>Method: {paymentMethod}</Text>
+                    <Text>Change: ${change}</Text>
+                  </>
+                ) : (
                   <Text>Method: {paymentMethod}</Text>
-                  <Text>Change: ${change}</Text>
-                </>
-              ) : (
-                <Text>Method: {paymentMethod}</Text>
-              )}
-              <Text>Subtotal: ${totals.subtotal.toFixed(2)}</Text>
-              <Text>Tarifa 0: ${totals.tariff0.toFixed(2)}</Text>
-              <Text>Tarifa 12: ${totals.tariff12.toFixed(2)}</Text>
-              <Text>12% IVA: ${totals.iva12.toFixed(2)}</Text>
-              <Text>Total: ${totals.total.toFixed(2)}</Text>
+                )}
+                <Text>Subtotal: ${totals.subtotal.toFixed(2)}</Text>
+                <Text>Tarifa 0: ${totals.tariff0.toFixed(2)}</Text>
+                <Text>Tarifa 12: ${totals.tariff12.toFixed(2)}</Text>
+                <Text>12% IVA: ${totals.iva12.toFixed(2)}</Text>
+                <Text>Total: ${totals.total.toFixed(2)}</Text>
+              </View>
+              <View
+                style={[
+                  styles.containerRow,
+                  {
+                    width: "50%",
+                  },
+                ]}
+              >
+                <CustomButton text={"Back"} onPress={onBackPressed} />
+                <CustomButton
+                  text={"Send"}
+                  onPress={handleSubmit(onSubmitPressed)}
+                />
+              </View>
             </View>
-            <CustomButton
-              text={"Send"}
-              onPress={handleSubmit(onSubmitPressed)}
-            />
-            <CustomButton text={"Back"} onPress={onBackPressed} />
           </>
         );
       default:
@@ -580,8 +617,22 @@ const BillingScreen = () => {
   };
 
   return (
-    <ScrollView showsVerticalScrollIndicator={false}>
-      <View style={styles.container}>{renderStepContent()}</View>
+    <ScrollView showsVerticalScrollIndicator={false} style={styles.root}>
+      <View
+        style={[
+          styles.container,
+          { flex: 1, justifyContent: "center", alignContent: "flex-end" },
+        ]}
+      >
+        <View
+          style={{
+            flex: 1,
+            justifyContent: "space-between",
+          }}
+        >
+          {renderStepContent()}
+        </View>
+      </View>
     </ScrollView>
   );
 };

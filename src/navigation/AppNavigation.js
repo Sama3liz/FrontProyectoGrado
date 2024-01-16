@@ -1,4 +1,4 @@
-import { ActivityIndicator, SafeAreaView, View } from "react-native";
+import { ActivityIndicator, SafeAreaView, StatusBar, View } from "react-native";
 import React, { useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
 import { useError } from "../context/ErrorContext";
@@ -24,6 +24,12 @@ const AppNavigation = () => {
 
   return (
     <SafeAreaView style={styles.root}>
+      <StatusBar
+        animated={true}
+        backgroundColor="#531158"
+        barStyle={"default"}
+        hidden={false}
+      />
       {user ? (
         config === "true" ? (
           <AppStack />

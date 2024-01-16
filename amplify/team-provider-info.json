@@ -10,6 +10,16 @@
       "StackName": "amplify-proyectogrado-dev-40752",
       "StackId": "arn:aws:cloudformation:us-east-1:461127647309:stack/amplify-proyectogrado-dev-40752/19d066f0-9e4e-11ee-8581-123963f5555d",
       "AmplifyAppId": "d3j7dxav8d6380"
+    },
+    "categories": {
+      "auth": {
+        "proyectogrado": {
+          "nativeClientId": "6cilbrq1pvcag4q8cqhkjva9t0",
+          "userPoolId": "us-east-1_6DFdHwxhl",
+          "userPoolName": "ProyectoGrado",
+          "webClientId": "6cilbrq1pvcag4q8cqhkjva9t0"
+        }
+      }
     }
   }
 }
