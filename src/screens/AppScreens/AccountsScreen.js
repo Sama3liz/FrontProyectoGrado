@@ -34,10 +34,6 @@ const AccountsScreen = () => {
     console.log("List Updated");
   };
 
-  const deleteAccount = (item) => {
-    console.log("Cuenta eliminada");
-  };
-
   const addAccount = () => {
     goTo("NewAccount", { updateList });
   };
@@ -51,12 +47,6 @@ const AccountsScreen = () => {
       <Text style={styles.cellTable}>{item.code}</Text>
       <Text style={[styles.cellTable, styles.nameTable]}>{item.name}</Text>
       <View style={styles.cellRowTable}>
-        <TouchableOpacity
-          style={styles.removeButton}
-          onPress={() => deleteAccount(item)}
-        >
-          <Ionicons name="trash-bin-outline" size={24} color="red" />
-        </TouchableOpacity>
         <TouchableOpacity
           style={styles.removeButton}
           onPress={() => editAccount(item)}

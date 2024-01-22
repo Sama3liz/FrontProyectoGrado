@@ -36,7 +36,7 @@ const CustomInputText = ({
             </Text>
             <TextInput
               type="text"
-              editable={disabled ? true : false}
+              editable={disabled ? false : true}
               value={value}
               onChangeText={(text) => {
                 onChange(text);

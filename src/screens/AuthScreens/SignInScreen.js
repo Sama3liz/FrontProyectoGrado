@@ -7,7 +7,7 @@ import {
   Text,
   StatusBar,
 } from "react-native";
-import Logo from "../../assets/Logo_1.png";
+import Logo from "../../assets/Logo_ultimate.png";
 import CustomButton from "../../components/Buttons/CustomButton";
 import useNavigationHelpers from "../../utils/navigationHelpers";
 import { useForm } from "react-hook-form";
