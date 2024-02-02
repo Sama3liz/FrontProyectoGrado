@@ -16,13 +16,9 @@ const NewClientForm = ({ route }) => {
   const [idType, setIdType] = useState(0);
 
   const onSubmitPressed = async (data) => {
-    try {
-      await addClient(data, idType);
-      route.params.updateClients();
-      goBack();
-    } catch (error) {
-      console.log(error);
-    }
+    await addClient(data, idType);
+    route.params.updateClients();
+    goBack();
   };
 
   const onBackPressed = () => {

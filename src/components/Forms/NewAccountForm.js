@@ -50,7 +50,6 @@ const NewAccountForm = ({ route }) => {
             : product
         );
         setSelectedProducts(updatedProducts);
-        console.log(selectedProducts);
       } else {
         const newProduct = { ...productToAdd, quantity: 1 };
         setSelectedProducts((prev) => [...prev, newProduct]);
@@ -87,10 +86,8 @@ const NewAccountForm = ({ route }) => {
   const splitCodeAndSum = (code) => {
     const splitCode = code.split("-");
     const level = 1;
-    console.log(splitCode);
     const summedCode = Number(splitCode[level]) + 1;
     const newCodeComplete = splitCode[0] + "-" + summedCode;
-    console.log(summedCode);
     setValue("code", newCodeComplete);
   };
 
@@ -154,7 +151,6 @@ const NewAccountForm = ({ route }) => {
                       name="code"
                       label="Code"
                       control={control}
-                      
                       rules={{
                         required: "Code is required",
                       }}

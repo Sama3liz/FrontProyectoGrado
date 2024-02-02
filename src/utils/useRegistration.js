@@ -49,7 +49,6 @@ const useRegistration = () => {
       await Auth.updateUserAttributes(Auth.currentUser, {
         "custom:email": email,
       });
-      console.log("Datos guardados correctamente");
     } catch (error) {
       setError(error.message);
     }

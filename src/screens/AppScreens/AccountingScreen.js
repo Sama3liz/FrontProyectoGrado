@@ -20,7 +20,11 @@ const AccountingScreen = () => {
         flex: 1,
       }}
     >
-      <View style={[styles.container, { justifyContent: 'center', }]}>
+      <View style={[styles.container, { justifyContent: "center" }]}>
+        <CustomButton
+          text={"Invoices"}
+          onPress={() => onButtonPress("InvoiceList")}
+        />
         <CustomButton text={"Kardex"} onPress={() => onButtonPress("Kardex")} />
         {/* <CustomButton
           text={"Reports"} onPress={() => onButtonPress("Reports")}

@@ -12,13 +12,9 @@ const NewCategoryForm = ({ route }) => {
   const { goBack } = useNavigationHelpers();
 
   const onSubmitPressed = async (data) => {
-    try {
-      await addCategory(data);
-      route.params.updateCategories();
-      goBack();
-    } catch (error) {
-      console.log(error);
-    }
+    await addCategory(data);
+    route.params.updateCategories();
+    goBack();
   };
 
   const onBackPressed = () => {

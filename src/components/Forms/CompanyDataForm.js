@@ -28,7 +28,6 @@ const Company = () => {
         "https://q20filkgq3.execute-api.us-east-1.amazonaws.com/dev/inventory"
       );
       const body = JSON.parse(data.body);
-      console.log(data);
       setValue("commercial", body.commercial);
       setValue("phone", body.phone);
       setValue("address", body.address);

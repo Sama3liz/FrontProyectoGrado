@@ -118,7 +118,6 @@ const ProfileScreen = ({ route }) => {
         </View>
         <View style={styles.buttonContainer}>
           <CustomButton text={"Save"} onPress={handleSubmit(onSubmitPressed)} />
-          <CustomButton text={"Back"} onPress={onBackPressed} />
         </View>
       </View>
     </ScrollView>

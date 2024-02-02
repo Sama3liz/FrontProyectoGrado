@@ -18,6 +18,8 @@ import UserScreen from "../screens/AppScreens/UserScreen";
 import ProductScreen from "../screens/AppScreens/ProductScreen";
 import NewAccountForm from "../components/Forms/NewAccountForm";
 import StockScreen from "../screens/AppScreens/StockScreen";
+import InvoiceScreen from "../screens/AppScreens/InvoiceScreen";
+import DetailsScreen from "../screens/AppScreens/DetailsScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -83,6 +85,16 @@ function AppStack() {
           options={{ headerTitle: "Product Profile" }}
         />
         {/* Accounting */}
+        <Stack.Screen
+          name="InvoiceList"
+          component={InvoiceScreen}
+          options={{ headerTitle: "Invoice List" }}
+        />
+        <Stack.Screen
+          name="InvoiceDetails"
+          component={DetailsScreen}
+          options={{ headerTitle: "Invoice Details" }}
+        />
         <Stack.Screen
           name="Kardex"
           component={KardexScreen}

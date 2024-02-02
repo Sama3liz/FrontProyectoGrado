@@ -10,7 +10,6 @@ import styles from "../../styles/styles";
 const UserScreen = () => {
   const { user } = useContext(AuthContext);
   const { control, handleSubmit, setValue } = useForm();
-  console.log(user.payload);
   useEffect(() => {
     setValue("name", user.payload.name);
     setValue("ruc", user.payload["cognito:username"]);

@@ -50,7 +50,6 @@ const StockScreen = ({ route }) => {
             : product
         );
         setSelectedProducts(updatedProducts);
-        console.log(selectedProducts);
       } else {
         const newProduct = { ...productToAdd, quantity: 1 };
         setSelectedProducts((prev) => [...prev, newProduct]);
@@ -90,7 +89,6 @@ const StockScreen = ({ route }) => {
         : Number(selectedProducts[0].stock) >= Number(data.quantity)
         ? Number(selectedProducts[0].stock) - Number(data.quantity)
         : setErrorMessage("Cantidad invalida");
-    console.log(newStock);
   };
 
   return (

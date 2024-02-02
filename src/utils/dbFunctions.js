@@ -126,7 +126,7 @@ export const addProductToInventory = async (
       stock: Number(data.stock),
       name: data.name.toLowerCase(),
     };
-    console.log(requestData);
+    
     // Llamada a la API para agregar producto al inventario
     await fetch(
       "https://q20filkgq3.execute-api.us-east-1.amazonaws.com/dev/inventory",

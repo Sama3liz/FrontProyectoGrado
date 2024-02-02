@@ -20,7 +20,6 @@ const InventoryScreen = () => {
         "https://q20filkgq3.execute-api.us-east-1.amazonaws.com/dev/inventory"
       );
       const body = JSON.parse(data.body);
-      console.log(data);
       setProducts(body);
     } catch (error) {
       console.error("Error fetching data:", error);

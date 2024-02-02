@@ -39,7 +39,7 @@ const AccountsScreen = () => {
   };
 
   const editAccount = (item) => {
-    console.log("Cuenta editada");
+    
   };
 
   const renderItem = ({ item }) => (

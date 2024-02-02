@@ -65,7 +65,6 @@ const BillingScreen = () => {
   }, [selectedProducts]);
 
   const setSearchCustomer = (customerData) => {
-    console.log(customerData);
     if (customerData !== null) {
       clearError();
       setValue("name", customerData.firstname);
@@ -92,7 +91,7 @@ const BillingScreen = () => {
         setErrorMessage("Give a valid CI/RUC for search");
       }
     } catch (error) {
-      console.log(error);
+      setErrorMessage(error);
       setCustomerData(null);
     }
   };
@@ -194,7 +193,6 @@ const BillingScreen = () => {
             label="Cash"
             control={control}
             handleInputChange={(text) => {
-              console.log(text);
               clearError();
               setCashInput(text);
               cashChange(text, totals);
@@ -254,45 +252,14 @@ const BillingScreen = () => {
   };
 
   const onSubmitPressed = (data) => {
-    /* const date = getCurrentDate();
-    const infoTributary = {
-      ambient: 1,
-      tipoEmision: 1,
-      razonSocial,
-      nombreComercial,
-      ruc,
-      claveAcceso: "0000000000000000000000000000000000000000000000000",
-      codDoc: "01",
-      estab: "000",
-      ptoEmi: "000",
-      secuencial: "0000",
-      dirMatriz: "dirMatriz",
-      agenteRetencion: 0,
-      contribuyenteRimpe: "CONTRIBUYENTE RÉGIMEN RIMPE"
-    };
-    constInfoFactura = {
-      fechaEmision: date,
-      dirEstablecimiento,
-      contribuyenteEspecial,
-      obligadoContabilidad,
-      tipoIdentificacionComprador,
-      razonSocialComprador,
-      identificacionComprador,
-      direccionComprador,
-      totalSinImpuestos,
-      totalSubsidio,
-      incoTermTotalSinImpuestos,
-      totalDescuento,
-    }
+    const date = getCurrentDate();
     const newBilling = {
       date,
-      infoTributary,
-      companyData: {},
+      user: {}, // Deberia ir el RUC
       clientData: data,
       valuesTotals: { ...totals, paymentMethod, change },
       products: selectedProducts,
     };
-    console.log(newBilling); */
     setValue("ci", "");
     setValue("name", "");
     setValue("email", "");

@@ -12,7 +12,6 @@ export const loadData = async (setProducts) => {
     );
     const data = await response.json();
     const body = JSON.parse(data.body);
-    console.log(body);
     const initialProducts = body.map((product) => ({
       ...product,
       quantity: 0,
@@ -36,7 +35,6 @@ export const getCurrentDate = () => {
 };
 
 export const calculateChange = (text, totals, setChange) => {
-  console.log(text);
   if (parseFloat(text) >= totals.total.toFixed(2)) {
     const newChange = parseFloat(text) - totals.total.toFixed(2);
     setChange(newChange.toFixed(2));

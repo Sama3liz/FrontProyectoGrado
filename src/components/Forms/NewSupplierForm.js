@@ -159,7 +159,6 @@ const NewSupplierForm = ({ route }) => {
           />
         </View>
         <CustomButton text="Submit" onPress={handleSubmit(onSubmitPressed)} />
-        <CustomButton text="Back" onPress={onBackPressed} type="PRIMARY" />
       </View>
     </ScrollView>
   );

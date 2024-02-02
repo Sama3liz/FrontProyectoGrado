@@ -11,7 +11,6 @@ const InitialConfigScreen = () => {
   const { user, logOut, updateAttribute, error, clearError } =
     useContext(AuthContext);
   const { control, handleSubmit, setValue } = useForm();
-  console.log(user);
 
   useEffect(() => {
     if (user) {
