@@ -13,52 +13,83 @@ import { useForm } from "react-hook-form";
 import CustomButton from "../../components/Buttons/CustomButton";
 import { loadData } from "../../utils/useBilling";
 import { Ionicons } from "@expo/vector-icons";
-import CustomInputNumber from "../../components/Inputs/CustomInputNumber";
+import { fetchData } from "../../utils/dbFunctions";
+import useNavigationHelpers from "../../utils/navigationHelpers";
 
 const NewAccountForm = ({ route }) => {
   const { errorMessage, setErrorMessage, clearError } = useError();
-  const { control, handleSubmit, watch, setValue } = useForm();
-  const [products, setProducts] = useState([]);
+  const { control, handleSubmit, setValue } = useForm();
+  const { goTo, goBack } = useNavigationHelpers();
+  const [accounts, setAccounts] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
-  const [filteredProducts, setFilteredProducts] = useState([]);
-  const [selectedProducts, setSelectedProducts] = useState([]);
-  const [newCode, setNewCode] = useState([]);
+  const [filteredAccounts, setFilteredAccounts] = useState([]);
+  const [selectedAccount, setSelectedAccount] = useState([]);
 
   useEffect(() => {
-    loadData(setProducts);
+    loadData();
   }, []);
 
-  const handleSearch = () => {
-    const query = searchQuery.toLowerCase();
-    const filtered = products.filter((product) =>
-      product.name.toLowerCase().includes(query)
-    );
-    setFilteredProducts(filtered);
-  };
-
-  const handleStock = (product) => {
-    const productId = product.id;
-    const productToAdd = products.find((product) => product.id === productId);
-    if (productToAdd) {
-      const existingProduct = selectedProducts.find(
-        (product) => product.id === productId
+  const loadData = async () => {
+    try {
+      const data = await fetchData(
+        "https://q20filkgq3.execute-api.us-east-1.amazonaws.com/dev/accounts"
       );
-      if (existingProduct) {
-        const updatedProducts = selectedProducts.map((product) =>
-          product.id === productId
-            ? { ...product, quantity: product.quantity + 1 }
-            : product
-        );
-        setSelectedProducts(updatedProducts);
-      } else {
-        const newProduct = { ...productToAdd, quantity: 1 };
-        setSelectedProducts((prev) => [...prev, newProduct]);
-        splitCodeAndSum(product.code);
-      }
+      const body = JSON.parse(data.body);
+      setAccounts(body);
+    } catch (error) {
+      console.error("Error fetching data:", error);
     }
   };
 
-  const renderProductList = ({ item }) => (
+  const handleSearch = () => {
+    const query = searchQuery.toLowerCase();
+    const filtered = accounts.filter(
+      (account) =>
+        account.nombre_cuenta.toLowerCase().includes(query) ||
+        account.codigo_cuenta.includes(query)
+    );
+    setFilteredAccounts(filtered);
+  };
+
+  const handleAccount = (account) => {
+    const accountToAdd = accounts.find(
+      (acc) => acc.id_cuenta === account.id_cuenta
+    );
+    if (accountToAdd) {
+      setSelectedAccount((prev) => [...prev, accountToAdd]);
+      console.log(selectedAccount);
+      splitCodeAndSum(account.codigo_cuenta);
+    }
+  };
+
+  const splitCodeAndSum = (code) => {
+    const splitCode = code.split(".");
+    const parentCode = splitCode.join("."); // Código padre
+
+    // Buscar las cuentas hijas existentes bajo el código padre
+    const existingChildCodes = accounts
+      .filter((account) => {
+        const accountCodeParts = account.codigo_cuenta.split(".");
+        return (
+          accountCodeParts.length === splitCode.length + 1 &&
+          account.codigo_cuenta.startsWith(parentCode + ".")
+        );
+      })
+      .map((account) => parseInt(account.codigo_cuenta.split(".").pop()));
+
+    // Determinar el número siguiente en la secuencia
+    let nextNumber = 1;
+    if (existingChildCodes.length > 0) {
+      nextNumber = Math.max(...existingChildCodes) + 1;
+    }
+
+    // Crear el nuevo código para la cuenta hija
+    const childCode = parentCode + "." + ("0" + nextNumber).slice(-2);
+
+    setValue("code", childCode);
+  };
+
+  const renderAccountList = ({ item }) => (
     <View
       style={[
         styles.itemContainer,
@@ -70,29 +101,55 @@ const NewAccountForm = ({ route }) => {
       ]}
     >
       <View style={styles.itemDetails}>
-        <Text style={styles.itemName}>{item.name}</Text>
-        <Text style={styles.itemDescription}>Stock: {item.stock}</Text>
-        <Text style={styles.itemDescription}>Code: {item.code}</Text>
+        <Text style={styles.itemName}>Código: {item.codigo_cuenta}</Text>
+        <Text style={styles.itemDescription}>Nombre: {item.nombre_cuenta}</Text>
       </View>
       <TouchableOpacity
         style={styles.removeButton}
-        onPress={() => handleStock(item)}
+        onPress={() => handleAccount(item)}
       >
         <Ionicons name="ios-add-circle-outline" size={24} color="green" />
       </TouchableOpacity>
     </View>
   );
 
-  const splitCodeAndSum = (code) => {
-    const splitCode = code.split("-");
-    const level = 1;
-    const summedCode = Number(splitCode[level]) + 1;
-    const newCodeComplete = splitCode[0] + "-" + summedCode;
-    setValue("code", newCodeComplete);
-  };
+  const onSavePressed = async (data) => {
+    // Obtener el id_cuenta de la cuenta padre y el nivel_cuenta
+    const idCuentaPadre = selectedAccount[0].id_cuenta;
+    const nivelCuenta = selectedAccount[0].nivel_cuenta + 1;
 
-  const onSavePressed = (data) => {
+    // Agregar el id_cuenta de la cuenta padre y el nivel_cuenta a los datos
+    data.padre_cuenta = idCuentaPadre;
+    data.nivel_cuenta = nivelCuenta;
+
     console.log(data);
+
+    try {
+      // Realizar la solicitud HTTP para enviar los datos a la API
+      const response = await fetch(
+        "https://q20filkgq3.execute-api.us-east-1.amazonaws.com/dev/accounts",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Error al enviar los datos");
+      }
+
+      // Si la solicitud se realizó con éxito, puedes hacer algo con la respuesta aquí
+      const responseData = await response.json();
+      console.log("Respuesta de la API:", responseData);
+      // Después de enviar los datos con éxito, actualizar la lista y regresar a la página anterior
+      route.params.updateList();
+      goBack();
+    } catch (error) {
+      console.error("Error al enviar los datos:", error.message);
+    }
   };
 
   return (
@@ -102,7 +159,7 @@ const NewAccountForm = ({ route }) => {
       style={styles.root}
     >
       <View style={styles.container}>
-        {selectedProducts.length === 0 ? (
+        {selectedAccount.length === 0 ? (
           <View style={styles.customerDetails}>
             {errorMessage !== "Cantidad invalida" ? (
               <Text style={styles.error}>{errorMessage}</Text>
@@ -118,7 +175,7 @@ const NewAccountForm = ({ route }) => {
           </View>
         ) : null}
         <View style={styles.containerCol}>
-          {selectedProducts.length !== 0 ? (
+          {selectedAccount.length !== 0 ? (
             <View style={[styles.customerDetails, { height: 400 }]}>
               <View style={[styles.itemContainer, { marginRight: 1 }]}>
                 <View style={styles.itemDetails}>
@@ -130,7 +187,7 @@ const NewAccountForm = ({ route }) => {
                   >
                     <Text style={styles.itemName}>Name: </Text>
                     <Text style={styles.itemDescription}>
-                      {selectedProducts[0].name}
+                      {selectedAccount[0].nombre_cuenta}
                     </Text>
                   </View>
                   <View
@@ -138,7 +195,7 @@ const NewAccountForm = ({ route }) => {
                   >
                     <Text style={styles.itemName}>Code: </Text>
                     <Text style={styles.itemDescription}>
-                      {selectedProducts[0].code}
+                      {selectedAccount[0].codigo_cuenta}
                     </Text>
                   </View>
 
@@ -150,18 +207,17 @@ const NewAccountForm = ({ route }) => {
                       placeholder="Insert a code"
                       name="code"
                       label="Code"
+                      disabled
                       control={control}
                       rules={{
                         required: "Code is required",
                       }}
-                      handleInputChange={() => clearError()}
                     />
                     <CustomInputText
                       placeholder="Insert a name"
                       name="name"
                       label="Name"
                       control={control}
-                      disabled
                       rules={{
                         required: "Name is required",
                       }}
@@ -175,17 +231,19 @@ const NewAccountForm = ({ route }) => {
                 </View>
               </View>
             </View>
-          ) : filteredProducts.length !== 0 ? (
+          ) : filteredAccounts.length !== 0 ? (
             <View style={[styles.customerDetails, { height: 300 }]}>
               <FlatList
-                data={filteredProducts}
-                renderItem={renderProductList}
-                keyExtractor={(item) => item.id.toString()}
+                data={filteredAccounts.sort((a, b) =>
+                  a.codigo_cuenta.localeCompare(b.codigo_cuenta)
+                )}
+                renderItem={renderAccountList}
+                keyExtractor={(item) => item.id_cuenta.toString()}
               />
             </View>
           ) : (
             <View style={styles.customerDetails}>
-              <Text>Search a product</Text>
+              <Text>Search an account</Text>
             </View>
           )}
         </View>

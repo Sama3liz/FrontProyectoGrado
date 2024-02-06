@@ -31,9 +31,7 @@ const CustomCardProductsKardex = ({ data, helper, type }) => {
   const searchFilter = (text) => {
     if (text) {
       const newData = master.filter((item) => {
-        const itemData = item.name
-          ? item.name.toUpperCase()
-          : "".toUpperCase();
+        const itemData = item.name ? item.name.toUpperCase() : "".toUpperCase();
         const textData = text.toUpperCase();
         return itemData.indexOf(textData) > -1;
       });
@@ -51,7 +49,8 @@ const CustomCardProductsKardex = ({ data, helper, type }) => {
 
   return (
     <>
-      <View style={[
+      <View
+        style={[
           styles.void,
           {
             backgroundColor: "white",
@@ -62,7 +61,8 @@ const CustomCardProductsKardex = ({ data, helper, type }) => {
             paddingHorizontal: 10,
             marginVertical: 5,
           },
-        ]}>
+        ]}
+      >
         <TextInput
           style={styles.input}
           placeholder="Search Here"
@@ -73,12 +73,10 @@ const CustomCardProductsKardex = ({ data, helper, type }) => {
       <FlatList
         data={filter}
         numColumns={numColumns}
-        
         renderItem={({ item }) => {
           return (
             <View style={styles.card}>
               <Text style={styles.cardText}>{item.name}</Text>
-              <Text style={styles.cardText}>Category: {item.category}</Text>
               <Text style={styles.cardText}>Main Code: {item.code}</Text>
               <CustomButton
                 text={helper}

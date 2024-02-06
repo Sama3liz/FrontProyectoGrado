@@ -1,4 +1,11 @@
-import { Text, FlatList, Image, View, Platform, TouchableOpacity } from "react-native";
+import {
+  Text,
+  FlatList,
+  Image,
+  View,
+  Platform,
+  TouchableOpacity,
+} from "react-native";
 import React, { useEffect, useState } from "react";
 import CustomButton from "../Buttons/CustomButton";
 import useNavigationHelpers from "../../utils/navigationHelpers";
@@ -69,41 +76,45 @@ const CustomCardInvoices = ({ data }) => {
           handleInputChange={(text) => searchFilter(text)}
         />
       </View>
-      <View style={styles.headerTable}>
-        <Text style={styles.headerTextTable}>Date</Text>
-        <Text style={styles.headerTextTable}>Document</Text>
-        <Text style={styles.headerTextTable}>More</Text>
-      </View>
-      <FlatList
-        data={filter}
-        renderItem={({ item }) => {
-          return (
-            <View style={styles.itemTable}>
-              <View style={{ flexDirection: "column", width: "100%" }}>
-                <View style={{ flexDirection: "row" }}>
-                  <Text style={styles.cellTable}>{item.date}</Text>
-                  <Text style={styles.cellTable}>{item.invoice}</Text>
-                  <View style={styles.cellRowTable}>
-                    <TouchableOpacity
-                      style={styles.removeButton}
-                      onPress={() => () => onMorePressed(item)}
-                    >
-                      <MaterialCommunityIcons
-                        name="plus-circle-outline"
-                        size={24}
-                        color="black"
-                      />
-                    </TouchableOpacity>
+      <View style={styles.customerDetails}>
+        <View style={styles.headerTable}>
+          <Text style={styles.headerTextTable}>Date</Text>
+          <Text style={styles.headerTextTable}>Document</Text>
+          <Text style={styles.headerTextTable}>Client</Text>
+          <Text style={styles.headerTextTable}>More</Text>
+        </View>
+        <FlatList
+          data={filter}
+          renderItem={({ item }) => {
+            return (
+              <View style={styles.itemTable}>
+                <View style={{ flexDirection: "column", width: "100%" }}>
+                  <View style={{ flexDirection: "row" }}>
+                    <Text style={styles.cellTable}>{item.date}</Text>
+                    <Text style={styles.cellTable}>{item.id}</Text>
+                    <Text style={styles.cellTable}>{item.client}</Text>
+                    <View style={styles.cellRowTable}>
+                      <TouchableOpacity
+                        style={styles.removeButton}
+                        onPress={() => onMorePressed(item)}
+                      >
+                        <MaterialCommunityIcons
+                          name="plus-circle-outline"
+                          size={24}
+                          color="black"
+                        />
+                      </TouchableOpacity>
+                    </View>
                   </View>
                 </View>
               </View>
-            </View>
-          );
-        }}
-        /* keyExtractor={(item) => {
+            );
+          }}
+          /* keyExtractor={(item) => {
           item.id.toString();
         }} */
-      />
+        />
+      </View>
     </>
   );
 };

@@ -20,6 +20,7 @@ import NewAccountForm from "../components/Forms/NewAccountForm";
 import StockScreen from "../screens/AppScreens/StockScreen";
 import InvoiceScreen from "../screens/AppScreens/InvoiceScreen";
 import DetailsScreen from "../screens/AppScreens/DetailsScreen";
+import EditAccountForm from "../components/Forms/EditAccountForm";
 
 const Stack = createNativeStackNavigator();
 
@@ -114,6 +115,11 @@ function AppStack() {
           name="NewAccount"
           component={NewAccountForm}
           options={{ headerTitle: "New Account" }}
+        />
+        <Stack.Screen
+          name="EditAccount"
+          component={EditAccountForm}
+          options={{ headerTitle: "Edit Account" }}
         />
         <Stack.Screen
           name="Journal"

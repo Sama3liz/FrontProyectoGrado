@@ -1,44 +1,82 @@
-import React, { useState } from "react";
-import { View, Text, FlatList, StyleSheet } from "react-native";
-import CustomButton from "../../components/Buttons/CustomButton";
+import React, { useEffect, useState } from "react";
+import { View, Text, FlatList, ScrollView } from "react-native";
 import useNavigationHelpers from "../../utils/navigationHelpers";
 import styles from "../../styles/styles";
+import { fetchData } from "../../utils/dbFunctions";
 
 const CardexScreen = ({ route }) => {
   const { goBack } = useNavigationHelpers();
   const { item } = route.params;
-  const [cardexEntries, setCardexEntries] = useState([
-    {
-      id: 1,
-      date: "2023-12-01",
-      item: "Producto A",
-      quantity: 10,
-      type: "Entrada",
-    },
-    {
-      id: 2,
-      date: "2023-12-05",
-      item: "Producto B",
-      quantity: 5,
-      type: "Salida",
-    },
-    // Add more cardex entries as needed...
-  ]);
+  const [cardexEntries, setCardexEntries] = useState(null);
+  const id = item.id;
+
+  useEffect(() => {
+    loadData();
+  }, []);
+
+  const loadData = async () => {
+    try {
+      const data = await fetchData(
+        `https://q20filkgq3.execute-api.us-east-1.amazonaws.com/dev/kardex/${id}`
+      );
+      const body = JSON.parse(data.body);
+      setCardexEntries(body);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
+  if (!cardexEntries) {
+    return (
+      <View
+        style={[
+          styles.root,
+          { alignItems: "center", justifyContent: "center", flex: 1 },
+        ]}
+      >
+        <View style={[styles.container, { justifyContent: "center" }]}>
+          <Text>Loading...</Text>
+        </View>
+      </View>
+    );
+  }
+
+  if (cardexEntries.length === 0) {
+    return (
+      <View
+        style={[
+          styles.root,
+          { alignItems: "center", justifyContent: "center", flex: 1 },
+        ]}
+      >
+        <View style={[styles.container, { justifyContent: "center" }]}>
+          <Text>No entries registered</Text>
+        </View>
+      </View>
+    );
+  }
 
   const renderItem = ({ item }) => (
     <View style={styles.itemTable}>
-      <Text style={styles.cellTable}>{item.date}</Text>
-      <Text style={styles.cellTable}>{item.quantity}</Text>
-      <Text style={styles.cellTable}>{item.type}</Text>
+      <Text style={styles.cellTable}>{item.fecha}</Text>
+      <Text style={styles.cellTable}>{item.cantidad}</Text>
+      <Text style={styles.cellTable}>{item.tipo_movimiento}</Text>
     </View>
   );
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Product: {item.name}</Text>
-      <Text style={styles.title}>Stock: {item.stock}</Text>
-      <View style={styles.customerDetails}>
-        <View style={[styles.containerTable, { marginTop: 10 }]}>
+    <ScrollView
+      showsVerticalScrollIndicator={false}
+      nestedScrollEnabled={true}
+      style={styles.root}
+      contentContainerStyle={{
+        flex: 1,
+      }}
+    >
+      <View style={styles.container}>
+        <Text style={styles.title}>Product: {item.name}</Text>
+        <Text style={styles.title}>Stock: {item.stock}</Text>
+        <View style={[styles.containerTable, styles.topMargin]}>
           <View style={styles.headerTable}>
             <Text style={styles.headerTextTable}>Fecha</Text>
             <Text style={styles.headerTextTable}>Cantidad</Text>
@@ -47,11 +85,11 @@ const CardexScreen = ({ route }) => {
           <FlatList
             data={cardexEntries}
             renderItem={renderItem}
-            keyExtractor={(item) => item.id.toString()}
+            keyExtractor={(item) => item.id_registro.toString()}
           />
         </View>
       </View>
-    </View>
+    </ScrollView>
   );
 };
 

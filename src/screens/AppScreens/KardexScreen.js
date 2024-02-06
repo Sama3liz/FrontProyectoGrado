@@ -32,17 +32,25 @@ const KardexScreen = () => {
   return (
     <ScrollView
       showsVerticalScrollIndicator={false}
+      nestedScrollEnabled={true}
       style={styles.root}
       contentContainerStyle={{
         flex: 1,
       }}
     >
       <View style={styles.container}>
-        <CustomCardProductsKardex
-          data={products}
-          helper={"History"}
-          type={"cardex"}
-        />
+        <View
+          style={[
+            styles.containerCol,
+            { alignItems: "baseline", width: "100%" },
+          ]}
+        >
+          <CustomCardProductsKardex
+            data={products}
+            helper={"History"}
+            type={"cardex"}
+          />
+        </View>
       </View>
     </ScrollView>
   );

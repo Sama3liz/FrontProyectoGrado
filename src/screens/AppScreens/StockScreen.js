@@ -89,6 +89,7 @@ const StockScreen = ({ route }) => {
         : Number(selectedProducts[0].stock) >= Number(data.quantity)
         ? Number(selectedProducts[0].stock) - Number(data.quantity)
         : setErrorMessage("Cantidad invalida");
+    console.log(newStock);
   };
 
   return (

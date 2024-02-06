@@ -11,27 +11,35 @@ import CustomButton from "../../components/Buttons/CustomButton";
 import useNavigationHelpers from "../../utils/navigationHelpers";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import styles from "../../styles/styles";
+import { fetchData } from "../../utils/dbFunctions";
 
 const AccountsScreen = () => {
   const [accounts, setAccounts] = useState([]);
   const { goTo, goBack } = useNavigationHelpers();
 
-  // Simulated data for accounts
-  const initialAccounts = [
-    { id: 1, code: "1.0.00", name: "Activo" },
-    { id: 2, code: "1.0.01", name: "Corriente" },
-    { id: 3, code: "2.0.00", name: "Pasivo" },
-    { id: 4, code: "2.0.00", name: "Patrimonio" },
-    // Add more accounts as needed...
-  ];
-
   useEffect(() => {
-    setAccounts(initialAccounts);
+    loadData();
   }, []);
 
+  const loadData = async () => {
+    try {
+      const data = await fetchData(
+        "https://q20filkgq3.execute-api.us-east-1.amazonaws.com/dev/accounts"
+      );
+      const body = JSON.parse(data.body);
+      const sortedAccounts = body.sort((a, b) => {
+        if (a.codigo_cuenta < b.codigo_cuenta) return -1;
+        if (a.codigo_cuenta > b.codigo_cuenta) return 1;
+        return 0;
+      });
+      setAccounts(sortedAccounts);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
   const updateList = () => {
-    /* loadData(); */
-    console.log("List Updated");
+    loadData();
   };
 
   const addAccount = () => {
@@ -39,13 +47,15 @@ const AccountsScreen = () => {
   };
 
   const editAccount = (item) => {
-    
+    goTo("EditAccount", { item, updateList });
   };
 
   const renderItem = ({ item }) => (
     <View style={styles.itemTable}>
-      <Text style={styles.cellTable}>{item.code}</Text>
-      <Text style={[styles.cellTable, styles.nameTable]}>{item.name}</Text>
+      <Text style={styles.cellTable}>{item.codigo_cuenta}</Text>
+      <Text style={[styles.cellTable, styles.nameTable]}>
+        {item.nombre_cuenta}
+      </Text>
       <View style={styles.cellRowTable}>
         <TouchableOpacity
           style={styles.removeButton}
@@ -61,6 +71,21 @@ const AccountsScreen = () => {
     </View>
   );
 
+  if (!accounts) {
+    return (
+      <View
+        style={[
+          styles.root,
+          { alignItems: "center", justifyContent: "center", flex: 1 },
+        ]}
+      >
+        <View style={[styles.container, { justifyContent: "center" }]}>
+          <Text>Loading...</Text>
+        </View>
+      </View>
+    );
+  }
+
   return (
     <ScrollView
       showsVerticalScrollIndicator={false}
@@ -70,7 +95,7 @@ const AccountsScreen = () => {
       }}
     >
       <View style={styles.container}>
-        <CustomButton text={"New"} onPress={() => addAccount()} />
+        <CustomButton text={"New"} onPress={addAccount} />
         <View style={[styles.containerTable, { marginTop: 10 }]}>
           <View style={styles.headerTable}>
             <Text style={styles.headerTextTable}>Código</Text>
@@ -80,7 +105,7 @@ const AccountsScreen = () => {
           <FlatList
             data={accounts}
             renderItem={renderItem}
-            keyExtractor={(item) => item.id.toString()}
+            keyExtractor={(item) => item.id_cuenta.toString()}
           />
         </View>
       </View>
