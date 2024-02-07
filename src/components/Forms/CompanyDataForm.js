@@ -6,15 +6,15 @@ import { newPasswordStyles } from "../../styles/screenStyles/NewPasswordStyles";
 import CustomInputText from "../Inputs/CustomInputText";
 import { useContext, useEffect } from "react";
 import { AuthContext } from "../../context/AuthContext";
-import useNavigationHelpers from "../../utils/navigationHelpers";
+import useNavigate from "../../utils/navigation";
 import styles from "../../styles/styles";
 import { EMAIL_REGEX, RUC_REGEX } from "../../utils/constants";
-import { fetchData } from "../../utils/dbFunctions";
+import { fetchData } from "../../utils/database";
 
 const Company = () => {
   const { user } = useContext(AuthContext);
   const { control, handleSubmit, setValue } = useForm();
-  const { goBack } = useNavigationHelpers();
+  const { goBack } = useNavigate();
 
   useEffect(() => {
     setValue("ruc", user.payload["cognito:username"]);
@@ -25,7 +25,7 @@ const Company = () => {
   const loadData = async () => {
     try {
       const data = await fetchData(
-        "https://q20filkgq3.execute-api.us-east-1.amazonaws.com/dev/inventory"
+        "https://zxdz2hq7jg.execute-api.us-east-1.amazonaws.com/dev/inventory"
       );
       const body = JSON.parse(data.body);
       setValue("commercial", body.commercial);

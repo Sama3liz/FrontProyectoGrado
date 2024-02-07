@@ -2,14 +2,14 @@ import { useForm } from "react-hook-form";
 import { View, Text, ScrollView } from "react-native";
 import CustomButton from "../Buttons/CustomButton";
 import { newPasswordStyles } from "../../styles/screenStyles/NewPasswordStyles";
-import { addCategory } from "../../utils/dbFunctions";
-import useNavigationHelpers from "../../utils/navigationHelpers";
+import { addCategory } from "../../utils/database";
+import useNavigate from "../../utils/navigation";
 import CustomInputText from "../Inputs/CustomInputText";
 import styles from "../../styles/styles";
 
 const NewCategoryForm = ({ route }) => {
   const { control, handleSubmit } = useForm();
-  const { goBack } = useNavigationHelpers();
+  const { goBack } = useNavigate();
 
   const onSubmitPressed = async (data) => {
     await addCategory(data);

@@ -20,20 +20,18 @@ export const fetchData = async (url) => {
 export const getDataByCategory = async (id) => {
   try {
     const response = await fetch(
-      "https://q20filkgq3.execute-api.us-east-1.amazonaws.com/dev/categories/products",
+      `https://zxdz2hq7jg.execute-api.us-east-1.amazonaws.com/dev/categories/${id}`,
       {
-        method: "POST",
+        method: "GET",
         headers: {
           Accept: "application/json",
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ id }),
       }
     );
-    const data = await response.json();
-    const body = JSON.parse(data.body);
-    const quantity = Object.keys(body).length;
-    return quantity;
+    const { body } = await response.json();
+    const { count } = JSON.parse(body);
+    return count;
   } catch (error) {
     throw new Error("Error fetching quantity");
   }
@@ -43,7 +41,7 @@ export const getDataByCategory = async (id) => {
 export const addCategory = async (data) => {
   try {
     const response = await fetch(
-      "https://q20filkgq3.execute-api.us-east-1.amazonaws.com/dev/categories",
+      "https://zxdz2hq7jg.execute-api.us-east-1.amazonaws.com/dev/categories",
       {
         method: "POST",
         headers: {
@@ -72,7 +70,7 @@ export const addClient = async (data, idType) => {
       tid: idType,
     };
     const response = await fetch(
-      "https://q20filkgq3.execute-api.us-east-1.amazonaws.com/dev/clients",
+      "https://zxdz2hq7jg.execute-api.us-east-1.amazonaws.com/dev/customer",
       {
         method: "POST",
         headers: {
@@ -126,10 +124,12 @@ export const addProductToInventory = async (
       stock: Number(data.stock),
       name: data.name.toLowerCase(),
     };
-    
+
+    console.log(requestData)
+
     // Llamada a la API para agregar producto al inventario
     await fetch(
-      "https://q20filkgq3.execute-api.us-east-1.amazonaws.com/dev/inventory",
+      "https://zxdz2hq7jg.execute-api.us-east-1.amazonaws.com/dev/inventory",
       {
         method: "POST",
         headers: {
@@ -154,7 +154,7 @@ export const addSupplier = async (data) => {
     data.address = data.address.toLowerCase();
     data.comercial = data.commercial.toLowerCase();
     const response = await fetch(
-      "https://q20filkgq3.execute-api.us-east-1.amazonaws.com/dev/suppliers",
+      "https://zxdz2hq7jg.execute-api.us-east-1.amazonaws.com/dev/suppliers",
       {
         method: "POST",
         headers: {
@@ -174,28 +174,25 @@ export const addSupplier = async (data) => {
   }
 };
 
-/* Function to search  */
-export const searchCustomerById = async (customerId) => {
+/* Function to update data */
+export const updateData = async (url, id, newData) => {
   try {
-    const response = await fetch(
-      "https://q20filkgq3.execute-api.us-east-1.amazonaws.com/dev/clients/client",
-      {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ id: customerId }),
-      }
-    );
-    const data = await response.json();
-    const body = JSON.parse(data.body);
-    if (Object.keys(body).length !== 0) {
-      return body[0];
-    } else {
-      return null;
+    const response = await fetch(`${url}/${id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(newData),
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to update data");
     }
+
+    const updatedData = await response.json();
+    return updatedData;
   } catch (error) {
-    console.error("Error fetching customer data:", error);
+    console.error("Error updating data:", error.message);
+    throw error; // Puedes manejar el error aquí o relanzarlo para que lo maneje la capa superior
   }
 };

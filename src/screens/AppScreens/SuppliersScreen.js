@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, ScrollView } from "react-native";
 import CustomButton from "../../components/Buttons/CustomButton";
-import useNavigationHelpers from "../../utils/navigationHelpers";
-import { fetchData } from "../../utils/dbFunctions";
+import useNavigate from "../../utils/navigation";
+import { fetchData } from "../../utils/database";
 import styles from "../../styles/styles";
 import CustomCardSuppliers from "../../components/Card/CustomCardSuppliers";
 
 const SuppliersScreen = () => {
   const [users, setUsers] = useState([]);
-  const { goTo } = useNavigationHelpers();
+  const { goTo } = useNavigate();
 
   useEffect(() => {
     loadData();
@@ -17,7 +17,7 @@ const SuppliersScreen = () => {
   const loadData = async () => {
     try {
       const data = await fetchData(
-        "https://q20filkgq3.execute-api.us-east-1.amazonaws.com/dev/suppliers"
+        "https://zxdz2hq7jg.execute-api.us-east-1.amazonaws.com/dev/suppliers"
       );
       const body = JSON.parse(data.body);
       setUsers(body);
@@ -37,6 +37,7 @@ const SuppliersScreen = () => {
   return (
     <ScrollView
       showsVerticalScrollIndicator={false}
+      nestedScrollEnabled={true}
       style={styles.root}
       contentContainerStyle={{
         flex: 1,
@@ -48,6 +49,7 @@ const SuppliersScreen = () => {
           data={users}
           helper={"Details"}
           type={"suppliers"}
+          refresher={updateSuppliers}
         />
       </View>
     </ScrollView>

@@ -1,7 +1,7 @@
-import { Text, FlatList, Image, View, Platform } from "react-native";
+import { Text, FlatList, View, Platform } from "react-native";
 import React, { useEffect, useState } from "react";
 import CustomButton from "../Buttons/CustomButton";
-import useNavigationHelpers from "../../utils/navigationHelpers";
+import useNavigate from "../../utils/navigation";
 import CustomSearchInput from "../Inputs/CustomSearchInput";
 import { useForm } from "react-hook-form";
 import styles from "../../styles/styles";
@@ -9,8 +9,8 @@ import styles from "../../styles/styles";
 const device = Platform.OS;
 const numColumns = device === "web" ? 6 : 2;
 
-const CustomCardClients = ({ data, helper }) => {
-  const { goTo } = useNavigationHelpers();
+const CustomCardClients = ({ data, helper, refresher }) => {
+  const { goTo } = useNavigate();
   const { control } = useForm();
   const [filter, setFilter] = useState([]);
   const [master, setMaster] = useState([]);
@@ -49,9 +49,9 @@ const CustomCardClients = ({ data, helper }) => {
   };
 
   const onMorePressed = (item) => {
-    goTo("UserProfile", { person: item });
+    goTo("UserProfile", { person: item, refresher });
   };
-  
+
   return (
     <>
       <View

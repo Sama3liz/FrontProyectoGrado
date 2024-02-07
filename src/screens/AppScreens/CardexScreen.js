@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, FlatList, ScrollView } from "react-native";
-import useNavigationHelpers from "../../utils/navigationHelpers";
+import useNavigate from "../../utils/navigation";
 import styles from "../../styles/styles";
-import { fetchData } from "../../utils/dbFunctions";
+import { fetchData } from "../../utils/database";
 
 const CardexScreen = ({ route }) => {
-  const { goBack } = useNavigationHelpers();
+  const { goBack } = useNavigate();
   const { item } = route.params;
   const [cardexEntries, setCardexEntries] = useState(null);
   const id = item.id;

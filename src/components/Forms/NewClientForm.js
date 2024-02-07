@@ -3,16 +3,16 @@ import { View, Text, ScrollView } from "react-native";
 import CustomButton from "../Buttons/CustomButton";
 import { newPasswordStyles } from "../../styles/screenStyles/NewPasswordStyles";
 import CustomPicker from "../Pickers/CustomPicker";
-import { addClient } from "../../utils/dbFunctions";
+import { addClient } from "../../utils/database";
 import CustomInputText from "../Inputs/CustomInputText";
 import { useState } from "react";
-import useNavigationHelpers from "../../utils/navigationHelpers";
+import useNavigate from "../../utils/navigation";
 import styles from "../../styles/styles";
 import { EMAIL_REGEX, RUC_REGEX } from "../../utils/constants";
 
 const NewClientForm = ({ route }) => {
   const { control, handleSubmit, watch } = useForm();
-  const { goBack } = useNavigationHelpers();
+  const { goBack } = useNavigate();
   const [idType, setIdType] = useState(0);
 
   const onSubmitPressed = async (data) => {

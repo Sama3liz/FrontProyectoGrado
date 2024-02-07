@@ -4,6 +4,7 @@ import {
   ScrollView,
   FlatList,
   TouchableOpacity,
+  Platform,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import styles from "../../styles/styles";
@@ -11,18 +12,23 @@ import { useError } from "../../context/ErrorContext";
 import CustomInputText from "../../components/Inputs/CustomInputText";
 import { useForm } from "react-hook-form";
 import CustomButton from "../../components/Buttons/CustomButton";
-import { loadData } from "../../utils/useBilling";
+import { loadData } from "../../utils/billing";
 import { Ionicons } from "@expo/vector-icons";
 import CustomInputNumber from "../../components/Inputs/CustomInputNumber";
+import SearchCart from "../../components/Card/CustomSearchCart";
+import { updateData } from "../../utils/database";
+import useNavigate from "../../utils/navigation";
 
 const StockScreen = ({ route }) => {
   const { type } = route.params;
   const { errorMessage, setErrorMessage, clearError } = useError();
   const { control, handleSubmit, watch, setValue } = useForm();
+  const { goBack } = useNavigate();
   const [products, setProducts] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [selectedProducts, setSelectedProducts] = useState([]);
+  const device = Platform.OS;
 
   useEffect(() => {
     loadData(setProducts);
@@ -57,39 +63,29 @@ const StockScreen = ({ route }) => {
     }
   };
 
-  const renderProductList = ({ item }) => (
-    <View
-      style={[
-        styles.itemContainer,
-        {
-          flexDirection: "row",
-          justifyContent: "space-between",
-          alignItems: "center",
-        },
-      ]}
-    >
-      <View style={styles.itemDetails}>
-        <Text style={styles.itemName}>{item.name}</Text>
-        <Text style={styles.itemDescription}>Stock: {item.stock}</Text>
-        <Text style={styles.itemDescription}>Stock: {item.code}</Text>
-      </View>
-      <TouchableOpacity
-        style={styles.removeButton}
-        onPress={() => handleStock(item)}
-      >
-        <Ionicons name="ios-add-circle-outline" size={24} color="green" />
-      </TouchableOpacity>
-    </View>
-  );
-
-  const onSavePressed = (data) => {
+  const onSubmitPressed = async (data) => {
+    const id = selectedProducts[0].id;
     const newStock =
       type === "add"
         ? Number(data.quantity) + Number(selectedProducts[0].stock)
         : Number(selectedProducts[0].stock) >= Number(data.quantity)
         ? Number(selectedProducts[0].stock) - Number(data.quantity)
         : setErrorMessage("Cantidad invalida");
-    console.log(newStock);
+    try {
+      const updatedProduct = await updateData(
+        "https://zxdz2hq7jg.execute-api.us-east-1.amazonaws.com/dev/inventory/stock", 
+        id,
+        { quantity: newStock } 
+      );
+      console.log("Producto actualizado:", updatedProduct);
+      route.params.updateProducts();
+      goBack();
+    } catch (error) {
+      console.error("Error al actualizar el producto:", error.message);
+      setErrorMessage(
+        "Error al actualizar el producto. Por favor, inténtalo de nuevo."
+      );
+    }
   };
 
   return (
@@ -150,7 +146,11 @@ const StockScreen = ({ route }) => {
                     <CustomInputNumber
                       placeholder="Insert a quantity"
                       name="quantity"
-                      label="Quantity"
+                      label={
+                        type === "add"
+                          ? "Quantity to add"
+                          : "Quantity to retrieve"
+                      }
                       control={control}
                       type={"number"}
                       showDecimals={false}
@@ -168,7 +168,7 @@ const StockScreen = ({ route }) => {
                     ) : null}
                     <CustomButton
                       text={"Save"}
-                      onPress={handleSubmit(onSavePressed)}
+                      onPress={handleSubmit(onSubmitPressed)}
                     />
                   </View>
                 </View>
@@ -178,7 +178,15 @@ const StockScreen = ({ route }) => {
             <View style={[styles.customerDetails, { height: 300 }]}>
               <FlatList
                 data={filteredProducts}
-                renderItem={renderProductList}
+                renderItem={({ item }) => (
+                  <SearchCart
+                    item={item}
+                    device={device}
+                    products={products}
+                    selectedProducts={selectedProducts}
+                    setSelectedProducts={setSelectedProducts}
+                  />
+                )}
                 keyExtractor={(item) => item.id.toString()}
               />
             </View>

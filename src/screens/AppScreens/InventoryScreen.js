@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { View, ScrollView, Dimensions } from "react-native";
 import CustomButton from "../../components/Buttons/CustomButton";
-import { fetchData } from "../../utils/dbFunctions";
-import useNavigationHelpers from "../../utils/navigationHelpers";
+import { fetchData } from "../../utils/database";
+import useNavigate from "../../utils/navigation";
 import styles from "../../styles/styles";
 import CustomCardProducts from "../../components/Card/CustomCardProducts";
 
 const InventoryScreen = () => {
   const [products, setProducts] = useState([]);
-  const { goTo } = useNavigationHelpers();
+  const { goTo } = useNavigate();
 
   useEffect(() => {
     loadData();
@@ -17,7 +17,7 @@ const InventoryScreen = () => {
   const loadData = async () => {
     try {
       const data = await fetchData(
-        "https://q20filkgq3.execute-api.us-east-1.amazonaws.com/dev/inventory"
+        "https://zxdz2hq7jg.execute-api.us-east-1.amazonaws.com/dev/inventory"
       );
       const body = JSON.parse(data.body);
       setProducts(body);
@@ -35,11 +35,11 @@ const InventoryScreen = () => {
   };
 
   const onPlusPressed = () => {
-    goTo("StockChange", { type: "add" });
+    goTo("StockChange", { type: "add", updateProducts });
   };
 
   const onMinusPressed = () => {
-    goTo("StockChange", { type: "rest" });
+    goTo("StockChange", { type: "rest", updateProducts });
   };
 
   return (

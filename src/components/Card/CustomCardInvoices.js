@@ -8,7 +8,7 @@ import {
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import CustomButton from "../Buttons/CustomButton";
-import useNavigationHelpers from "../../utils/navigationHelpers";
+import useNavigate from "../../utils/navigation";
 import { useForm } from "react-hook-form";
 import CustomSearchInput from "../Inputs/CustomSearchInput";
 import styles from "../../styles/styles";
@@ -17,7 +17,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 const device = Platform.OS;
 
 const CustomCardInvoices = ({ data }) => {
-  const { goTo } = useNavigationHelpers();
+  const { goTo } = useNavigate();
   const { control } = useForm();
   const [filter, setFilter] = useState([]);
   const [master, setMaster] = useState([]);

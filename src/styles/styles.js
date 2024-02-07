@@ -56,7 +56,7 @@ export default StyleSheet.create({
     borderRadius: 5,
   },
   searchProduct: {
-    width: "50%",
+    width: "100%",
     borderWidth: 1,
     borderColor: "#ccc",
     borderRadius: 5,

@@ -4,19 +4,19 @@ import CustomButton from "../Buttons/CustomButton";
 import { newPasswordStyles } from "../../styles/screenStyles/NewPasswordStyles";
 import CustomPicker from "../Pickers/CustomPicker";
 import { useEffect, useState } from "react";
-import useNavigationHelpers from "../../utils/navigationHelpers";
+import useNavigate from "../../utils/navigation";
 import {
   addProductToInventory,
   fetchData,
   getDataByCategory,
-} from "../../utils/dbFunctions";
+} from "../../utils/database";
 import CustomInputText from "../Inputs/CustomInputText";
 import CustomInputNumber from "../Inputs/CustomInputNumber";
 import styles from "../../styles/styles";
 
 const NewProductForm = ({ route }) => {
   const { control, handleSubmit, watch, setValue } = useForm();
-  const { goTo, goBack } = useNavigationHelpers();
+  const { goTo, goBack } = useNavigate();
   const [categories, setCategories] = useState([]);
   const [idCategory, setIdCategory] = useState(0);
   const [suppliers, setSuppliers] = useState([]);
@@ -40,7 +40,7 @@ const NewProductForm = ({ route }) => {
   const load_data_sup = async () => {
     try {
       const data = await fetchData(
-        "https://q20filkgq3.execute-api.us-east-1.amazonaws.com/dev/suppliers"
+        "https://zxdz2hq7jg.execute-api.us-east-1.amazonaws.com/dev/suppliers"
       );
       const body = JSON.parse(data.body);
       const array = body.map((item) => item.commercial);
@@ -53,7 +53,7 @@ const NewProductForm = ({ route }) => {
   const load_data_cat = async () => {
     try {
       const data = await fetchData(
-        "https://q20filkgq3.execute-api.us-east-1.amazonaws.com/dev/categories"
+        "https://zxdz2hq7jg.execute-api.us-east-1.amazonaws.com/dev/categories"
       );
       const body = JSON.parse(data.body);
       const array = body.map((item) => item.name);
@@ -66,7 +66,7 @@ const NewProductForm = ({ route }) => {
   const load_data_type = async () => {
     try {
       const data = await fetchData(
-        "https://q20filkgq3.execute-api.us-east-1.amazonaws.com/dev/types"
+        "https://zxdz2hq7jg.execute-api.us-east-1.amazonaws.com/dev/types"
       );
       const body = JSON.parse(data.body);
       const array = body.map((item) => item.name);
@@ -86,7 +86,7 @@ const NewProductForm = ({ route }) => {
     if (category) {
       const sugCode = extractInitials(category);
       const quantity = await getDataByCategory(idCategory);
-      const newQuantity = quantity + 1;
+      const newQuantity = Number(quantity) + 1;
       setValue("intcod", sugCode + "-" + newQuantity);
     }
   };
@@ -139,6 +139,7 @@ const NewProductForm = ({ route }) => {
           control={control}
           rules={{ required: "Name is required" }}
         />
+        <Text style={{ fontWeight: "bold" }}>Choose a supplier: </Text>
         <CustomPicker
           name="supplier"
           able={true}
@@ -154,6 +155,7 @@ const NewProductForm = ({ route }) => {
           label={"Supplier Code"}
           control={control}
         />
+        <Text style={{ fontWeight: "bold" }}>Choose a category: </Text>
         <CustomPicker
           name="category"
           able={true}
@@ -220,6 +222,7 @@ const NewProductForm = ({ route }) => {
             },
           }}
         />
+        <Text style={{ fontWeight: "bold" }}>Choose a unit: </Text>
         <CustomPicker
           name="unit"
           able={true}
@@ -241,6 +244,7 @@ const NewProductForm = ({ route }) => {
           setIndex={setIdUnit}
           rules={{ required: "Unit is required" }}
         />
+        <Text style={{ fontWeight: "bold" }}>Choose a type: </Text>
         <CustomPicker
           name="type"
           able={true}

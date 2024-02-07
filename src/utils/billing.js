@@ -1,7 +1,8 @@
+/* Function to load products from db */
 export const loadData = async (setProducts) => {
   try {
     const response = await fetch(
-      "https://q20filkgq3.execute-api.us-east-1.amazonaws.com/dev/inventory",
+      "https://zxdz2hq7jg.execute-api.us-east-1.amazonaws.com/dev/inventory",
       {
         method: "GET",
         headers: {
@@ -149,4 +150,36 @@ export const handleProductSelection = (
     );
     setProducts(updatedProducts);
   }
+};
+
+export const handleSubmitClean = (
+  setValue,
+  setSelectedProducts,
+  setFilteredProducts,
+  setChange,
+  setPaymentMethod,
+  clearError
+) => {
+  setValue("ci", "");
+  setValue("name", "");
+  setValue("lastname", "");
+  setValue("email", "");
+  setValue("address", "");
+  setValue("phone", "");
+  setSelectedProducts([]);
+  setFilteredProducts([]);
+  setChange("");
+  setPaymentMethod("");
+  clearError();
+};
+
+export const handleRemoveFromInvoice = (
+  productId,
+  selectedProducts,
+  setSelectedProducts
+) => {
+  const updatedProducts = selectedProducts.filter(
+    (product) => product.id !== productId
+  );
+  setSelectedProducts(updatedProducts);
 };

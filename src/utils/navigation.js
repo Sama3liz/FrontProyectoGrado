@@ -1,6 +1,6 @@
 import { useNavigation } from "@react-navigation/core";
 
-const useNavigationHelpers = () => {
+const useNavigate = () => {
   const navigation = useNavigation();
 
   const goTo = (screenName, params={}) => {
@@ -14,4 +14,4 @@ const useNavigationHelpers = () => {
   return { goTo, goBack };
 };
 
-export default useNavigationHelpers;
+export default useNavigate;

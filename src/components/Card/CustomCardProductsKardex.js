@@ -11,14 +11,14 @@ import {
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import CustomButton from "../Buttons/CustomButton";
-import useNavigationHelpers from "../../utils/navigationHelpers";
+import useNavigate from "../../utils/navigation";
 import styles from "../../styles/styles";
 
 const device = Platform.OS;
 const numColumns = device === "web" ? 6 : 2;
 
 const CustomCardProductsKardex = ({ data, helper, type }) => {
-  const { goTo } = useNavigationHelpers();
+  const { goTo } = useNavigate();
   const [filter, setFilter] = useState([]);
   const [master, setMaster] = useState([]);
   const [search, setSearch] = useState("");

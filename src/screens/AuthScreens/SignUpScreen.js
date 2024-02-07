@@ -3,7 +3,7 @@ import { View, Text, ScrollView } from "react-native";
 import CustomButton from "../../components/Buttons/CustomButton";
 import { useForm } from "react-hook-form";
 import PasswordChecklist from "react-password-checklist";
-import useNavigationHelpers from "../../utils/navigationHelpers";
+import useNavigate from "../../utils/navigation";
 import useRegistration from "../../utils/useRegistration";
 import { EMAIL_REGEX, RUC_REGEX } from "../../utils/constants";
 import styles from "../../styles/styles";
@@ -11,7 +11,7 @@ import CustomInputText from "../../components/Inputs/CustomInputText";
 
 const SignUpScreen = () => {
   const { onSignUp, error, clearError } = useRegistration();
-  const { goTo } = useNavigationHelpers();
+  const { goTo } = useNavigate();
   const { control, handleSubmit, watch } = useForm();
   const [password, setPassword] = useState("");
   const pwd = watch("password");

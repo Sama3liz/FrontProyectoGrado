@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, ScrollView } from "react-native";
 import CustomButton from "../../components/Buttons/CustomButton";
-import useNavigationHelpers from "../../utils/navigationHelpers";
-import { fetchData } from "../../utils/dbFunctions";
+import useNavigate from "../../utils/navigation";
+import { fetchData } from "../../utils/database";
 import styles from "../../styles/styles";
 import CustomCardClients from "../../components/Card/CustomCardClients";
 
 const ClientsScreen = () => {
   const [users, setUsers] = useState([]);
-  const { goTo } = useNavigationHelpers();
+  const { goTo } = useNavigate();
 
   useEffect(() => {
     loadData();
@@ -17,7 +17,7 @@ const ClientsScreen = () => {
   const loadData = async () => {
     try {
       const data = await fetchData(
-        "https://q20filkgq3.execute-api.us-east-1.amazonaws.com/dev/clients"
+        "https://zxdz2hq7jg.execute-api.us-east-1.amazonaws.com/dev/customer"
       );
       const body = JSON.parse(data.body);
       setUsers(body);
@@ -44,7 +44,12 @@ const ClientsScreen = () => {
     >
       <View style={styles.container}>
         <CustomButton text="New" onPress={onNewPressed} />
-        <CustomCardClients data={users} helper={"Details"} type={"clients"} />
+        <CustomCardClients
+          data={users}
+          helper={"Details"}
+          type={"clients"}
+          refresher={updateClients}
+        />
       </View>
     </ScrollView>
   );

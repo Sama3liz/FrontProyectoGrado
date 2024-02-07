@@ -1,17 +1,7 @@
-import {
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  FlatList,
-  Image,
-  View,
-  Dimensions,
-  TextInput,
-  Platform,
-} from "react-native";
+import { Text, FlatList, View, Platform } from "react-native";
 import React, { useEffect, useState } from "react";
 import CustomButton from "../Buttons/CustomButton";
-import useNavigationHelpers from "../../utils/navigationHelpers";
+import useNavigate from "../../utils/navigation";
 import CustomSearchInput from "../Inputs/CustomSearchInput";
 import { useForm } from "react-hook-form";
 import styles from "../../styles/styles";
@@ -19,8 +9,8 @@ import styles from "../../styles/styles";
 const device = Platform.OS;
 const numColumns = device === "web" ? 6 : 2;
 
-const CustomCardSuppliers = ({ data, helper }) => {
-  const { goTo } = useNavigationHelpers();
+const CustomCardSuppliers = ({ data, helper, refresher }) => {
+  const { goTo } = useNavigate();
   const { control } = useForm();
   const [filter, setFilter] = useState([]);
   const [master, setMaster] = useState([]);
@@ -52,12 +42,13 @@ const CustomCardSuppliers = ({ data, helper }) => {
   };
 
   const onMorePressed = (item) => {
-    goTo("UserProfile", { person: item });
+    goTo("UserProfile", { person: item, refresher });
   };
 
   return (
     <>
-      <View style={[
+      <View
+        style={[
           styles.void,
           {
             backgroundColor: "white",
@@ -68,7 +59,8 @@ const CustomCardSuppliers = ({ data, helper }) => {
             paddingHorizontal: 10,
             marginVertical: 5,
           },
-        ]}>
+        ]}
+      >
         <CustomSearchInput
           placeholder="Search Here"
           name={"search"}

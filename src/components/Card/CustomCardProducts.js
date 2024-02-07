@@ -1,22 +1,15 @@
-import {
-  Text,
-  FlatList,
-  Image,
-  View,
-  Platform,
-} from "react-native";
+import { Text, FlatList, Image, View, Platform } from "react-native";
 import React, { useEffect, useState } from "react";
 import CustomButton from "../Buttons/CustomButton";
-import useNavigationHelpers from "../../utils/navigationHelpers";
+import useNavigate from "../../utils/navigation";
 import { useForm } from "react-hook-form";
 import CustomSearchInput from "../Inputs/CustomSearchInput";
 import styles from "../../styles/styles";
 
-const device = Platform.OS;
-const numColumns = device === "web" ? 6 : 2;
-
 const CustomCardProducts = ({ data, helper }) => {
-  const { goTo } = useNavigationHelpers();
+  const device = Platform.OS;
+  const numColumns = device === "web" ? 6 : 2;
+  const { goTo } = useNavigate();
   const { control } = useForm();
   const [filter, setFilter] = useState([]);
   const [master, setMaster] = useState([]);
@@ -58,7 +51,8 @@ const CustomCardProducts = ({ data, helper }) => {
 
   return (
     <>
-      <View style={[
+      <View
+        style={[
           styles.void,
           {
             backgroundColor: "white",
@@ -69,7 +63,8 @@ const CustomCardProducts = ({ data, helper }) => {
             paddingHorizontal: 10,
             marginVertical: 5,
           },
-        ]}>
+        ]}
+      >
         <CustomSearchInput
           placeholder="Keyword Here"
           name={"search"}
@@ -85,9 +80,9 @@ const CustomCardProducts = ({ data, helper }) => {
           return (
             <View style={styles.card}>
               <Image
-                  style={styles.cardImage}
-                  source={require("../../assets/product_default.jpg")}
-                />
+                style={styles.cardImage}
+                source={require("../../assets/product_default.jpg")}
+              />
               <Text style={styles.cardText}>{item.name}</Text>
               <Text style={styles.cardText}>Main Code: {item.code}</Text>
               <Text style={styles.cardText}>Code: {item.aux}</Text>

@@ -3,15 +3,15 @@ import { View, Text, ScrollView } from "react-native";
 import CustomButton from "../Buttons/CustomButton";
 import { newPasswordStyles } from "../../styles/screenStyles/NewPasswordStyles";
 import CustomPicker from "../Pickers/CustomPicker";
-import { addSupplier } from "../../utils/dbFunctions";
-import useNavigationHelpers from "../../utils/navigationHelpers";
+import { addSupplier } from "../../utils/database";
+import useNavigate from "../../utils/navigation";
 import CustomInputText from "../Inputs/CustomInputText";
 import styles from "../../styles/styles";
 import { EMAIL_REGEX, RUC_REGEX } from "../../utils/constants";
 
 const NewSupplierForm = ({ route }) => {
   const { control, handleSubmit } = useForm();
-  const { goBack, goTo } = useNavigationHelpers();
+  const { goBack, goTo } = useNavigate();
 
   const onSubmitPressed = async (data) => {
     data.tid = 1;

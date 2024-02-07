@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { View, Text, FlatList, TouchableOpacity } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import styles from "../../styles/styles";
-import { getCurrentDate } from "../../utils/useBilling";
+import { getCurrentDate } from "../../utils/billing";
 
 const JournalScreen = () => {
   const [journalEntries, setJournalEntries] = useState([

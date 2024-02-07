@@ -11,15 +11,15 @@ import { useError } from "../../context/ErrorContext";
 import CustomInputText from "../../components/Inputs/CustomInputText";
 import { useForm } from "react-hook-form";
 import CustomButton from "../../components/Buttons/CustomButton";
-import { loadData } from "../../utils/useBilling";
+import { loadData } from "../../utils/billing";
 import { Ionicons } from "@expo/vector-icons";
-import { fetchData } from "../../utils/dbFunctions";
-import useNavigationHelpers from "../../utils/navigationHelpers";
+import { fetchData } from "../../utils/database";
+import useNavigate from "../../utils/navigation";
 
 const NewAccountForm = ({ route }) => {
   const { errorMessage, setErrorMessage, clearError } = useError();
   const { control, handleSubmit, setValue } = useForm();
-  const { goTo, goBack } = useNavigationHelpers();
+  const { goTo, goBack } = useNavigate();
   const [accounts, setAccounts] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredAccounts, setFilteredAccounts] = useState([]);

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { View } from "react-native";
 import styles from "../../styles/styles";
 import CustomCardInvoices from "../../components/Card/CustomCardInvoices";
-import { fetchData } from "../../utils/dbFunctions";
+import { fetchData } from "../../utils/database";
 
 const InvoiceScreen = () => {
   const [journalEntries, setJournalEntries] = useState([]);
@@ -14,9 +14,10 @@ const InvoiceScreen = () => {
   const loadData = async () => {
     try {
       const data = await fetchData(
-        "https://q20filkgq3.execute-api.us-east-1.amazonaws.com/dev/invoice"
+        "https://zxdz2hq7jg.execute-api.us-east-1.amazonaws.com/dev/invoices"
       );
       const body = JSON.parse(data.body);
+      console.log(body)
       setJournalEntries(body);
       console.log(body);
     } catch (error) {

@@ -8,14 +8,14 @@ import {
   Alert,
 } from "react-native";
 import CustomButton from "../../components/Buttons/CustomButton";
-import useNavigationHelpers from "../../utils/navigationHelpers";
+import useNavigate from "../../utils/navigation";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import styles from "../../styles/styles";
-import { fetchData } from "../../utils/dbFunctions";
+import { fetchData } from "../../utils/database";
 
 const AccountsScreen = () => {
   const [accounts, setAccounts] = useState([]);
-  const { goTo, goBack } = useNavigationHelpers();
+  const { goTo, goBack } = useNavigate();
 
   useEffect(() => {
     loadData();
@@ -89,10 +89,8 @@ const AccountsScreen = () => {
   return (
     <ScrollView
       showsVerticalScrollIndicator={false}
+      nestedScrollEnabled={true}
       style={styles.root}
-      contentContainerStyle={{
-        flex: 1,
-      }}
     >
       <View style={styles.container}>
         <CustomButton text={"New"} onPress={addAccount} />

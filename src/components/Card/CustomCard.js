@@ -10,12 +10,12 @@ import {
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import CustomButton from "../Buttons/CustomButton";
-import useNavigationHelpers from "../../utils/navigationHelpers";
+import useNavigate from "../../utils/navigation";
 
 const numColumns = 4;
 
 const CustomCard = ({ data, helper, type }) => {
-  const { goTo } = useNavigationHelpers();
+  const { goTo } = useNavigate();
   const [filter, setFilter] = useState([]);
   const [master, setMaster] = useState([]);
   const [search, setSearch] = useState("");

@@ -1,11 +1,11 @@
 import React from "react";
 import { View, ScrollView } from "react-native";
 import CustomButton from "../../components/Buttons/CustomButton";
-import useNavigationHelpers from "../../utils/navigationHelpers";
+import useNavigate from "../../utils/navigation";
 import styles from "../../styles/styles";
 
 export default function SettingsScreen() {
-  const { goTo } = useNavigationHelpers();
+  const { goTo } = useNavigate();
 
   const onButtonPress = (page) => {
     goTo(page);

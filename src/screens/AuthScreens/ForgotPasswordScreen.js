@@ -2,14 +2,14 @@ import React from "react";
 import { View, Text, ScrollView } from "react-native";
 import CustomButton from "../../components/Buttons/CustomButton";
 import { useForm } from "react-hook-form";
-import useNavigationHelpers from "../../utils/navigationHelpers";
+import useNavigate from "../../utils/navigation";
 import useConfirmation from "../../utils/useConfirmation";
 import styles from "../../styles/styles";
 import CustomInputText from "../../components/Inputs/CustomInputText";
 
 const ForgotPasswordScreen = () => {
   const { control, handleSubmit } = useForm();
-  const { goTo } = useNavigationHelpers();
+  const { goTo } = useNavigate();
   const { error, clearError, forgotPassword } = useConfirmation();
 
   const onSendPressed = async ({ username }) => {

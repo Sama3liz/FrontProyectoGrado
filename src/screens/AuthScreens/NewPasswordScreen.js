@@ -4,7 +4,7 @@ import CustomInput from "../../components/Inputs/CustomInput";
 import CustomButton from "../../components/Buttons/CustomButton";
 import { newPasswordStyles } from "../../styles/screenStyles/NewPasswordStyles";
 import { useForm } from "react-hook-form";
-import useNavigationHelpers from "../../utils/navigationHelpers";
+import useNavigate from "../../utils/navigation";
 import useConfirmation from "../../utils/useConfirmation";
 import PasswordChecklist from "react-password-checklist";
 import styles from "../../styles/styles";
@@ -13,7 +13,7 @@ import CustomInputText from "../../components/Inputs/CustomInputText";
 const NewPasswordScreen = ({ route }) => {
   const { control, handleSubmit } = useForm();
   const { username } = route.params;
-  const { goTo } = useNavigationHelpers();
+  const { goTo } = useNavigate();
   const { error, clearError, newForgotPassword } = useConfirmation();
   const [password, setPassword] = useState("");
 

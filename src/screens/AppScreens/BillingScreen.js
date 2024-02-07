@@ -4,33 +4,32 @@ import {
   Text,
   TouchableOpacity,
   FlatList,
-  TextInput,
+  Platform,
+  ScrollView,
 } from "react-native";
 import CustomButton from "../../components/Buttons/CustomButton";
-import useNavigationHelpers from "../../utils/navigationHelpers";
+import useNavigate from "../../utils/navigation";
 import {
   loadData,
   calculateTotals,
   handleAddToInvoice,
-  handleProductSelection,
-  handleQuantityChange,
   calculateChange,
   getCurrentDate,
-} from "../../utils/useBilling";
+  handleSubmitClean,
+} from "../../utils/billing";
 import styles from "../../styles/styles";
 import { useForm } from "react-hook-form";
 import { useError } from "../../context/ErrorContext";
-import { ScrollView } from "react-native-gesture-handler";
-import CartItem from "../../components/Card/CustomItemCard";
 import { Ionicons } from "@expo/vector-icons";
-import { searchCustomerById } from "../../utils/dbFunctions";
+import { searchCustomer, searchCustomerById } from "../../utils/customer";
 import CustomInputText from "../../components/Inputs/CustomInputText";
 import { EMAIL_REGEX, RUC_REGEX } from "../../utils/constants";
 import CustomInputNumber from "../../components/Inputs/CustomInputNumber";
 import ResumeCart from "../../components/Card/CustomResumeCart";
+import SearchCart from "../../components/Card/CustomSearchCart";
+import SelectedCart from "../../components/Card/CustomSelectedCart";
 
 const BillingScreen = () => {
-  const { goTo } = useNavigationHelpers();
   const { errorMessage, setErrorMessage, clearError } = useError();
   const { control, handleSubmit, watch, setValue } = useForm();
   const [step, setStep] = useState(1);
@@ -57,44 +56,13 @@ const BillingScreen = () => {
   const phone = watch("phone");
   const email = watch("email");
   const cash = watch("cash");
+  const device = Platform.OS;
 
   useEffect(() => {
     loadData(setProducts);
     calculateTotals(selectedProducts, setTotals);
-    cashChange(cash);
+    calculateChange(cash, totals, setChange);
   }, [selectedProducts]);
-
-  const setSearchCustomer = (customerData) => {
-    if (customerData !== null) {
-      clearError();
-      setValue("name", customerData.firstname);
-      setValue("lastname", customerData.lastname);
-      setValue("email", customerData.email);
-      setValue("address", customerData.address);
-      setValue("phone", customerData.phone);
-    } else {
-      setErrorMessage("Client not found");
-      setValue("name", "");
-      setValue("lastname", "");
-      setValue("email", "");
-      setValue("address", "");
-      setValue("phone", "");
-    }
-  };
-
-  const searchCustomer = async () => {
-    try {
-      if (customerId) {
-        const data = await searchCustomerById(customerId);
-        setSearchCustomer(data);
-      } else {
-        setErrorMessage("Give a valid CI/RUC for search");
-      }
-    } catch (error) {
-      setErrorMessage(error);
-      setCustomerData(null);
-    }
-  };
 
   const handleSearch = () => {
     const query = searchQuery.toLowerCase();
@@ -104,84 +72,15 @@ const BillingScreen = () => {
     setFilteredProducts(filtered);
   };
 
-  const addToInvoice = (product) => {
-    const productId = product.id;
-    handleAddToInvoice(
-      productId,
-      products,
-      selectedProducts,
-      setSelectedProducts
+  const handleSearchCustomer = async () => {
+    await searchCustomer(
+      customerId,
+      searchCustomerById,
+      setErrorMessage,
+      clearError,
+      setValue
     );
   };
-
-  const quantityChange = (productId, quantity) => {
-    handleQuantityChange(
-      productId,
-      quantity,
-      selectedProducts,
-      setSelectedProducts
-    );
-  };
-
-  const productSelection = (product) => {
-    handleProductSelection(
-      product,
-      selectedProducts,
-      setSelectedProducts,
-      products,
-      setProducts
-    );
-  };
-
-  const removeFromInvoice = (productId) => {
-    const updatedProducts = selectedProducts.filter(
-      (product) => product.id !== productId
-    );
-    setSelectedProducts(updatedProducts);
-  };
-
-  const cashChange = (text) => {
-    calculateChange(text, totals, setChange);
-  };
-
-  const handleInputChange = () => {
-    clearError();
-  };
-
-  const handleIDChange = (text) => {
-    clearError();
-    setCustomerId(text);
-  };
-
-  const renderProductSelected = ({ item }) => (
-    <View style={[styles.itemContainer, { marginRight: 1 }]}>
-      <TouchableOpacity
-        style={styles.removeButton}
-        onPress={() => removeFromInvoice(item.id)}
-      >
-        <Ionicons name="trash-bin-outline" size={24} color="red" />
-      </TouchableOpacity>
-      <View style={styles.itemDetails}>
-        <Text style={styles.itemName}>{item.name}</Text>
-        <Text style={styles.itemDescription}>Quantity: {item.quantity}</Text>
-      </View>
-    </View>
-  );
-
-  const renderProductList = ({ item }) => (
-    <View style={styles.itemContainer}>
-      <View style={styles.itemDetails}>
-        <Text style={styles.itemName}>{item.name}</Text>
-        {/* <Text style={styles.itemDescription}>Stock: {item.stock}</Text> */}
-      </View>
-      <TouchableOpacity
-        style={styles.removeButton}
-        onPress={() => addToInvoice(item)}
-      >
-        <Ionicons name="ios-add-circle-outline" size={24} color="green" />
-      </TouchableOpacity>
-    </View>
-  );
 
   const renderPaymentFields = () => {
     if (paymentMethod === "Cash") {
@@ -195,7 +94,7 @@ const BillingScreen = () => {
             handleInputChange={(text) => {
               clearError();
               setCashInput(text);
-              cashChange(text, totals);
+              calculateChange(text, totals, setChange);
             }}
           />
           <Text>Change:</Text>
@@ -260,15 +159,14 @@ const BillingScreen = () => {
       valuesTotals: { ...totals, paymentMethod, change },
       products: selectedProducts,
     };
-    setValue("ci", "");
-    setValue("name", "");
-    setValue("email", "");
-    setValue("address", "");
-    setValue("phone", "");
-    setSelectedProducts([]);
-    setFilteredProducts([]);
-    setChange("");
-    clearError();
+    handleSubmitClean(
+      setValue,
+      setSelectedProducts,
+      setFilteredProducts,
+      setChange,
+      setPaymentMethod,
+      clearError
+    );
     setStep(1);
   };
 
@@ -289,7 +187,10 @@ const BillingScreen = () => {
                 placeholder="Insert a CI or RUC"
                 label="CI/RUC"
                 control={control}
-                handleInputChange={handleIDChange}
+                handleInputChange={(text) => {
+                  clearError();
+                  setCustomerId(text);
+                }}
                 rules={{
                   required: "CI/RUC is required",
                   pattern: {
@@ -307,7 +208,7 @@ const BillingScreen = () => {
                 }}
               />
               <View>
-                <CustomButton text={"Search"} onPress={searchCustomer} />
+                <CustomButton text={"Search"} onPress={handleSearchCustomer} />
               </View>
               <CustomInputText
                 name="name"
@@ -325,7 +226,9 @@ const BillingScreen = () => {
                     message: "Name should be max 24 characters long",
                   },
                 }}
-                handleInputChange={handleInputChange}
+                handleInputChange={(text) => {
+                  clearError();
+                }}
               />
               <CustomInputText
                 name="lastname"
@@ -400,7 +303,12 @@ const BillingScreen = () => {
       case 2:
         return (
           <>
-            <View style={styles.containerCol}>
+            <View
+              style={[
+                styles.containerCol,
+                { flex: 1, flexDirection: "column" },
+              ]}
+            >
               <Text style={[styles.title, { alignSelf: "center" }]}>
                 Select Products
               </Text>
@@ -417,12 +325,20 @@ const BillingScreen = () => {
                 />
                 <CustomButton text={"Search"} onPress={handleSearch} />
               </View>
-              <View style={styles.containerRow}>
+              <View style={[styles.containerRow, { width: "50%" }]}>
                 {filteredProducts.length !== 0 ? (
                   <View style={[styles.searchProduct, { height: 400 }]}>
                     <FlatList
                       data={filteredProducts}
-                      renderItem={renderProductList}
+                      renderItem={({ item }) => (
+                        <SearchCart
+                          item={item}
+                          device={device}
+                          products={products}
+                          selectedProducts={selectedProducts}
+                          setSelectedProducts={setSelectedProducts}
+                        />
+                      )}
                       keyExtractor={(item) => item.id.toString()}
                     />
                   </View>
@@ -435,12 +351,19 @@ const BillingScreen = () => {
                   <View style={[styles.searchProduct, { height: 400 }]}>
                     <FlatList
                       data={selectedProducts}
-                      renderItem={renderProductSelected}
+                      renderItem={({ item }) => (
+                        <SelectedCart
+                          item={item}
+                          device={device}
+                          selectedProducts={selectedProducts}
+                          setSelectedProducts={setSelectedProducts}
+                        />
+                      )}
                       keyExtractor={(item) => item.id.toString()}
                     />
                   </View>
                 ) : (
-                  <View style={styles.selectedProducts}>
+                  <View style={styles.searchProduct}>
                     <Text>No products selected</Text>
                   </View>
                 )}
@@ -535,11 +458,26 @@ const BillingScreen = () => {
                 Resume
               </Text>
               <View style={styles.customerDetails}>
-                <Text>CI/RUC: {id}</Text>
-                <Text>Name: {firstName + " " + lastName} </Text>
-                <Text>Email: {email}</Text>
-                <Text>Phone: {phone}</Text>
-                <Text>Address: {email}</Text>
+                <Text>
+                  <Text style={{ fontWeight: "bold" }}>CI/RUC:</Text>
+                  <Text> {id}</Text>
+                </Text>
+                <Text>
+                  <Text style={{ fontWeight: "bold" }}>Name: </Text>
+                  <Text> {firstName + " " + lastName}</Text>
+                </Text>
+                <Text>
+                  <Text style={{ fontWeight: "bold" }}>Email:</Text>
+                  <Text> {email}</Text>
+                </Text>
+                <Text>
+                  <Text style={{ fontWeight: "bold" }}>Phone:</Text>
+                  <Text> {phone}</Text>
+                </Text>
+                <Text>
+                  <Text style={{ fontWeight: "bold" }}>Address:</Text>
+                  <Text> {address}</Text>
+                </Text>
               </View>
               <View style={styles.customerDetails}>
                 {selectedProducts.map((product) => (
@@ -547,19 +485,38 @@ const BillingScreen = () => {
                 ))}
               </View>
               <View style={styles.billSummary}>
+                <Text>
+                  <Text style={{ fontWeight: "bold" }}>Method: </Text>
+                  <Text>{paymentMethod}</Text>
+                </Text>
                 {paymentMethod === "Cash" ? (
                   <>
-                    <Text>Method: {paymentMethod}</Text>
-                    <Text>Change: ${change}</Text>
+                    <Text>
+                      <Text style={{ fontWeight: "bold" }}>Change: </Text>
+                      <Text>${change}</Text>
+                    </Text>
                   </>
-                ) : (
-                  <Text>Method: {paymentMethod}</Text>
-                )}
-                <Text>Subtotal: ${totals.subtotal.toFixed(2)}</Text>
-                <Text>Tarifa 0: ${totals.tariff0.toFixed(2)}</Text>
-                <Text>Tarifa 12: ${totals.tariff12.toFixed(2)}</Text>
-                <Text>12% IVA: ${totals.iva12.toFixed(2)}</Text>
-                <Text>Total: ${totals.total.toFixed(2)}</Text>
+                ) : null}
+                <Text>
+                  <Text style={{ fontWeight: "bold" }}>Subtotal: </Text>
+                  <Text>${totals.subtotal.toFixed(2)}</Text>
+                </Text>
+                <Text>
+                  <Text style={{ fontWeight: "bold" }}>Tariff 0: </Text>
+                  <Text>${totals.tariff0.toFixed(2)}</Text>
+                </Text>
+                <Text>
+                  <Text style={{ fontWeight: "bold" }}>Tariff 12: </Text>
+                  <Text>${totals.tariff12.toFixed(2)}</Text>
+                </Text>
+                <Text>
+                  <Text style={{ fontWeight: "bold" }}>IVA: </Text>
+                  <Text>${totals.iva12.toFixed(2)}</Text>
+                </Text>
+                <Text>
+                  <Text style={{ fontWeight: "bold" }}>Total: </Text>
+                  <Text>${totals.total.toFixed(2)}</Text>
+                </Text>
               </View>
               <View
                 style={[
@@ -584,7 +541,11 @@ const BillingScreen = () => {
   };
 
   return (
-    <ScrollView showsVerticalScrollIndicator={false} style={styles.root}>
+    <ScrollView
+      showsVerticalScrollIndicator={false}
+      nestedScrollEnabled={true}
+      style={styles.root}
+    >
       <View
         style={[
           styles.container,

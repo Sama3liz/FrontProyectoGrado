@@ -2,13 +2,13 @@ import { useForm } from "react-hook-form";
 import { View, ScrollView } from "react-native";
 import CustomButton from "../Buttons/CustomButton";
 import CustomInputText from "../Inputs/CustomInputText";
-import useNavigationHelpers from "../../utils/navigationHelpers";
+import useNavigate from "../../utils/navigation";
 import styles from "../../styles/styles";
 import { useEffect } from "react";
 
 const EditAccountForm = ({ route }) => {
   const { control, handleSubmit, setValue } = useForm();
-  const { goBack } = useNavigationHelpers();
+  const { goBack } = useNavigate();
   const { item } = route.params;
   const id = item.id_cuenta;
 

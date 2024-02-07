@@ -2,11 +2,11 @@ import React, { useState } from "react";
 import { View, Text, ScrollView } from "react-native";
 
 import CustomButton from "../../components/Buttons/CustomButton";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigate } from "@react-navigation/native";
 import { newPasswordStyles } from "../../styles/screenStyles/NewPasswordStyles";
 
 const NotFoundScreen = () => {
-  const navigation = useNavigation();
+  const navigation = useNavigate();
 
   const onNewPressed = () => {
     navigation.navigate("");

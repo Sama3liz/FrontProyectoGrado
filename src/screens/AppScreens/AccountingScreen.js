@@ -1,11 +1,11 @@
 import { View, Text, ScrollView } from "react-native";
 import React from "react";
 import CustomButton from "../../components/Buttons/CustomButton";
-import useNavigationHelpers from "../../utils/navigationHelpers";
+import useNavigate from "../../utils/navigation";
 import styles from "../../styles/styles";
 
 const AccountingScreen = () => {
-  const { goTo } = useNavigationHelpers();
+  const { goTo } = useNavigate();
 
   const onButtonPress = (page) => {
     goTo(page);

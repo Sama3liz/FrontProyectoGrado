@@ -4,11 +4,11 @@ import {
   currentAuthenticatedUser,
   updateUserAttribute,
 } from "aws-amplify/auth";
-import useNavigationHelpers from "../utils/navigationHelpers";
+import useNavigate from "../utils/navigation";
 
 const useRegistration = () => {
   const [error, setError] = useState(null);
-  const { goTo } = useNavigationHelpers();
+  const { goTo } = useNavigate();
 
   const onSignUp = async ({ username, name, email, password }) => {
     const updated = Date.now();

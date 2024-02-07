@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { View, Text, ScrollView } from "react-native";
 import CustomInput from "../../components/Inputs/CustomInput";
 import CustomButton from "../../components/Buttons/CustomButton";
-import useNavigationHelpers from "../../utils/navigationHelpers";
+import useNavigate from "../../utils/navigation";
 import { confirmEmailStyles } from "../../styles/screenStyles/ConfirmEmailStyles";
 import { useForm } from "react-hook-form";
 import useConfirmation from "../../utils/useConfirmation";
@@ -11,7 +11,7 @@ import CustomInputText from "../../components/Inputs/CustomInputText";
 
 const ConfirmEmailScreen = ({ route }) => {
   const { control, handleSubmit } = useForm();
-  const { goTo } = useNavigationHelpers();
+  const { goTo } = useNavigate();
   const { username } = route.params;
   const { confirmEmailCode, resendCodeMail, clearError, error } =
     useConfirmation();
