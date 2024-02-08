@@ -37,7 +37,7 @@ export async function fetchHistoricalSales() {
   const monthlyData = data.map((item) => {
     return {
       x: Number(item.mes),
-      y: item.total_por_mes,
+      y: (item.total_por_mes),
     };
   });
   console.log(monthlyData);

@@ -45,7 +45,7 @@ const CustomChart = (data) => {
         />
         <VictoryScatter
           data={historicalSales}
-          size={7}
+          size={10}
           style={{ data: { fill: "#c43a31" } }}
         />
         <VictoryAxis style={{ grid: { stroke: "transparent" } }} />

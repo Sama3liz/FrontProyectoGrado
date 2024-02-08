@@ -81,7 +81,7 @@ export default function HomeScreen() {
           ]}
         >
           <Text style={{ fontSize: 18 }}>Your sales:</Text>
-          <Text style={{ fontSize: 18, color: "#0aada8" }}>${totalSales}</Text>
+          <Text style={{ fontSize: 18, color: "#0aada8" }}>${Number(totalSales).toFixed(2)}</Text>
         </View>
         {loading ? ( // Mostrar indicador de carga si loading es true
           <ActivityIndicator size="large" color="#0aada8" />
@@ -114,19 +114,19 @@ export default function HomeScreen() {
                 title="Daily Sales"
                 subtitle={"Gain per hour"}
                 annualAmount={totalSalesByDay}
-                dailyAmount={totalSalesByDay/8}
+                dailyAmount={(totalSalesByDay/8).toFixed(2)}
               />
               <SalesOverviewCard
                 title="Monthly Sales"
                 subtitle={"Gain per day"}
                 annualAmount={totalSalesByMonth}
-                dailyAmount={totalSalesByMonth/30}
+                dailyAmount={(totalSalesByMonth/30).toFixed(2)}
               />
               <SalesOverviewCard
                 title="Annual Sales"
                 subtitle={"Gain per month"}
                 annualAmount={totalSalesByYear}
-                dailyAmount={totalSalesByYear/12}
+                dailyAmount={(totalSalesByYear/12).toFixed(2)}
               />
             </View>
           </View>
