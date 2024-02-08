@@ -17,7 +17,7 @@ const CardexScreen = ({ route }) => {
   const loadData = async () => {
     try {
       const data = await fetchData(
-        `https://q20filkgq3.execute-api.us-east-1.amazonaws.com/dev/kardex/${id}`
+        `https://zxdz2hq7jg.execute-api.us-east-1.amazonaws.com/dev/cardex/${id}`
       );
       const body = JSON.parse(data.body);
       setCardexEntries(body);

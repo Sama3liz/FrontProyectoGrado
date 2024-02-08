@@ -1,12 +1,12 @@
 import React from 'react';
 import {View, Text, StyleSheet} from 'react-native';
 
-const SalesOverviewCard = ({title, annualAmount, dailyAmount}) => {
+const SalesOverviewCard = ({title, subtitle, annualAmount, dailyAmount}) => {
  return (
     <View style={styles.card}>
       <Text style={styles.title}>{title}</Text>
       <Text style={styles.amount}>${annualAmount}</Text>
-      <Text style={styles.subtitle}>Daily</Text>
+      <Text style={styles.subtitle}>{subtitle}</Text>
       <Text style={styles.amount}>${dailyAmount}</Text>
     </View>
  );

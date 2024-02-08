@@ -19,8 +19,21 @@ const InitialConfigScreen = () => {
     }
   }, [user]);
 
-  const onSubmitPressed = async () => {
-    await updateAttribute();
+  const onSubmitPressed = async (data) => {
+    try {
+      const response = await fetch("https://tu-api.com/endpoint", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+
+      const data = await response.json();
+      console.log(data);
+    } catch (error) {
+      console.error("Error al enviar los datos:", error);
+    }
   };
 
   return (
@@ -112,7 +125,6 @@ const InitialConfigScreen = () => {
             }}
           />
         </View>
-
         <CustomButton text="Submit" onPress={handleSubmit(onSubmitPressed)} />
         <CustomButton text="LogOut" onPress={logOut} type="DANGER" />
       </View>

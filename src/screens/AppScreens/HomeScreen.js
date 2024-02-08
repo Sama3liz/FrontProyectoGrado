@@ -1,14 +1,50 @@
-import React, { useContext } from "react";
-import { Platform, ScrollView, Text, View } from "react-native";
+import React, { useContext, useEffect, useState } from "react";
+import {
+  Platform,
+  ScrollView,
+  Text,
+  View,
+  ActivityIndicator,
+} from "react-native";
 import { AuthContext } from "../../context/AuthContext";
 import CustomChart from "../../components/Charts/CustomChart";
 import styles from "../../styles/styles";
 import SalesOverviewCard from "../../components/Card/CustomSalesOverviewCard";
+import {
+  fetchTotalSales,
+  fetchTotalSalesByDay,
+  fetchTotalSalesByMonth,
+  fetchTotalSalesByYear,
+} from "../../utils/reports";
 
 export default function HomeScreen() {
   const { user } = useContext(AuthContext);
+  const [totalSalesByDay, setTotalSalesByDay] = useState(null);
+  const [totalSalesByMonth, setTotalSalesByMonth] = useState(null);
+  const [totalSalesByYear, setTotalSalesByYear] = useState(null);
+  const [totalSales, setTotalSales] = useState(null);
+  const [loading, setLoading] = useState(true); 
   const device = Platform.OS;
-  
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const totalSalesByDayData = await fetchTotalSalesByDay();
+      setTotalSalesByDay(totalSalesByDayData);
+
+      const totalSalesByMonthData = await fetchTotalSalesByMonth();
+      setTotalSalesByMonth(totalSalesByMonthData);
+
+      const totalSalesByYearData = await fetchTotalSalesByYear();
+      setTotalSalesByYear(totalSalesByYearData);
+
+      const totalSalesData = await fetchTotalSales();
+      setTotalSales(totalSalesData);
+
+      setLoading(false); 
+    };
+    fetchData();
+  }, []);
+
   return (
     <ScrollView
       showsVerticalScrollIndicator={false}
@@ -35,56 +71,66 @@ export default function HomeScreen() {
           </Text>
         </View>
         <View
-          style={{
-            marginVertical: 15,
-            flexDirection: "row",
-            justifyContent: "space-between",
-          }}
+          style={[
+            styles.customerDetails,
+            {
+              marginVertical: 15,
+              flexDirection: "row",
+              justifyContent: "space-between",
+            },
+          ]}
         >
           <Text style={{ fontSize: 18 }}>Your sales:</Text>
-          <Text style={{ fontSize: 18, color: "#0aada8" }}>$1,000</Text>
+          <Text style={{ fontSize: 18, color: "#0aada8" }}>${totalSales}</Text>
         </View>
-        <View
-          style={{
-            flex: 1,
-            flexDirection: device === "web" ? "row" : "column",
-            width: "100%",
-            justifyContent: "space-between",
-          }}
-        >
-          <View
-            style={{
-              flexDirection: "column",
-              justifyContent: "space-between",
-            }}
-          >
-            <CustomChart />
-          </View>
+        {loading ? ( // Mostrar indicador de carga si loading es true
+          <ActivityIndicator size="large" color="#0aada8" />
+        ) : (
           <View
             style={{
               flex: 1,
-              flexDirection: "column",
+              flexDirection: device === "web" ? "row" : "column",
+              width: "100%",
               justifyContent: "space-between",
-              rowGap: device === "web" ? 0 : 15,
             }}
           >
-            <SalesOverviewCard
-              title="Daily Sales"
-              annualAmount="458"
-              dailyAmount="880"
-            />
-            <SalesOverviewCard
-              title="Monthly Sales"
-              annualAmount="12,458"
-              dailyAmount="880"
-            />
-            <SalesOverviewCard
-              title="Annual Sales"
-              annualAmount="12,458"
-              dailyAmount="880"
-            />
+            <View
+              style={{
+                flexDirection: "column",
+                justifyContent: "space-between",
+              }}
+            >
+              <CustomChart />
+            </View>
+            <View
+              style={{
+                flex: 1,
+                flexDirection: "column",
+                justifyContent: "space-between",
+                rowGap: device === "web" ? 0 : 15,
+              }}
+            >
+              <SalesOverviewCard
+                title="Daily Sales"
+                subtitle={"Gain per hour"}
+                annualAmount={totalSalesByDay}
+                dailyAmount={totalSalesByDay/8}
+              />
+              <SalesOverviewCard
+                title="Monthly Sales"
+                subtitle={"Gain per day"}
+                annualAmount={totalSalesByMonth}
+                dailyAmount={totalSalesByMonth/30}
+              />
+              <SalesOverviewCard
+                title="Annual Sales"
+                subtitle={"Gain per month"}
+                annualAmount={totalSalesByYear}
+                dailyAmount={totalSalesByYear/12}
+              />
+            </View>
           </View>
-        </View>
+        )}
       </View>
     </ScrollView>
   );

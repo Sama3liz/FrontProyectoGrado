@@ -24,6 +24,7 @@ export const loadData = async (setProducts) => {
   }
 };
 
+/* Function to get the current date */
 export const getCurrentDate = () => {
   var today = new Date();
   var year = today.getFullYear();
@@ -35,6 +36,7 @@ export const getCurrentDate = () => {
   return formattedDate;
 };
 
+/* Function to calculate cash change */
 export const calculateChange = (text, totals, setChange) => {
   if (parseFloat(text) >= totals.total.toFixed(2)) {
     const newChange = parseFloat(text) - totals.total.toFixed(2);
@@ -42,6 +44,7 @@ export const calculateChange = (text, totals, setChange) => {
   }
 };
 
+/* Function to calculate taxes and totals */
 export const calculateTotals = (selectedProducts, setTotals) => {
   const subtotal = selectedProducts.reduce(
     (total, product) => total + product.price * product.quantity,
@@ -69,6 +72,7 @@ export const calculateTotals = (selectedProducts, setTotals) => {
   setTotals(newTotals);
 };
 
+/* Function to add to the invoice */
 export const handleAddToInvoice = (
   productId,
   products,
@@ -95,6 +99,7 @@ export const handleAddToInvoice = (
   }
 };
 
+/* Function to remove selected products from list */
 export const handleRemoveFromFiltered = (
   productId,
   filteredProducts,
@@ -106,6 +111,7 @@ export const handleRemoveFromFiltered = (
   setFilteredProducts(updatedFilteredProducts);
 };
 
+/* Function to handle the quantity */
 export const handleQuantityChange = (
   productId,
   quantity,
@@ -124,6 +130,7 @@ export const handleQuantityChange = (
   }
 };
 
+/* Function to select the product */
 export const handleProductSelection = (
   product,
   selectedProducts,
@@ -152,6 +159,7 @@ export const handleProductSelection = (
   }
 };
 
+/* Function to clean when submit */
 export const handleSubmitClean = (
   setValue,
   setSelectedProducts,
@@ -173,6 +181,7 @@ export const handleSubmitClean = (
   clearError();
 };
 
+/* Function to remove selected products form cart */
 export const handleRemoveFromInvoice = (
   productId,
   selectedProducts,
@@ -182,4 +191,34 @@ export const handleRemoveFromInvoice = (
     (product) => product.id !== productId
   );
   setSelectedProducts(updatedProducts);
+};
+
+/* Function to send the invoice to store */
+export const sendBillingData = async (newBillingData) => {
+  try {
+    const response = await fetch(
+      "https://zxdz2hq7jg.execute-api.us-east-1.amazonaws.com/dev/invoices",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(newBillingData),
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(
+        "Error al enviar los datos de facturación: " + response.statusText
+      );
+    }
+
+    const responseData = await response.json();
+    console.log("Respuesta del servidor:", responseData);
+
+    return responseData;
+  } catch (error) {
+    console.error("Error al enviar los datos de facturación:", error);
+    throw new Error("Error al enviar los datos de facturación");
+  }
 };

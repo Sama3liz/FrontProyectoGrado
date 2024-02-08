@@ -1,8 +1,12 @@
 /* Function to search customer by ID */
-export const searchCustomerById = async (customerId) => {
+export const searchCustomerById = async (
+  customerId,
+  setErrorMessage,
+  setValue
+) => {
   try {
     const response = await fetch(
-      `https://zxdz2hq7jg.execute-api.us-east-1.amazonaws.com/dev/customer/search/${customerId}`,
+      `https://zxdz2hq7jg.execute-api.us-east-1.amazonaws.com/dev/customer/search?id=${customerId}`,
       {
         method: "GET",
         headers: {
@@ -12,60 +16,20 @@ export const searchCustomerById = async (customerId) => {
       }
     );
     const data = await response.json();
-    console.log(data.body);
-    /* if (data && data.length > 0) {
-      return data[0];
+    const body = JSON.parse(data.body);
+    if (Array.isArray(body) && body.length > 0) {
+      return body[0];
     } else {
+      setErrorMessage("No customer found with the provided ID");
+      clearCustomerValues(setValue);
       return null;
-    } */
+    }
   } catch (error) {
     console.error("Error fetching customer data:", error);
     throw error;
   }
 };
 
-/* Function to search customer */
-export const searchCustomer = async (
-  customerId,
-  searchCustomerById,
-  setErrorMessage,
-  clearError,
-  setValue
-) => {
-  try {
-    if (customerId) {
-      const data = await searchCustomerById(customerId);
-      if (data) {
-        setSearchCustomer(data, clearError, setErrorMessage, setValue);
-      } else {
-        setErrorMessage("No customer found with the provided ID");
-      }
-    } else {
-      setErrorMessage("Please provide a valid ID for the customer search");
-    }
-  } catch (error) {
-    console.error("Error searching for customer:", error);
-    setErrorMessage("Error searching for customer. Please try again.");
-  }
-};
-
-/* Function to set de data of the customer */
-export const setSearchCustomer = (
-  customerData,
-  clearError,
-  setErrorMessage,
-  setValue
-) => {
-  if (customerData !== null) {
-    clearError();
-    setCustomerValues(customerData, setValue);
-  } else {
-    setErrorMessage("Client not found");
-    clearCustomerValues(setValue);
-  }
-};
-
-/* Function to set customer values */
 export const setCustomerValues = (customerData, setValue) => {
   setValue("name", customerData.firstname);
   setValue("lastname", customerData.lastname);
@@ -76,7 +40,7 @@ export const setCustomerValues = (customerData, setValue) => {
 
 /* Function to clear customer values */
 export const clearCustomerValues = (setValue) => {
-  setValue("ci", "");
+  /* setValue("ci", ""); */
   setValue("name", "");
   setValue("lastname", "");
   setValue("email", "");

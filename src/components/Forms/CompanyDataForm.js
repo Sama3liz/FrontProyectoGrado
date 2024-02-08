@@ -19,6 +19,7 @@ const Company = () => {
   useEffect(() => {
     setValue("ruc", user.payload["cognito:username"]);
     setValue("email", user.payload.email);
+    setValue("phone", "1234567");
     loadData();
   }, [setValue]);
 
@@ -28,8 +29,8 @@ const Company = () => {
         "https://zxdz2hq7jg.execute-api.us-east-1.amazonaws.com/dev/inventory"
       );
       const body = JSON.parse(data.body);
+      console.log(user.payload);
       setValue("commercial", body.commercial);
-      setValue("phone", body.phone);
       setValue("address", body.address);
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -38,10 +39,6 @@ const Company = () => {
 
   const onSubmitPressed = /* async */ (data) => {
     console.log(data);
-  };
-
-  const onBackPressed = () => {
-    goBack();
   };
 
   return (
@@ -77,6 +74,7 @@ const Company = () => {
             }}
           />
           <CustomInputText
+            disabled
             placeholder="Insert the commercial name"
             name="commercial"
             label="Commercial Name"
@@ -94,6 +92,7 @@ const Company = () => {
             }}
           />
           <CustomInputText
+            disabled
             placeholder="Insert the email"
             name="email"
             label="Email"
@@ -104,6 +103,7 @@ const Company = () => {
             }}
           />
           <CustomInputText
+            disabled
             placeholder="Insert the phone"
             name="phone"
             label="Phone"
@@ -121,6 +121,7 @@ const Company = () => {
             }}
           />
           <CustomInputText
+            disabled
             placeholder="Insert the address"
             name="address"
             label="Address"
@@ -138,7 +139,7 @@ const Company = () => {
             }}
           />
         </View>
-        <CustomButton text="Submit" onPress={handleSubmit(onSubmitPressed)} />
+        {/* <CustomButton text="Submit" onPress={handleSubmit(onSubmitPressed)} /> */}
       </View>
     </ScrollView>
   );

@@ -65,6 +65,7 @@ const StockScreen = ({ route }) => {
 
   const onSubmitPressed = async (data) => {
     const id = selectedProducts[0].id;
+    const quantity = Number(data.quantity);
     const newStock =
       type === "add"
         ? Number(data.quantity) + Number(selectedProducts[0].stock)
@@ -73,9 +74,9 @@ const StockScreen = ({ route }) => {
         : setErrorMessage("Cantidad invalida");
     try {
       const updatedProduct = await updateData(
-        "https://zxdz2hq7jg.execute-api.us-east-1.amazonaws.com/dev/inventory/stock", 
+        "https://zxdz2hq7jg.execute-api.us-east-1.amazonaws.com/dev/inventory/stock",
         id,
-        { quantity: newStock } 
+        { type, quantity, newStock }
       );
       console.log("Producto actualizado:", updatedProduct);
       route.params.updateProducts();

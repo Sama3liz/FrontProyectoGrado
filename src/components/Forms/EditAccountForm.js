@@ -20,7 +20,7 @@ const EditAccountForm = ({ route }) => {
     console.log(data);
     try {
       const response = await fetch(
-        `https://q20filkgq3.execute-api.us-east-1.amazonaws.com/dev/accounts/${id}`,
+        `https://zxdz2hq7jg.execute-api.us-east-1.amazonaws.com/dev/accounts/${id}`,
         {
           method: "PUT",
           headers: {

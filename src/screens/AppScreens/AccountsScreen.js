@@ -24,7 +24,7 @@ const AccountsScreen = () => {
   const loadData = async () => {
     try {
       const data = await fetchData(
-        "https://q20filkgq3.execute-api.us-east-1.amazonaws.com/dev/accounts"
+        "https://zxdz2hq7jg.execute-api.us-east-1.amazonaws.com/dev/accounts"
       );
       const body = JSON.parse(data.body);
       const sortedAccounts = body.sort((a, b) => {

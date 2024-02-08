@@ -53,14 +53,14 @@ const UserScreen = () => {
               required: "Email is required",
             }}
           />
-          <CustomInputText
+          {/* <CustomInputText
             name="newPassword"
             label="New Password"
             placeholder="Insert a new password"
             control={control}
-          />
+          /> */}
         </View>
-        <CustomButton text={"Save"} onPress={handleSubmit(updateUserData)} />
+        {/* <CustomButton text={"Save"} onPress={handleSubmit(updateUserData)} /> */}
       </View>
     </ScrollView>
   );
