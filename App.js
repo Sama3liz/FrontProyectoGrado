@@ -21,6 +21,6 @@ const App = () => {
   );
 };
 
-AppRegistry.registerComponent(expo.name, () => App);
+AppRegistry.registerComponent("ProyectoGrado", () => App);
 
 export default App;
