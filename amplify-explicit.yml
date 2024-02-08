@@ -7,7 +7,7 @@ frontend:
         - npm install
     build:
       commands:
-        - expo export:web
+        - expo start --web
   artifacts:
     baseDirectory: web-build
     files:
