@@ -14,7 +14,7 @@ frontend:
           fi
     build:
       commands:
-        - expo export:web
+        - expo run:web
   artifacts:
     baseDirectory: web-build
     files:
