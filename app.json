@@ -32,6 +32,11 @@
           "useMetro": true
         }
       }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "67923dbb-891a-424d-acef-9182d20e44e0"
+      }
     }
   }
 }
